@@ -1,0 +1,44 @@
+{
+  "pipeline": {
+    "objects": [
+      {
+        "type": "Start",
+        "id": "start",
+        "x": 50,
+        "y": 200
+      },
+      {
+        "type": "ObjectRenderer",
+        "id": "objectRenderer",
+        "x": 50,
+        "y": 150
+      },
+      {
+        "type": "UI",
+        "id": "ui",
+        "x": 50,
+        "y": 100
+      },
+      {
+        "type": "End",
+        "id": "end",
+        "x": 50,
+        "y": 50
+      }
+    ],
+    "connections": [
+      {
+        "from": "start:output",
+        "to": "objectRenderer:input"
+      },
+      {
+        "from": "objectRenderer:output",
+        "to": "ui:input"
+      },
+      {
+        "from": "ui:output",
+        "to": "end:input"
+      }
+    ]
+  }
+}
