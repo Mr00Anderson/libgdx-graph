@@ -1,20 +1,15 @@
-package com.gempukku.graph.pipeline.producer;
+package com.gempukku.graph.pipeline.producer.participant;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.graph.pipeline.PipelineParticipant;
+import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import org.json.simple.JSONObject;
 
-public class EndPipelineParticipantProducer implements PipelineParticipantProducer {
+public class EndGraphBoxProducer implements GraphBoxProducer {
     @Override
     public boolean supportsType(String type) {
-        return type.equals("End");
-    }
-
-    @Override
-    public PipelineParticipant createPipelineParticipant(JSONObject jsonObject) {
-        return null;
+        return type.equals("PipelineEnd");
     }
 
     @Override
@@ -23,9 +18,14 @@ public class EndPipelineParticipantProducer implements PipelineParticipantProduc
         float x = ((Number) jsonObject.get("x")).floatValue();
         float y = ((Number) jsonObject.get("y")).floatValue();
 
-        GraphBoxImpl end = new GraphBoxImpl(id, "End", "End", skin);
+        GraphBoxImpl end = new GraphBoxImpl(id, "PipelineEnd", "End", skin);
         end.setPosition(x, y);
         end.addTopConnector(id + ":input");
         return end;
+    }
+
+    @Override
+    public GraphBox createDefault(Skin skin, float x, float y) {
+        return null;
     }
 }

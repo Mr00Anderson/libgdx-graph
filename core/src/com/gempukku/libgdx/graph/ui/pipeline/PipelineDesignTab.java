@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.graph.pipeline.PipelineSerializer;
-import com.gempukku.graph.pipeline.producer.PipelineParticipantProducer;
+import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.SleepingTab;
 import com.gempukku.libgdx.graph.ui.UIPipelineLoaderCallback;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
@@ -128,8 +128,8 @@ public class PipelineDesignTab extends SleepingTab {
         JSONArray connections = new JSONArray();
         for (GraphConnection connection : graphContainer.getConnections()) {
             JSONObject conn = new JSONObject();
-            conn.put("from", connection.getFrom());
-            conn.put("to", connection.getTo());
+            conn.put("from", connection.getFrom().getConnector().getId());
+            conn.put("to", connection.getTo().getConnector().getId());
             connections.add(conn);
         }
 
@@ -155,8 +155,8 @@ public class PipelineDesignTab extends SleepingTab {
         return true;
     }
 
-    private PipelineParticipantProducer findProducerByType(String type) throws IOException {
-        for (PipelineParticipantProducer producer : PipelineSerializer.producers) {
+    private GraphBoxProducer findProducerByType(String type) throws IOException {
+        for (GraphBoxProducer producer : PipelineSerializer.producers) {
             if (producer.supportsType(type))
                 return producer;
         }

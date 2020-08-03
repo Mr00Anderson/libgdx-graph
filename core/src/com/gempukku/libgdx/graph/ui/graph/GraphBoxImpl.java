@@ -3,6 +3,7 @@ package com.gempukku.libgdx.graph.ui.graph;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.gempukku.graph.pipeline.PropertyType;
 import com.google.common.base.Supplier;
 import org.json.simple.JSONObject;
 
@@ -32,7 +33,7 @@ public class GraphBoxImpl implements GraphBox {
 
     public void addTopConnector(String id) {
         boxConnectors.put(id, new GraphBoxConnectorImpl(id, GraphBoxConnector.Side.Top,
-                GraphBoxConnector.CommunicationType.Input, null, new Supplier<Float>() {
+                GraphBoxConnector.CommunicationType.Input, PropertyType.PipelineParticipant, new Supplier<Float>() {
             @Override
             public Float get() {
                 return window.getWidth() / 2f;
@@ -42,7 +43,7 @@ public class GraphBoxImpl implements GraphBox {
 
     public void addBottomConnector(String id) {
         boxConnectors.put(id, new GraphBoxConnectorImpl(id, GraphBoxConnector.Side.Bottom,
-                GraphBoxConnector.CommunicationType.Output, null, new Supplier<Float>() {
+                GraphBoxConnector.CommunicationType.Output, PropertyType.PipelineParticipant, new Supplier<Float>() {
             @Override
             public Float get() {
                 return window.getWidth() / 2f;
@@ -94,6 +95,10 @@ public class GraphBoxImpl implements GraphBox {
         result.put("type", type);
         result.put("x", window.getX());
         result.put("y", window.getY());
+
+        for (GraphBoxPart graphBoxPart : graphBoxParts)
+            graphBoxPart.serializePart(result);
+
         return result;
     }
 }

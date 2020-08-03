@@ -2,7 +2,7 @@ package com.gempukku.libgdx.graph.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.graph.pipeline.PipelineLoaderCallback;
-import com.gempukku.graph.pipeline.producer.PipelineParticipantProducer;
+import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
 import org.json.simple.JSONObject;
@@ -22,7 +22,7 @@ public class UIPipelineLoaderCallback implements PipelineLoaderCallback {
     }
 
     @Override
-    public void addPipelineParticipant(PipelineParticipantProducer pipelineParticipantProducer, JSONObject object) {
+    public void addPipelineParticipant(GraphBoxProducer pipelineParticipantProducer, JSONObject object) {
         GraphBox graphBox = pipelineParticipantProducer.createPipelineGraphBox(skin, object);
         graphContainer.addGraphBox(graphBox);
     }

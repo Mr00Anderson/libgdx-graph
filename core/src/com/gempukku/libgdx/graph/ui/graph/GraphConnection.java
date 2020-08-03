@@ -1,19 +1,19 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
 public class GraphConnection {
-    private String from;
-    private String to;
+    private NodeInfo from;
+    private NodeInfo to;
 
-    public GraphConnection(String from, String to) {
+    public GraphConnection(NodeInfo from, NodeInfo to) {
         this.from = from;
         this.to = to;
     }
 
-    public String getFrom() {
+    public NodeInfo getFrom() {
         return from;
     }
 
-    public String getTo() {
+    public NodeInfo getTo() {
         return to;
     }
 }

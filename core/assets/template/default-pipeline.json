@@ -2,7 +2,7 @@
   "pipeline": {
     "objects": [
       {
-        "type": "Start",
+        "type": "PipelineStart",
         "id": "start",
         "x": 50,
         "y": 200
@@ -14,13 +14,13 @@
         "y": 150
       },
       {
-        "type": "UI",
+        "type": "UIRenderer",
         "id": "ui",
         "x": 50,
         "y": 100
       },
       {
-        "type": "End",
+        "type": "PipelineEnd",
         "id": "end",
         "x": 50,
         "y": 50

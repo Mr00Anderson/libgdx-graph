@@ -1,10 +1,10 @@
 package com.gempukku.graph.pipeline;
 
-import com.gempukku.graph.pipeline.producer.EndPipelineParticipantProducer;
-import com.gempukku.graph.pipeline.producer.ObjectRendererParticipantProducer;
-import com.gempukku.graph.pipeline.producer.PipelineParticipantProducer;
-import com.gempukku.graph.pipeline.producer.StartPipelineParticipantProducer;
-import com.gempukku.graph.pipeline.producer.UIRendererParticipantProducer;
+import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
+import com.gempukku.graph.pipeline.producer.participant.EndGraphBoxProducer;
+import com.gempukku.graph.pipeline.producer.participant.ObjectRendererBoxProducer;
+import com.gempukku.graph.pipeline.producer.participant.StartGraphBoxProducer;
+import com.gempukku.graph.pipeline.producer.participant.UIRendererBoxProducer;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -16,13 +16,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PipelineSerializer {
-    public static final List<PipelineParticipantProducer> producers = new LinkedList<>();
+    public static final List<GraphBoxProducer> producers = new LinkedList<>();
 
     static {
-        producers.add(new StartPipelineParticipantProducer());
-        producers.add(new EndPipelineParticipantProducer());
-        producers.add(new ObjectRendererParticipantProducer());
-        producers.add(new UIRendererParticipantProducer());
+        producers.add(new StartGraphBoxProducer());
+        producers.add(new EndGraphBoxProducer());
+        producers.add(new ObjectRendererBoxProducer());
+        producers.add(new UIRendererBoxProducer());
     }
 
     public static void loadPipeline(InputStream inputStream, PipelineLoaderCallback pipelineLoaderCallback) throws IOException {
@@ -34,7 +34,7 @@ public class PipelineSerializer {
             JSONObject pipeline = (JSONObject) renderer.get("pipeline");
             for (JSONObject object : (List<JSONObject>) pipeline.get("objects")) {
                 String type = (String) object.get("type");
-                PipelineParticipantProducer producer = findProducerByType(type);
+                GraphBoxProducer producer = findProducerByType(type);
                 if (producer == null)
                     throw new IOException("Unable to find pipeline producer for type: " + type);
                 pipelineLoaderCallback.addPipelineParticipant(producer, object);
@@ -50,8 +50,8 @@ public class PipelineSerializer {
         }
     }
 
-    private static PipelineParticipantProducer findProducerByType(String type) {
-        for (PipelineParticipantProducer producer : producers) {
+    private static GraphBoxProducer findProducerByType(String type) {
+        for (GraphBoxProducer producer : producers) {
             if (producer.supportsType(type))
                 return producer;
         }
