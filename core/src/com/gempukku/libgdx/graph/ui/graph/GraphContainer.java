@@ -11,7 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueBooleanBoxProducer;
 import com.gempukku.graph.pipeline.producer.value.ValueColorBoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueVector1BoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueVector2BoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueVector3BoxProducer;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
@@ -19,13 +23,13 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class GraphContainer extends WidgetGroup {
-    private Map<String, GraphBoxProducer> valueProducers = new TreeMap<>();
+    private Map<String, GraphBoxProducer> valueProducers = new LinkedHashMap<>();
 
     private static final float CONNECTOR_LENGTH = 10;
     private static final float CONNECTOR_RADIUS = 5;
@@ -44,6 +48,10 @@ public class GraphContainer extends WidgetGroup {
     public GraphContainer(Skin skin) {
         this.skin = skin;
         valueProducers.put("Color", new ValueColorBoxProducer());
+        valueProducers.put("Vector1", new ValueVector1BoxProducer());
+        valueProducers.put("Vector2", new ValueVector2BoxProducer());
+        valueProducers.put("Vector3", new ValueVector3BoxProducer());
+        valueProducers.put("Boolean", new ValueBooleanBoxProducer());
 
         shapeRenderer = new ShapeRenderer();
 

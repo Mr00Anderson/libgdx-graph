@@ -1,10 +1,14 @@
 package com.gempukku.graph.pipeline.producer.participant;
 
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.gempukku.graph.pipeline.PropertyType;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
-import com.gempukku.libgdx.graph.ui.graph.part.ColorInputGraphBoxPart;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import org.json.simple.JSONObject;
 
 public class StartGraphBoxProducer implements GraphBoxProducer {
@@ -22,8 +26,7 @@ public class StartGraphBoxProducer implements GraphBoxProducer {
         GraphBoxImpl start = new GraphBoxImpl(id, "PipelineStart", "Start", skin);
         start.setPosition(x, y);
         start.addBottomConnector(id + ":output");
-
-        start.addGraphBoxPart(new ColorInputGraphBoxPart(skin, id + ":background"));
+        start.addGraphBoxPart(createColorPart(skin, id + ":background"));
 
         return start;
     }
@@ -31,5 +34,14 @@ public class StartGraphBoxProducer implements GraphBoxProducer {
     @Override
     public GraphBox createDefault(Skin skin, float x, float y) {
         return null;
+    }
+
+    private GraphBoxPartImpl createColorPart(Skin skin, String id) {
+        HorizontalGroup horizontalGroup = new HorizontalGroup();
+        horizontalGroup.addActor(new Label("Background color", skin));
+
+        GraphBoxPartImpl colorPart = new GraphBoxPartImpl(horizontalGroup, null);
+        colorPart.addConnector(id, GraphBoxConnector.Side.Left, GraphBoxConnector.CommunicationType.Input, PropertyType.Color);
+        return colorPart;
     }
 }
