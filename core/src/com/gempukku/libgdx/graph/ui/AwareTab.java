@@ -2,17 +2,19 @@ package com.gempukku.libgdx.graph.ui;
 
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
-public abstract class SleepingTab extends Tab {
-    public SleepingTab() {
+public abstract class AwareTab extends Tab {
+    public AwareTab() {
     }
 
-    public SleepingTab(boolean savable) {
+    public AwareTab(boolean savable) {
         super(savable);
     }
 
-    public SleepingTab(boolean savable, boolean closeableByUser) {
+    public AwareTab(boolean savable, boolean closeableByUser) {
         super(savable, closeableByUser);
     }
+
+    public abstract void resized(int width, int height);
 
     public abstract void sleep();
 

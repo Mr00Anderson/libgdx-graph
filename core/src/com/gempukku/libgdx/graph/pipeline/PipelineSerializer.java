@@ -29,6 +29,12 @@ public class PipelineSerializer {
                 String to = (String) connection.get("to");
                 pipelineLoaderCallback.addPipelineParticipantConnection(from, to);
             }
+            for (JSONObject property : (List<JSONObject>) pipeline.get("properties")) {
+                String type = (String) property.get("type");
+                JSONObject data = (JSONObject) property.get("data");
+                pipelineLoaderCallback.addPipelineProperty(type, data);
+            }
+
             pipelineLoaderCallback.end();
         } catch (ParseException exp) {
             throw new IOException("Unable to parse pipeline", exp);

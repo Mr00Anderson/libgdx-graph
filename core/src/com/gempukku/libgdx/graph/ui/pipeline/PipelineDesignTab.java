@@ -1,6 +1,5 @@
 package com.gempukku.libgdx.graph.ui.pipeline;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,7 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.libgdx.graph.PipelineConfiguration;
 import com.gempukku.libgdx.graph.pipeline.PipelineSerializer;
-import com.gempukku.libgdx.graph.ui.SleepingTab;
+import com.gempukku.libgdx.graph.ui.AwareTab;
 import com.gempukku.libgdx.graph.ui.UIPipelineLoaderCallback;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
@@ -35,14 +34,12 @@ import org.json.simple.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PipelineDesignTab extends SleepingTab {
-
+public class PipelineDesignTab extends AwareTab {
     private List<PropertyBox> propertyBoxes = new LinkedList<>();
 
     private final VerticalGroup pipelineProperties;
@@ -51,7 +48,7 @@ public class PipelineDesignTab extends SleepingTab {
     private Table contentTable;
     private Skin skin;
 
-    public PipelineDesignTab(Skin skin) {
+    public PipelineDesignTab(Skin skin, FileHandle source) {
         super(true, false);
 
         this.skin = skin;
@@ -95,7 +92,7 @@ public class PipelineDesignTab extends SleepingTab {
 
         splitPane.setMaxSplitAmount(0.3f);
         try {
-            InputStream stream = Gdx.files.internal("template/default-pipeline.json").read();
+            InputStream stream = source.read();
             try {
                 PipelineSerializer.loadPipeline(stream, new UIPipelineLoaderCallback(skin, graphContainer));
             } finally {
@@ -252,30 +249,7 @@ public class PipelineDesignTab extends SleepingTab {
         return contentTable;
     }
 
-    public boolean save() {
-        JSONObject renderer = new JSONObject();
-        renderer.put("pipeline", serializePipeline());
-
-        try {
-            FileHandle local = Gdx.files.local("graph.json");
-            OutputStreamWriter out = new OutputStreamWriter(local.write(false));
-            try {
-                renderer.writeJSONString(out);
-                out.flush();
-            } finally {
-                out.close();
-            }
-        } catch (IOException exp) {
-            exp.printStackTrace();
-            return false;
-        }
-
-        setDirty(false);
-
-        return true;
-    }
-
-    private JSONObject serializePipeline() {
+    public JSONObject serializePipeline() {
         JSONObject pipeline = new JSONObject();
 
         JSONArray objects = new JSONArray();
@@ -322,7 +296,8 @@ public class PipelineDesignTab extends SleepingTab {
         return pipeline;
     }
 
-    public void resize(int width, int height) {
+    @Override
+    public void resized(int width, int height) {
         graphContainer.resize(width, height);
     }
 }
