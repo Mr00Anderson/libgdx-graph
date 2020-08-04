@@ -4,9 +4,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.gempukku.graph.pipeline.PropertyType;
+import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import org.json.simple.JSONObject;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +19,8 @@ public class GraphBoxImpl implements GraphBox {
     private String type;
     private Window window;
     private List<GraphBoxPart> graphBoxParts = new LinkedList<>();
-    private Map<String, GraphBoxConnector> boxConnectors = new HashMap<>();
+    private Map<String, GraphBoxInputConnector> inputConnectors = new HashMap<>();
+    private Map<String, GraphBoxOutputConnector> outputConnectors = new HashMap<>();
 
     public GraphBoxImpl(String id, String type, String title, Skin skin) {
         this.id = id;
@@ -32,8 +35,13 @@ public class GraphBoxImpl implements GraphBox {
     }
 
     public void addTopConnector(String id) {
-        boxConnectors.put(id, new GraphBoxConnectorImpl(id, GraphBoxConnector.Side.Top,
-                GraphBoxConnector.CommunicationType.Input, PropertyType.PipelineParticipant, new Supplier<Float>() {
+        inputConnectors.put(id, new GraphBoxInputConnectorImpl(id, GraphBoxInputConnector.Side.Top,
+                new Predicate<PropertyType>() {
+                    @Override
+                    public boolean apply(@Nullable PropertyType propertyType) {
+                        return propertyType == PropertyType.PipelineParticipant;
+                    }
+                }, new Supplier<Float>() {
             @Override
             public Float get() {
                 return window.getWidth() / 2f;
@@ -42,8 +50,8 @@ public class GraphBoxImpl implements GraphBox {
     }
 
     public void addBottomConnector(String id) {
-        boxConnectors.put(id, new GraphBoxConnectorImpl(id, GraphBoxConnector.Side.Bottom,
-                GraphBoxConnector.CommunicationType.Output, PropertyType.PipelineParticipant, new Supplier<Float>() {
+        outputConnectors.put(id, new GraphBoxOutputConnectorImpl(id, GraphBoxOutputConnector.Side.Bottom,
+                PropertyType.PipelineParticipant, new Supplier<Float>() {
             @Override
             public Float get() {
                 return window.getWidth() / 2f;
@@ -60,27 +68,45 @@ public class GraphBoxImpl implements GraphBox {
         graphBoxParts.add(graphBoxPart);
         final Actor actor = graphBoxPart.getActor();
         window.add(actor).growX().row();
-        for (GraphBoxConnector connector : graphBoxPart.getConnectors()) {
-            String id = connector.getId();
-            boxConnectors.put(id + ":" + id,
-                    new GraphBoxConnectorImpl(id, connector.getSide(), connector.getCommunicationType(),
-                            connector.getPropertyType(), new Supplier<Float>() {
+        final GraphBoxInputConnector inputConnector = graphBoxPart.getInputConnector();
+        if (inputConnector != null) {
+            String id = inputConnector.getId();
+            inputConnectors.put(id + ":" + id,
+                    new GraphBoxInputConnectorImpl(id, inputConnector.getSide(),
+                            new Predicate<PropertyType>() {
+                                @Override
+                                public boolean apply(@Nullable PropertyType propertyType) {
+                                    return inputConnector.accepts(propertyType);
+                                }
+                            }, new Supplier<Float>() {
                         @Override
                         public Float get() {
                             return actor.getY() + actor.getHeight() / 2f;
                         }
                     }));
         }
+        GraphBoxOutputConnector outputConnector = graphBoxPart.getOutputConnector();
+        if (outputConnector != null) {
+            String id = outputConnector.getId();
+            outputConnectors.put(id + ":" + id,
+                    new GraphBoxOutputConnectorImpl(id, outputConnector.getSide(), outputConnector.getPropertyType(),
+                            new Supplier<Float>() {
+                                @Override
+                                public Float get() {
+                                    return actor.getY() + actor.getHeight() / 2f;
+                                }
+                            }));
+        }
     }
 
     @Override
-    public GraphBoxConnector getGraphBoxConnector(String id) {
-        return boxConnectors.get(id);
+    public Iterable<GraphBoxInputConnector> getGraphBoxInputConnectors() {
+        return inputConnectors.values();
     }
 
     @Override
-    public Iterable<GraphBoxConnector> getGraphBoxConnectors() {
-        return boxConnectors.values();
+    public Iterable<GraphBoxOutputConnector> getGraphBoxOutputConnectors() {
+        return outputConnectors.values();
     }
 
     @Override

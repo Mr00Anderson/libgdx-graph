@@ -6,11 +6,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.graph.pipeline.PropertyType;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
-import com.gempukku.libgdx.graph.ui.graph.GraphBoxConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxInputConnector;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class SplitBoxProducer implements GraphBoxProducer {
@@ -38,12 +42,10 @@ public class SplitBoxProducer implements GraphBoxProducer {
     private GraphBox createGraphBox(Skin skin, String id, float x, float y) {
         GraphBoxImpl end = new GraphBoxImpl(id, "Split", "Split", skin);
         end.setPosition(x, y);
-        end.addGraphBoxPart(createTwoPart(skin, id + ":v2", id + ":x", "V2", "X",
-                PropertyType.Vector2, PropertyType.Vector1));
-        end.addGraphBoxPart(createTwoPart(skin, id + ":v3", id + ":y", "V3", "Y",
-                PropertyType.Vector3, PropertyType.Vector1));
-        end.addGraphBoxPart(createTwoPart(skin, id + ":color", id + ":z", "Color", "Z",
-                PropertyType.Color, PropertyType.Vector1));
+        end.addGraphBoxPart(createTwoPart(skin, id + ":input", id + ":x", "Input", "X",
+                Predicates.in(Arrays.asList(PropertyType.Vector2, PropertyType.Vector3, PropertyType.Color)), PropertyType.Vector1));
+        end.addGraphBoxPart(createOutputPart(skin, id + ":y", "Y", PropertyType.Vector1));
+        end.addGraphBoxPart(createOutputPart(skin, id + ":z", "Z", PropertyType.Vector1));
         end.addGraphBoxPart(createOutputPart(skin, id + ":w", "W", PropertyType.Vector1));
 
         return end;
@@ -53,14 +55,14 @@ public class SplitBoxProducer implements GraphBoxProducer {
             Skin skin,
             String inputId, String outputId,
             String inputText, String outputText,
-            PropertyType inputType, PropertyType outputType) {
+            Predicate<PropertyType> inputType, PropertyType outputType) {
         HorizontalGroup horizontalGroup = new HorizontalGroup();
         horizontalGroup.addActor(new Label(inputText, skin));
         horizontalGroup.addActor(new Label(outputText, skin));
 
         GraphBoxPartImpl timePart = new GraphBoxPartImpl(horizontalGroup, null);
-        timePart.addConnector(inputId, GraphBoxConnector.Side.Left, GraphBoxConnector.CommunicationType.Input, inputType);
-        timePart.addConnector(outputId, GraphBoxConnector.Side.Right, GraphBoxConnector.CommunicationType.Output, outputType);
+        timePart.setInputConnector(inputId, GraphBoxInputConnector.Side.Left, inputType);
+        timePart.setOutputConnector(outputId, GraphBoxOutputConnector.Side.Right, outputType);
         return timePart;
     }
 
@@ -73,7 +75,7 @@ public class SplitBoxProducer implements GraphBoxProducer {
         horizontalGroup.addActor(new Label(text, skin));
 
         GraphBoxPartImpl timePart = new GraphBoxPartImpl(horizontalGroup, null);
-        timePart.addConnector(id, GraphBoxConnector.Side.Right, GraphBoxConnector.CommunicationType.Output, type);
+        timePart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, type);
         return timePart;
     }
 }

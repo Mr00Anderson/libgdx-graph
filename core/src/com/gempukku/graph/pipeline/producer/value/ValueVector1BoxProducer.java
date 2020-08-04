@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.graph.pipeline.PropertyType;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
-import com.gempukku.libgdx.graph.ui.graph.GraphBoxConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
@@ -66,7 +66,7 @@ public class ValueVector1BoxProducer implements GraphBoxProducer {
                         object.put("v1", Float.parseFloat(v1Input.getText()));
                     }
                 });
-        colorPart.addConnector(id, GraphBoxConnector.Side.Right, GraphBoxConnector.CommunicationType.Output, PropertyType.Vector1);
+        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, PropertyType.Vector1);
         return colorPart;
     }
 }

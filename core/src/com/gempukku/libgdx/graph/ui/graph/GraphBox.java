@@ -8,7 +8,7 @@ public interface GraphBox {
 
     JSONObject serializeGraphBox();
 
-    GraphBoxConnector getGraphBoxConnector(String id);
+    Iterable<GraphBoxInputConnector> getGraphBoxInputConnectors();
 
-    Iterable<GraphBoxConnector> getGraphBoxConnectors();
+    Iterable<GraphBoxOutputConnector> getGraphBoxOutputConnectors();
 }

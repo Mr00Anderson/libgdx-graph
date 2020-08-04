@@ -2,20 +2,14 @@ package com.gempukku.libgdx.graph.ui.graph;
 
 import com.gempukku.graph.pipeline.PropertyType;
 
-public interface GraphBoxConnector {
+public interface GraphBoxOutputConnector {
     enum Side {
-        Left, Right, Top, Bottom;
-    }
-
-    enum CommunicationType {
-        Input, Output;
+        Right, Bottom;
     }
 
     String getId();
 
     Side getSide();
-
-    CommunicationType getCommunicationType();
 
     PropertyType getPropertyType();
 

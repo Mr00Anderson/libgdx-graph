@@ -11,8 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.graph.pipeline.PropertyType;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
-import com.gempukku.libgdx.graph.ui.graph.GraphBoxConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
@@ -83,7 +83,7 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
                         object.put("color", image.getColor().toString());
                     }
                 });
-        colorPart.addConnector(id, GraphBoxConnector.Side.Right, GraphBoxConnector.CommunicationType.Output, PropertyType.Color);
+        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, PropertyType.Color);
         return colorPart;
     }
 }

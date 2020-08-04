@@ -129,29 +129,27 @@ public class GraphContainer extends WidgetGroup {
         if (drawingFrom != null) {
             NodeInfo nodeInfo = getNodeInfo(key);
             if (!drawingFrom.equals(nodeInfo)) {
-                GraphBoxConnector startConnector = drawingFrom.getConnector();
-                GraphBoxConnector otherConnector = nodeInfo.getConnector();
-                if (otherConnector.getCommunicationType() == startConnector.getCommunicationType()
-                        || otherConnector.getPropertyType() != startConnector.getPropertyType()) {
-                    // Either input-input, output-output, or different property type
+                if (drawingFrom.isInput() == nodeInfo.isInput()) {
                     drawingFrom = null;
                 } else {
-                    GraphBoxConnector outputConnector = startConnector.getCommunicationType() == GraphBoxConnector.CommunicationType.Output
-                            ? startConnector : otherConnector;
-                    GraphBoxConnector inputConnector = startConnector.getCommunicationType() == GraphBoxConnector.CommunicationType.Input
-                            ? startConnector : otherConnector;
-
-                    // Remove conflicting connections if needed
-                    for (GraphConnection oldConnection : findNodeConnections(inputConnector)) {
-                        removeConnection(oldConnection);
-                    }
-                    if (!outputConnector.getPropertyType().supportsMultiple()) {
-                        for (GraphConnection oldConnection : findNodeConnections(outputConnector)) {
+                    GraphBoxInputConnector inputConnector = drawingFrom.isInput() ? drawingFrom.getInputConnector() : nodeInfo.getInputConnector();
+                    GraphBoxOutputConnector outputConnector = drawingFrom.isInput() ? nodeInfo.getOutputConnector() : drawingFrom.getOutputConnector();
+                    if (!inputConnector.accepts(outputConnector.getPropertyType())) {
+                        // Either input-input, output-output, or different property type
+                        drawingFrom = null;
+                    } else {
+                        // Remove conflicting connections if needed
+                        for (GraphConnection oldConnection : findNodeConnections(inputConnector.getId())) {
                             removeConnection(oldConnection);
                         }
+                        if (!outputConnector.getPropertyType().supportsMultiple()) {
+                            for (GraphConnection oldConnection : findNodeConnections(outputConnector.getId())) {
+                                removeConnection(oldConnection);
+                            }
+                        }
+                        addGraphConnection(outputConnector.getId(), inputConnector.getId());
+                        drawingFrom = null;
                     }
-                    addGraphConnection(outputConnector.getId(), inputConnector.getId());
-                    drawingFrom = null;
                 }
             } else {
                 // Same node, that started at
@@ -159,10 +157,10 @@ public class GraphContainer extends WidgetGroup {
             }
         } else {
             NodeInfo clickedNode = getNodeInfo(key);
-            GraphBoxConnector connector = clickedNode.getConnector();
-            if (connector.getCommunicationType() == GraphBoxConnector.CommunicationType.Input
-                    || !connector.getPropertyType().supportsMultiple()) {
-                List<GraphConnection> nodeConnections = findNodeConnections(connector);
+            if (clickedNode.isInput()
+                    || !clickedNode.getOutputConnector().getPropertyType().supportsMultiple()) {
+                String id = clickedNode.isInput() ? clickedNode.getInputConnector().getId() : clickedNode.getOutputConnector().getId();
+                List<GraphConnection> nodeConnections = findNodeConnections(id);
                 if (nodeConnections.size() > 0) {
                     GraphConnection oldConnection = nodeConnections.get(0);
                     removeConnection(oldConnection);
@@ -179,11 +177,11 @@ public class GraphContainer extends WidgetGroup {
         }
     }
 
-    private List<GraphConnection> findNodeConnections(GraphBoxConnector connector) {
+    private List<GraphConnection> findNodeConnections(String id) {
         List<GraphConnection> result = new LinkedList<>();
         for (GraphConnection graphConnection : graphConnections) {
-            if (graphConnection.getFrom().getConnector().getId().equals(connector.getId())
-                    || graphConnection.getTo().getConnector().getId().equals(connector.getId()))
+            if (graphConnection.getFrom().getOutputConnector().getId().equals(id)
+                    || graphConnection.getTo().getInputConnector().getId().equals(id))
                 result.add(graphConnection);
         }
         return result;
@@ -250,7 +248,7 @@ public class GraphContainer extends WidgetGroup {
             Window window = graphBox.getWindow();
             float windowX = window.getX();
             float windowY = window.getY();
-            for (GraphBoxConnector connector : graphBox.getGraphBoxConnectors()) {
+            for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
                 switch (connector.getSide()) {
                     case Left:
                         from.set(windowX - CONNECTOR_LENGTH, windowY + connector.getOffset());
@@ -258,6 +256,15 @@ public class GraphContainer extends WidgetGroup {
                     case Top:
                         from.set(windowX + connector.getOffset(), windowY + window.getHeight() + CONNECTOR_LENGTH);
                         break;
+                }
+                Rectangle2D rectangle = new Rectangle2D.Float(
+                        from.x - CONNECTOR_RADIUS, from.y - CONNECTOR_RADIUS,
+                        CONNECTOR_RADIUS * 2, CONNECTOR_RADIUS * 2);
+
+                connectionNodeMap.put(connector.getId(), rectangle);
+            }
+            for (GraphBoxOutputConnector connector : graphBox.getGraphBoxOutputConnectors()) {
+                switch (connector.getSide()) {
                     case Right:
                         from.set(windowX + window.getWidth() + CONNECTOR_LENGTH, windowY + connector.getOffset());
                         break;
@@ -277,9 +284,9 @@ public class GraphContainer extends WidgetGroup {
         Vector2 to = new Vector2();
         for (GraphConnection graphConnection : graphConnections) {
             NodeInfo fromNode = graphConnection.getFrom();
-            calculateConnection(from, fromNode.getGraphBox(), fromNode.getConnector());
+            calculateConnection(from, fromNode.getGraphBox(), fromNode.getOutputConnector());
             NodeInfo toNode = graphConnection.getTo();
-            calculateConnection(to, toNode.getGraphBox(), toNode.getConnector());
+            calculateConnection(to, toNode.getGraphBox(), toNode.getInputConnector());
 
             Shape shape = basicStroke.createStrokedShape(new Line2D.Float(from.x, from.y, to.x, to.y));
 
@@ -289,7 +296,11 @@ public class GraphContainer extends WidgetGroup {
 
     private NodeInfo getNodeInfo(String id) {
         for (GraphBox graphBox : graphBoxes) {
-            for (GraphBoxConnector connector : graphBox.getGraphBoxConnectors()) {
+            for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
+                if (connector.getId().equals(id))
+                    return new NodeInfo(graphBox, connector);
+            }
+            for (GraphBoxOutputConnector connector : graphBox.getGraphBoxOutputConnectors()) {
                 if (connector.getId().equals(id))
                     return new NodeInfo(graphBox, connector);
             }
@@ -316,8 +327,17 @@ public class GraphContainer extends WidgetGroup {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         for (GraphBox graphBox : graphBoxes) {
-            for (GraphBoxConnector graphBoxConnector : graphBox.getGraphBoxConnectors()) {
-                calculateConnector(from, to, graphBox, graphBoxConnector);
+            for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
+                calculateConnector(from, to, graphBox, connector);
+                from.add(x, y);
+                to.add(x, y);
+
+                shapeRenderer.line(from, to);
+                shapeRenderer.circle(from.x, from.y, CONNECTOR_RADIUS);
+            }
+
+            for (GraphBoxOutputConnector connector : graphBox.getGraphBoxOutputConnectors()) {
+                calculateConnector(from, to, graphBox, connector);
                 from.add(x, y);
                 to.add(x, y);
 
@@ -328,9 +348,9 @@ public class GraphContainer extends WidgetGroup {
 
         for (GraphConnection graphConnection : graphConnections) {
             NodeInfo fromNode = graphConnection.getFrom();
-            calculateConnection(from, fromNode.getGraphBox(), fromNode.getConnector());
+            calculateConnection(from, fromNode.getGraphBox(), fromNode.getOutputConnector());
             NodeInfo toNode = graphConnection.getTo();
-            calculateConnection(to, toNode.getGraphBox(), toNode.getConnector());
+            calculateConnection(to, toNode.getGraphBox(), toNode.getInputConnector());
 
             from.add(x, y);
             to.add(x, y);
@@ -339,33 +359,46 @@ public class GraphContainer extends WidgetGroup {
         }
 
         if (drawingFrom != null) {
-            calculateConnection(from, drawingFrom.getGraphBox(), drawingFrom.getConnector());
-            shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            if (drawingFrom.isInput()) {
+                calculateConnection(from, drawingFrom.getGraphBox(), drawingFrom.getInputConnector());
+                shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            } else {
+                calculateConnection(from, drawingFrom.getGraphBox(), drawingFrom.getOutputConnector());
+                shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
+            }
         }
 
         shapeRenderer.end();
     }
 
-    private void calculateConnector(Vector2 from, Vector2 to, GraphBox graphBox, GraphBoxConnector graphBoxConnector) {
+    private void calculateConnector(Vector2 from, Vector2 to, GraphBox graphBox, GraphBoxOutputConnector connector) {
         Window window = graphBox.getWindow();
         float windowX = window.getX();
         float windowY = window.getY();
-        switch (graphBoxConnector.getSide()) {
-            case Left:
-                from.set(windowX - CONNECTOR_LENGTH, windowY + graphBoxConnector.getOffset());
-                to.set(windowX, windowY + graphBoxConnector.getOffset());
-                break;
-            case Top:
-                from.set(windowX + graphBoxConnector.getOffset(), windowY + window.getHeight() + CONNECTOR_LENGTH);
-                to.set(windowX + graphBoxConnector.getOffset(), windowY + window.getHeight());
-                break;
+        switch (connector.getSide()) {
             case Right:
-                from.set(windowX + window.getWidth() + CONNECTOR_LENGTH, windowY + graphBoxConnector.getOffset());
-                to.set(windowX + window.getWidth(), windowY + graphBoxConnector.getOffset());
+                from.set(windowX + window.getWidth() + CONNECTOR_LENGTH, windowY + connector.getOffset());
+                to.set(windowX + window.getWidth(), windowY + connector.getOffset());
                 break;
             case Bottom:
-                from.set(windowX + graphBoxConnector.getOffset(), windowY - CONNECTOR_LENGTH);
-                to.set(windowX + graphBoxConnector.getOffset(), windowY);
+                from.set(windowX + connector.getOffset(), windowY - CONNECTOR_LENGTH);
+                to.set(windowX + connector.getOffset(), windowY);
+                break;
+        }
+    }
+
+    private void calculateConnector(Vector2 from, Vector2 to, GraphBox graphBox, GraphBoxInputConnector connector) {
+        Window window = graphBox.getWindow();
+        float windowX = window.getX();
+        float windowY = window.getY();
+        switch (connector.getSide()) {
+            case Left:
+                from.set(windowX - CONNECTOR_LENGTH, windowY + connector.getOffset());
+                to.set(windowX, windowY + connector.getOffset());
+                break;
+            case Top:
+                from.set(windowX + connector.getOffset(), windowY + window.getHeight() + CONNECTOR_LENGTH);
+                to.set(windowX + connector.getOffset(), windowY + window.getHeight());
                 break;
         }
     }
@@ -383,22 +416,30 @@ public class GraphContainer extends WidgetGroup {
         shapeRenderer.updateMatrices();
     }
 
-    private void calculateConnection(Vector2 position, GraphBox graphBox, GraphBoxConnector graphBoxConnector) {
+    private void calculateConnection(Vector2 position, GraphBox graphBox, GraphBoxInputConnector connector) {
         Window window = graphBox.getWindow();
         float windowX = window.getX();
         float windowY = window.getY();
-        switch (graphBoxConnector.getSide()) {
+        switch (connector.getSide()) {
             case Left:
-                position.set(windowX - CONNECTOR_LENGTH, windowY + graphBoxConnector.getOffset());
+                position.set(windowX - CONNECTOR_LENGTH, windowY + connector.getOffset());
                 break;
             case Top:
-                position.set(windowX + graphBoxConnector.getOffset(), windowY + window.getHeight() + CONNECTOR_LENGTH);
+                position.set(windowX + connector.getOffset(), windowY + window.getHeight() + CONNECTOR_LENGTH);
                 break;
+        }
+    }
+
+    private void calculateConnection(Vector2 position, GraphBox graphBox, GraphBoxOutputConnector connector) {
+        Window window = graphBox.getWindow();
+        float windowX = window.getX();
+        float windowY = window.getY();
+        switch (connector.getSide()) {
             case Right:
-                position.set(windowX + window.getWidth() + CONNECTOR_LENGTH, windowY + graphBoxConnector.getOffset());
+                position.set(windowX + window.getWidth() + CONNECTOR_LENGTH, windowY + connector.getOffset());
                 break;
             case Bottom:
-                position.set(windowX + graphBoxConnector.getOffset(), windowY - CONNECTOR_LENGTH);
+                position.set(windowX + connector.getOffset(), windowY - CONNECTOR_LENGTH);
                 break;
         }
     }

@@ -6,7 +6,9 @@ import org.json.simple.JSONObject;
 public interface GraphBoxPart {
     Actor getActor();
 
-    Iterable<? extends GraphBoxConnector> getConnectors();
+    GraphBoxOutputConnector getOutputConnector();
+
+    GraphBoxInputConnector getInputConnector();
 
     void serializePart(JSONObject object);
 }

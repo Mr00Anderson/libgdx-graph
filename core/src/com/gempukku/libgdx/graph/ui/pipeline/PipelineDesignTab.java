@@ -128,8 +128,8 @@ public class PipelineDesignTab extends SleepingTab {
         JSONArray connections = new JSONArray();
         for (GraphConnection connection : graphContainer.getConnections()) {
             JSONObject conn = new JSONObject();
-            conn.put("from", connection.getFrom().getConnector().getId());
-            conn.put("to", connection.getTo().getConnector().getId());
+            conn.put("from", connection.getFrom().getOutputConnector().getId());
+            conn.put("to", connection.getTo().getInputConnector().getId());
             connections.add(conn);
         }
 

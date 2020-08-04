@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.graph.pipeline.PropertyType;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
-import com.gempukku.libgdx.graph.ui.graph.GraphBoxConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import org.json.simple.JSONObject;
 
@@ -50,7 +50,7 @@ public class ScreenSizeBoxProducer implements GraphBoxProducer {
         horizontalGroup.addActor(new Label(text, skin));
 
         GraphBoxPartImpl timePart = new GraphBoxPartImpl(horizontalGroup, null);
-        timePart.addConnector(id, GraphBoxConnector.Side.Right, GraphBoxConnector.CommunicationType.Output, type);
+        timePart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, type);
         return timePart;
     }
 }
