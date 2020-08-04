@@ -7,39 +7,22 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
-import com.gempukku.graph.pipeline.producer.part.MergeBoxProducer;
-import com.gempukku.graph.pipeline.producer.part.SplitBoxProducer;
-import com.gempukku.graph.pipeline.producer.provided.ScreenSizeBoxProducer;
-import com.gempukku.graph.pipeline.producer.provided.TimeBoxProducer;
-import com.gempukku.graph.pipeline.producer.value.ValueBooleanBoxProducer;
-import com.gempukku.graph.pipeline.producer.value.ValueColorBoxProducer;
-import com.gempukku.graph.pipeline.producer.value.ValueVector1BoxProducer;
-import com.gempukku.graph.pipeline.producer.value.ValueVector2BoxProducer;
-import com.gempukku.graph.pipeline.producer.value.ValueVector3BoxProducer;
-import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class GraphContainer extends WidgetGroup {
-    private Map<String, GraphBoxProducer> valueProducers = new LinkedHashMap<>();
-    private Map<String, GraphBoxProducer> providedProducers = new LinkedHashMap<>();
-    private Map<String, GraphBoxProducer> mathProducers = new LinkedHashMap<>();
-
     private static final float CONNECTOR_LENGTH = 10;
     private static final float CONNECTOR_RADIUS = 5;
 
@@ -52,25 +35,11 @@ public class GraphContainer extends WidgetGroup {
 
     private ShapeRenderer shapeRenderer;
     private Skin skin;
-    private PropertyProducerProvider propertyProducerProvider;
 
     private NodeInfo drawingFrom;
 
-    public GraphContainer(Skin skin, PropertyProducerProvider propertyProducerProvider) {
+    public GraphContainer(Skin skin, final PopupMenuProducer popupMenuProducer) {
         this.skin = skin;
-        this.propertyProducerProvider = propertyProducerProvider;
-
-        valueProducers.put("Color", new ValueColorBoxProducer());
-        valueProducers.put("Vector1", new ValueVector1BoxProducer());
-        valueProducers.put("Vector2", new ValueVector2BoxProducer());
-        valueProducers.put("Vector3", new ValueVector3BoxProducer());
-        valueProducers.put("Boolean", new ValueBooleanBoxProducer());
-
-        providedProducers.put("Time", new TimeBoxProducer());
-        providedProducers.put("Screen Size", new ScreenSizeBoxProducer());
-
-        mathProducers.put("Split", new SplitBoxProducer());
-        mathProducers.put("Merge", new MergeBoxProducer());
 
         shapeRenderer = new ShapeRenderer();
 
@@ -78,8 +47,10 @@ public class GraphContainer extends WidgetGroup {
                 new ClickListener(Input.Buttons.RIGHT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        if (!containedInWindow(x, y))
-                            createPopup(x, y);
+                        if (!containedInWindow(x, y)) {
+                            PopupMenu popupMenu = popupMenuProducer.createPopupMenu(x, y);
+                            popupMenu.showMenu(getStage(), x + getX(), y + getY());
+                        }
                     }
                 });
         addListener(
@@ -194,61 +165,17 @@ public class GraphContainer extends WidgetGroup {
         return result;
     }
 
-    private void createPopup(final float popupX, final float popupY) {
-        PopupMenu popupMenu = new PopupMenu();
-
-        createSubMenu(popupX, popupY, popupMenu, "Values", this.valueProducers);
-        createSubMenu(popupX, popupY, popupMenu, "Provided", providedProducers);
-        createSubMenu(popupX, popupY, popupMenu, "Math", mathProducers);
-
-        popupMenu.addSeparator();
-        for (final PropertyProducer propertyProducer : propertyProducerProvider.getPropertyProducers()) {
-            final String name = propertyProducer.getName();
-            MenuItem valueMenuItem = new MenuItem(name);
-            valueMenuItem.addListener(
-                    new ClickListener(Input.Buttons.LEFT) {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            String id = UUID.randomUUID().toString().replace("-", "");
-                            GraphBox graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
-                            addGraphBox(graphBox, name, true, popupX, popupY);
-                        }
-                    });
-            popupMenu.addItem(valueMenuItem);
-        }
-
-        popupMenu.showMenu(getStage(), popupX + getX(), popupY + getY());
-    }
-
-    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName, Map<String, GraphBoxProducer> producerMap) {
-        MenuItem valuesMenuItem = new MenuItem(menuName);
-        PopupMenu valuesMenu = new PopupMenu();
-        for (Map.Entry<String, GraphBoxProducer> valueEntry : producerMap.entrySet()) {
-            final String name = valueEntry.getKey();
-            final GraphBoxProducer value = valueEntry.getValue();
-            MenuItem valueMenuItem = new MenuItem(name);
-            valueMenuItem.addListener(
-                    new ClickListener(Input.Buttons.LEFT) {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            String id = UUID.randomUUID().toString().replace("-", "");
-                            GraphBox graphBox = value.createDefault(skin, id);
-                            addGraphBox(graphBox, name, true, popupX, popupY);
-                        }
-                    });
-            valuesMenu.addItem(valueMenuItem);
-        }
-        valuesMenuItem.setSubMenu(valuesMenu);
-        popupMenu.addItem(valuesMenuItem);
-    }
-
-    public void addGraphBox(GraphBox graphBox, String windowTitle, boolean closeable, float x, float y) {
+    public void addGraphBox(final GraphBox graphBox, String windowTitle, boolean closeable, float x, float y) {
         graphBoxes.add(graphBox);
-        Window window = new Window(windowTitle, skin);
+        VisWindow window = new VisWindow(windowTitle) {
+            @Override
+            protected void close() {
+                removeGraphBox(graphBox);
+                super.close();
+            }
+        };
         if (closeable) {
-            Table titleTable = window.getTitleTable();
-            TextButton close = new TextButton("Close", skin);
-            titleTable.add(close);
+            window.addCloseButton();
         }
         window.add(graphBox.getActor()).grow().row();
         window.setPosition(x, y);
@@ -256,6 +183,19 @@ public class GraphContainer extends WidgetGroup {
         window.setSize(Math.max(150, window.getPrefWidth()), window.getPrefHeight());
         graphBoxWindowMap.put(graphBox, window);
         invalidate();
+    }
+
+    private void removeGraphBox(GraphBox graphBox) {
+        Iterator<GraphConnection> graphConnectionIterator = graphConnections.iterator();
+        while (graphConnectionIterator.hasNext()) {
+            GraphConnection graphConnection = graphConnectionIterator.next();
+            if (graphConnection.getFrom().getGraphBox() == graphBox
+                    || graphConnection.getTo().getGraphBox() == graphBox)
+                graphConnectionIterator.remove();
+        }
+
+        graphBoxWindowMap.remove(graphBox);
+        graphBoxes.remove(graphBox);
     }
 
     public void addGraphConnection(String from, String to) {
@@ -270,8 +210,12 @@ public class GraphContainer extends WidgetGroup {
     @Override
     public void layout() {
         super.layout();
-        fire(GraphChangedEvent.INSTANCE);
+        recreateClickableShapes();
 
+        fire(GraphChangedEvent.INSTANCE);
+    }
+
+    private void recreateClickableShapes() {
         connectionNodeMap.clear();
         connections.clear();
 

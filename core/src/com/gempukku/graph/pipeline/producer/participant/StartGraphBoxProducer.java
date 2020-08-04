@@ -38,6 +38,13 @@ public class StartGraphBoxProducer implements GraphBoxProducer {
 
     @Override
     public GraphBox createDefault(Skin skin, String id) {
-        return null;
+        GraphBoxImpl start = new GraphBoxImpl(id, "PipelineStart", skin);
+        start.addBottomConnector(id + ":output");
+        start.addInputGraphPart(skin,
+                id + ":background", "Background color", Predicates.equalTo(PropertyType.Color));
+        start.addInputGraphPart(skin,
+                id + ":size", "Size", Predicates.equalTo(PropertyType.Vector2));
+
+        return start;
     }
 }

@@ -18,6 +18,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.graph.pipeline.PipelineSerializer;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
+import com.gempukku.graph.pipeline.producer.part.MergeBoxProducer;
+import com.gempukku.graph.pipeline.producer.part.SplitBoxProducer;
+import com.gempukku.graph.pipeline.producer.provided.ScreenSizeBoxProducer;
+import com.gempukku.graph.pipeline.producer.provided.TimeBoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueBooleanBoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueColorBoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueVector1BoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueVector2BoxProducer;
+import com.gempukku.graph.pipeline.producer.value.ValueVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.SleepingTab;
 import com.gempukku.libgdx.graph.ui.UIPipelineLoaderCallback;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
@@ -25,8 +34,8 @@ import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
 import com.gempukku.libgdx.graph.ui.graph.GraphConnection;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
+import com.gempukku.libgdx.graph.ui.graph.PopupMenuProducer;
 import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
-import com.gempukku.libgdx.graph.ui.graph.PropertyProducerProvider;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector1BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector3BoxProducer;
@@ -38,7 +47,6 @@ import org.json.simple.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,9 +54,12 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PipelineDesignTab extends SleepingTab {
+    private Map<String, GraphBoxProducer> valueProducers = new LinkedHashMap<>();
+    private Map<String, GraphBoxProducer> providedProducers = new LinkedHashMap<>();
+    private Map<String, GraphBoxProducer> mathProducers = new LinkedHashMap<>();
     private Map<String, PropertyBoxProducer> propertyProducers = new LinkedHashMap<>();
+
     private List<PropertyBox> propertyBoxes = new LinkedList<>();
-    private Map<PropertyBox, Window> propertyWindows = new HashMap<>();
 
     private final VerticalGroup pipelineProperties;
     private final GraphContainer graphContainer;
@@ -58,6 +69,18 @@ public class PipelineDesignTab extends SleepingTab {
 
     public PipelineDesignTab(Skin skin) {
         super(true, false);
+
+        valueProducers.put("Color", new ValueColorBoxProducer());
+        valueProducers.put("Vector1", new ValueVector1BoxProducer());
+        valueProducers.put("Vector2", new ValueVector2BoxProducer());
+        valueProducers.put("Vector3", new ValueVector3BoxProducer());
+        valueProducers.put("Boolean", new ValueBooleanBoxProducer());
+
+        providedProducers.put("Time", new TimeBoxProducer());
+        providedProducers.put("Screen Size", new ScreenSizeBoxProducer());
+
+        mathProducers.put("Split", new SplitBoxProducer());
+        mathProducers.put("Merge", new MergeBoxProducer());
 
         propertyProducers.put("Vector1", new PropertyVector1BoxProducer());
         propertyProducers.put("Vector2", new PropertyVector2BoxProducer());
@@ -90,13 +113,7 @@ public class PipelineDesignTab extends SleepingTab {
 
         leftTable.add(buttons).growX().row();
 
-        graphContainer = new GraphContainer(skin,
-                new PropertyProducerProvider() {
-                    @Override
-                    public Iterable<? extends PropertyProducer> getPropertyProducers() {
-                        return propertyBoxes;
-                    }
-                });
+        graphContainer = new GraphContainer(skin, createPopupMenuProducer());
         graphContainer.addListener(
                 new GraphChangedListener() {
                     @Override
@@ -121,6 +138,59 @@ public class PipelineDesignTab extends SleepingTab {
         }
 
         contentTable.add(splitPane).grow().row();
+    }
+
+    private PopupMenuProducer createPopupMenuProducer() {
+        return new PopupMenuProducer() {
+            @Override
+            public PopupMenu createPopupMenu(final float popupX, final float popupY) {
+                PopupMenu popupMenu = new PopupMenu();
+
+                createSubMenu(popupX, popupY, popupMenu, "Values", valueProducers);
+                createSubMenu(popupX, popupY, popupMenu, "Provided", providedProducers);
+                createSubMenu(popupX, popupY, popupMenu, "Math", mathProducers);
+
+                popupMenu.addSeparator();
+                for (final PropertyProducer propertyProducer : propertyBoxes) {
+                    final String name = propertyProducer.getName();
+                    MenuItem valueMenuItem = new MenuItem(name);
+                    valueMenuItem.addListener(
+                            new ClickListener(Input.Buttons.LEFT) {
+                                @Override
+                                public void clicked(InputEvent event, float x, float y) {
+                                    String id = UUID.randomUUID().toString().replace("-", "");
+                                    GraphBox graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
+                                    graphContainer.addGraphBox(graphBox, name, true, popupX, popupY);
+                                }
+                            });
+                    popupMenu.addItem(valueMenuItem);
+                }
+
+                return popupMenu;
+            }
+        };
+    }
+
+    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName, Map<String, GraphBoxProducer> producerMap) {
+        MenuItem valuesMenuItem = new MenuItem(menuName);
+        PopupMenu valuesMenu = new PopupMenu();
+        for (Map.Entry<String, GraphBoxProducer> valueEntry : producerMap.entrySet()) {
+            final String name = valueEntry.getKey();
+            final GraphBoxProducer value = valueEntry.getValue();
+            MenuItem valueMenuItem = new MenuItem(name);
+            valueMenuItem.addListener(
+                    new ClickListener(Input.Buttons.LEFT) {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            String id = UUID.randomUUID().toString().replace("-", "");
+                            GraphBox graphBox = value.createDefault(skin, id);
+                            graphContainer.addGraphBox(graphBox, name, true, popupX, popupY);
+                        }
+                    });
+            valuesMenu.addItem(valueMenuItem);
+        }
+        valuesMenuItem.setSubMenu(valuesMenu);
+        popupMenu.addItem(valuesMenuItem);
     }
 
     private VerticalGroup createPropertiesUI(final Skin skin) {
@@ -194,6 +264,11 @@ public class PipelineDesignTab extends SleepingTab {
     @Override
     public void awaken() {
 
+    }
+
+    @Override
+    public void dispose() {
+        graphContainer.dispose();
     }
 
     @Override
