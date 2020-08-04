@@ -6,8 +6,6 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import org.json.simple.JSONObject;
 
-import java.util.UUID;
-
 public class ObjectRendererBoxProducer implements GraphBoxProducer {
     @Override
     public boolean supportsType(String type) {
@@ -29,9 +27,7 @@ public class ObjectRendererBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, float x, float y) {
-        String id = UUID.randomUUID().toString().replace("-", "");
-
+    public GraphBox createDefault(Skin skin, String id, float x, float y) {
         GraphBoxImpl start = new GraphBoxImpl(id, "ObjectRenderer", "Object Renderer", skin);
         start.setPosition(x, y);
         start.addTopConnector(id + ":input");

@@ -8,8 +8,6 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
-import java.util.UUID;
-
 public class MergeBoxProducer implements GraphBoxProducer {
     @Override
     public boolean supportsType(String type) {
@@ -26,9 +24,7 @@ public class MergeBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, float x, float y) {
-        String id = UUID.randomUUID().toString().replace("-", "");
-
+    public GraphBox createDefault(Skin skin, String id, float x, float y) {
         return createGraphBox(skin, id, x, y);
     }
 

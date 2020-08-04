@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class GraphContainer extends WidgetGroup {
     private Map<String, GraphBoxProducer> valueProducers = new LinkedHashMap<>();
@@ -210,7 +211,8 @@ public class GraphContainer extends WidgetGroup {
                     new ClickListener(Input.Buttons.LEFT) {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            GraphBox graphBox = value.createDefault(skin, popupX, popupY);
+                            String id = UUID.randomUUID().toString().replace("-", "");
+                            GraphBox graphBox = value.createDefault(skin, id, popupX, popupY);
                             addGraphBox(graphBox);
                         }
                     });

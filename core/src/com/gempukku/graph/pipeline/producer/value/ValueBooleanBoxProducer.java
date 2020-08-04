@@ -11,8 +11,6 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import org.json.simple.JSONObject;
 
-import java.util.UUID;
-
 public class ValueBooleanBoxProducer implements GraphBoxProducer {
     @Override
     public boolean supportsType(String type) {
@@ -30,9 +28,7 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, float x, float y) {
-        String id = UUID.randomUUID().toString().replace("-", "");
-
+    public GraphBox createDefault(Skin skin, String id, float x, float y) {
         return createGraphBox(skin, id, x, y, false);
     }
 

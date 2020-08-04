@@ -13,8 +13,6 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
-import java.util.UUID;
-
 public class ValueVector1BoxProducer implements GraphBoxProducer {
     @Override
     public boolean supportsType(String type) {
@@ -32,9 +30,7 @@ public class ValueVector1BoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, float x, float y) {
-        String id = UUID.randomUUID().toString().replace("-", "");
-
+    public GraphBox createDefault(Skin skin, String id, float x, float y) {
         return createGraphBox(skin, id, x, y, 0);
     }
 

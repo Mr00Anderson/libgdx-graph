@@ -9,5 +9,5 @@ public interface GraphBoxProducer {
 
     GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject);
 
-    GraphBox createDefault(Skin skin, float x, float y);
+    GraphBox createDefault(Skin skin, String id, float x, float y);
 }

@@ -25,7 +25,7 @@ public class EndGraphBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, float x, float y) {
+    public GraphBox createDefault(Skin skin, String id, float x, float y) {
         return null;
     }
 }
