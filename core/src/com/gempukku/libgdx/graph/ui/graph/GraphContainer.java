@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
+import com.gempukku.graph.pipeline.producer.part.MergeBoxProducer;
 import com.gempukku.graph.pipeline.producer.part.SplitBoxProducer;
 import com.gempukku.graph.pipeline.producer.provided.ScreenSizeBoxProducer;
 import com.gempukku.graph.pipeline.producer.provided.TimeBoxProducer;
@@ -63,6 +64,7 @@ public class GraphContainer extends WidgetGroup {
         providedProducers.put("Screen Size", new ScreenSizeBoxProducer());
 
         mathProducers.put("Split", new SplitBoxProducer());
+        mathProducers.put("Merge", new MergeBoxProducer());
 
         shapeRenderer = new ShapeRenderer();
 

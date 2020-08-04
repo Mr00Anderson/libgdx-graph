@@ -8,13 +8,12 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
-import java.util.Arrays;
 import java.util.UUID;
 
-public class SplitBoxProducer implements GraphBoxProducer {
+public class MergeBoxProducer implements GraphBoxProducer {
     @Override
     public boolean supportsType(String type) {
-        return type.equals("Split");
+        return type.equals("Merge");
     }
 
     @Override
@@ -34,17 +33,19 @@ public class SplitBoxProducer implements GraphBoxProducer {
     }
 
     private GraphBox createGraphBox(Skin skin, String id, float x, float y) {
-        GraphBoxImpl end = new GraphBoxImpl(id, "Split", "Split", skin);
+        GraphBoxImpl end = new GraphBoxImpl(id, "Merge", "Merge", skin);
         end.setPosition(x, y);
         end.addTwoSideGraphPart(skin,
-                id + ":input", "Input", Predicates.in(Arrays.asList(PropertyType.Vector2, PropertyType.Vector3, PropertyType.Color)),
-                id + ":x", "X", PropertyType.Vector1);
-        end.addOutputGraphPart(skin,
-                id + ":y", "Y", PropertyType.Vector1);
-        end.addOutputGraphPart(skin,
-                id + ":z", "Z", PropertyType.Vector1);
-        end.addOutputGraphPart(skin,
-                id + ":w", "W", PropertyType.Vector1);
+                id + ":x", "X", Predicates.equalTo(PropertyType.Vector1),
+                id + ":v2", "V2", PropertyType.Vector2);
+        end.addTwoSideGraphPart(skin,
+                id + ":y", "Y", Predicates.equalTo(PropertyType.Vector1),
+                id + ":v3", "V3", PropertyType.Vector3);
+        end.addTwoSideGraphPart(skin,
+                id + ":z", "Z", Predicates.equalTo(PropertyType.Vector1),
+                id + ":color", "Color", PropertyType.Color);
+        end.addInputGraphPart(skin,
+                id + ":w", "W", Predicates.equalTo(PropertyType.Vector1));
         return end;
     }
 }

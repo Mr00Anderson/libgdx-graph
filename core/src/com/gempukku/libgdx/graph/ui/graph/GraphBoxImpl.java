@@ -1,8 +1,11 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.utils.Align;
 import com.gempukku.graph.pipeline.PropertyType;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -62,6 +65,47 @@ public class GraphBoxImpl implements GraphBox {
     public void setPosition(float x, float y) {
         window.setPosition(x, y);
         window.invalidate();
+    }
+
+    public void addTwoSideGraphPart(Skin skin,
+                                    String inputId, String inputText, Predicate<PropertyType> inputType,
+                                    String outputId, String outputText, PropertyType outputType) {
+        Table table = new Table();
+        table.add(new Label(inputText, skin)).grow();
+        Label outputLabel = new Label(outputText, skin);
+        outputLabel.setAlignment(Align.right);
+        table.add(outputLabel).grow();
+        table.row();
+
+        GraphBoxPartImpl graphBoxPart = new GraphBoxPartImpl(table, null);
+        graphBoxPart.setInputConnector(inputId, GraphBoxInputConnector.Side.Left, inputType);
+        graphBoxPart.setOutputConnector(outputId, GraphBoxOutputConnector.Side.Right, outputType);
+        addGraphBoxPart(graphBoxPart);
+    }
+
+    public void addInputGraphPart(Skin skin,
+                                  String inputId, String inputText, Predicate<PropertyType> inputType) {
+        Table table = new Table();
+        table.add(new Label(inputText, skin)).grow().row();
+
+        GraphBoxPartImpl graphBoxPart = new GraphBoxPartImpl(table, null);
+        graphBoxPart.setInputConnector(inputId, GraphBoxInputConnector.Side.Left, inputType);
+        addGraphBoxPart(graphBoxPart);
+    }
+
+    public void addOutputGraphPart(
+            Skin skin,
+            String id,
+            String text,
+            PropertyType type) {
+        Table table = new Table();
+        Label outputLabel = new Label(text, skin);
+        outputLabel.setAlignment(Align.right);
+        table.add(outputLabel).grow().row();
+
+        GraphBoxPartImpl graphBoxPart = new GraphBoxPartImpl(table, null);
+        graphBoxPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, type);
+        addGraphBoxPart(graphBoxPart);
     }
 
     public void addGraphBoxPart(GraphBoxPart graphBoxPart) {
