@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
+import com.gempukku.graph.pipeline.producer.part.SplitBoxProducer;
+import com.gempukku.graph.pipeline.producer.provided.ScreenSizeBoxProducer;
+import com.gempukku.graph.pipeline.producer.provided.TimeBoxProducer;
 import com.gempukku.graph.pipeline.producer.value.ValueBooleanBoxProducer;
 import com.gempukku.graph.pipeline.producer.value.ValueColorBoxProducer;
 import com.gempukku.graph.pipeline.producer.value.ValueVector1BoxProducer;
@@ -30,6 +33,8 @@ import java.util.Map;
 
 public class GraphContainer extends WidgetGroup {
     private Map<String, GraphBoxProducer> valueProducers = new LinkedHashMap<>();
+    private Map<String, GraphBoxProducer> providedProducers = new LinkedHashMap<>();
+    private Map<String, GraphBoxProducer> mathProducers = new LinkedHashMap<>();
 
     private static final float CONNECTOR_LENGTH = 10;
     private static final float CONNECTOR_RADIUS = 5;
@@ -47,11 +52,17 @@ public class GraphContainer extends WidgetGroup {
 
     public GraphContainer(Skin skin) {
         this.skin = skin;
+
         valueProducers.put("Color", new ValueColorBoxProducer());
         valueProducers.put("Vector1", new ValueVector1BoxProducer());
         valueProducers.put("Vector2", new ValueVector2BoxProducer());
         valueProducers.put("Vector3", new ValueVector3BoxProducer());
         valueProducers.put("Boolean", new ValueBooleanBoxProducer());
+
+        providedProducers.put("Time", new TimeBoxProducer());
+        providedProducers.put("Screen Size", new ScreenSizeBoxProducer());
+
+        mathProducers.put("Split", new SplitBoxProducer());
 
         shapeRenderer = new ShapeRenderer();
 
@@ -180,10 +191,18 @@ public class GraphContainer extends WidgetGroup {
 
     private void createPopup(final float popupX, final float popupY) {
         PopupMenu popupMenu = new PopupMenu();
-        MenuItem valuesMenuItem = new MenuItem("Values");
 
+        createSubMenu(popupX, popupY, popupMenu, "Values", this.valueProducers);
+        createSubMenu(popupX, popupY, popupMenu, "Provided", providedProducers);
+        createSubMenu(popupX, popupY, popupMenu, "Math", mathProducers);
+
+        popupMenu.showMenu(getStage(), popupX + getX(), popupY + getY());
+    }
+
+    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName, Map<String, GraphBoxProducer> producerMap) {
+        MenuItem valuesMenuItem = new MenuItem(menuName);
         PopupMenu valuesMenu = new PopupMenu();
-        for (Map.Entry<String, GraphBoxProducer> valueEntry : valueProducers.entrySet()) {
+        for (Map.Entry<String, GraphBoxProducer> valueEntry : producerMap.entrySet()) {
             String name = valueEntry.getKey();
             final GraphBoxProducer value = valueEntry.getValue();
             MenuItem valueMenuItem = new MenuItem(name);
@@ -197,11 +216,8 @@ public class GraphContainer extends WidgetGroup {
                     });
             valuesMenu.addItem(valueMenuItem);
         }
-
         valuesMenuItem.setSubMenu(valuesMenu);
         popupMenu.addItem(valuesMenuItem);
-
-        popupMenu.showMenu(getStage(), popupX + getX(), popupY + getY());
     }
 
     public void addGraphBox(GraphBox graphBox) {
