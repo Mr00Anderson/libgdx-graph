@@ -27,6 +27,7 @@ public class StartGraphBoxProducer implements GraphBoxProducer {
         start.setPosition(x, y);
         start.addBottomConnector(id + ":output");
         start.addGraphBoxPart(createColorPart(skin, id + ":background"));
+        start.addGraphBoxPart(createSizePart(skin, id + ":size"));
 
         return start;
     }
@@ -34,6 +35,15 @@ public class StartGraphBoxProducer implements GraphBoxProducer {
     @Override
     public GraphBox createDefault(Skin skin, float x, float y) {
         return null;
+    }
+
+    private GraphBoxPartImpl createSizePart(Skin skin, String id) {
+        HorizontalGroup horizontalGroup = new HorizontalGroup();
+        horizontalGroup.addActor(new Label("Size", skin));
+
+        GraphBoxPartImpl sizePart = new GraphBoxPartImpl(horizontalGroup, null);
+        sizePart.addConnector(id, GraphBoxConnector.Side.Left, GraphBoxConnector.CommunicationType.Input, PropertyType.Vector2);
+        return sizePart;
     }
 
     private GraphBoxPartImpl createColorPart(Skin skin, String id) {

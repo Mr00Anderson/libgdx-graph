@@ -1,6 +1,7 @@
 package com.gempukku.graph.pipeline.producer.value;
 
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.graph.pipeline.PropertyType;
 import com.gempukku.graph.pipeline.producer.GraphBoxProducer;
@@ -63,7 +64,9 @@ public class ValueVector2BoxProducer implements GraphBoxProducer {
         v2Input.setText(String.valueOf(v2));
 
         HorizontalGroup horizontalGroup = new HorizontalGroup();
+        horizontalGroup.addActor(new Label("x", skin));
         horizontalGroup.addActor(v1Input);
+        horizontalGroup.addActor(new Label("y", skin));
         horizontalGroup.addActor(v2Input);
 
         GraphBoxPartImpl colorPart = new GraphBoxPartImpl(horizontalGroup,
