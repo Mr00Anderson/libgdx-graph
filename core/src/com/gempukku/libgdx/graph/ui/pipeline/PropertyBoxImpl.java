@@ -11,16 +11,14 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import org.json.simple.JSONObject;
 
 public class PropertyBoxImpl extends Table implements PropertyBox {
-    private String id;
     private String type;
     private PropertyType propertyType;
     private PropertyDefaultBox propertyDefaultBox;
     private TextField textField;
 
-    public PropertyBoxImpl(Skin skin, String id, String type, PropertyType propertyType,
+    public PropertyBoxImpl(Skin skin, String type, PropertyType propertyType,
                            PropertyDefaultBox propertyDefaultBox) {
         super(skin);
-        this.id = id;
         this.type = type;
         this.propertyType = propertyType;
         this.propertyDefaultBox = propertyDefaultBox;
@@ -42,8 +40,8 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
     @Override
     public JSONObject serializeProperty() {
         JSONObject result = new JSONObject();
-        result.put("id", id);
         result.put("type", type);
+        result.put("name", getName());
         propertyDefaultBox.serializeDefault(result);
         return result;
     }

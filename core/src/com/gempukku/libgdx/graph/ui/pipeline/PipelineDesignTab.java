@@ -223,8 +223,7 @@ public class PipelineDesignTab extends SleepingTab {
                     new ClickListener(Input.Buttons.LEFT) {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            String id = UUID.randomUUID().toString().replace("-", "");
-                            PropertyBox defaultPropertyBox = value.createDefaultPropertyBox(skin, id);
+                            PropertyBox defaultPropertyBox = value.createDefaultPropertyBox(skin);
                             addPropertyBox(skin, name, defaultPropertyBox);
                         }
                     });

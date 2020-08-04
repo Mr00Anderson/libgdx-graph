@@ -8,5 +8,5 @@ public interface PropertyBoxProducer {
 
     PropertyBox createPropertyBox(Skin skin, JSONObject jsonObject);
 
-    PropertyBox createDefaultPropertyBox(Skin skin, String id);
+    PropertyBox createDefaultPropertyBox(Skin skin);
 }
