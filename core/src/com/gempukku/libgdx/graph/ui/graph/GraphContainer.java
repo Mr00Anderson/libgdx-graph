@@ -175,6 +175,7 @@ public class GraphContainer extends WidgetGroup {
                 super.close();
             }
         };
+        window.setKeepWithinParent(true);
         if (closeable) {
             window.addCloseButton();
         }
