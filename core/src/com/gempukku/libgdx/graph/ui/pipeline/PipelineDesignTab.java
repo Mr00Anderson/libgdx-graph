@@ -64,21 +64,9 @@ public class PipelineDesignTab extends AwareTab {
         leftTable.add(propertiesScroll).grow().row();
         HorizontalGroup buttons = new HorizontalGroup();
         buttons.align(Align.left);
-        buttons.addActor(new TextButton("+", skin));
-
-        TextButton save = new TextButton("Save", skin);
-        save.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        save();
-                    }
-                });
-        buttons.addActor(save);
-
         leftTable.add(buttons).growX().row();
 
-        graphContainer = new GraphContainer(skin, createPopupMenuProducer());
+        graphContainer = new GraphContainer(createPopupMenuProducer());
         graphContainer.addListener(
                 new GraphChangedListener() {
                     @Override
@@ -94,7 +82,7 @@ public class PipelineDesignTab extends AwareTab {
         try {
             InputStream stream = source.read();
             try {
-                PipelineSerializer.loadPipeline(stream, new UIPipelineLoaderCallback(skin, graphContainer));
+                PipelineSerializer.loadPipeline(stream, new UIPipelineLoaderCallback(skin, this, graphContainer));
             } finally {
                 stream.close();
             }
@@ -202,7 +190,7 @@ public class PipelineDesignTab extends AwareTab {
         return menu;
     }
 
-    private void addPropertyBox(Skin skin, String type, final PropertyBox propertyBox) {
+    public void addPropertyBox(Skin skin, String type, final PropertyBox propertyBox) {
         propertyBoxes.add(propertyBox);
         final Actor actor = propertyBox.getActor();
 

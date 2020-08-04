@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 public interface PropertyBoxProducer {
     boolean supportsType(String type);
 
-    PropertyBox createPropertyBox(Skin skin, JSONObject jsonObject);
+    PropertyBox createPropertyBox(Skin skin, String name, JSONObject jsonObject);
 
     PropertyBox createDefaultPropertyBox(Skin skin);
 }

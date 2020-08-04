@@ -9,7 +9,7 @@ public interface PipelineLoaderCallback {
 
     void addPipelineParticipantConnection(String from, String to);
 
-    void addPipelineProperty(String type, JSONObject data);
+    void addPipelineProperty(String type, String name, JSONObject data);
 
     void end();
 }

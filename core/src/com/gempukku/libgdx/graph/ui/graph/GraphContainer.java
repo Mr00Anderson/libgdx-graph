@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -34,13 +33,10 @@ public class GraphContainer extends WidgetGroup {
     private Map<GraphConnection, Shape> connections = new HashMap<>();
 
     private ShapeRenderer shapeRenderer;
-    private Skin skin;
 
     private NodeInfo drawingFrom;
 
-    public GraphContainer(Skin skin, final PopupMenuProducer popupMenuProducer) {
-        this.skin = skin;
-
+    public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
 
         addListener(
@@ -168,6 +164,11 @@ public class GraphContainer extends WidgetGroup {
     public void addGraphBox(final GraphBox graphBox, String windowTitle, boolean closeable, float x, float y) {
         graphBoxes.add(graphBox);
         VisWindow window = new VisWindow(windowTitle) {
+            @Override
+            protected void positionChanged() {
+                invalidateHierarchy();
+            }
+
             @Override
             protected void close() {
                 removeGraphBox(graphBox);

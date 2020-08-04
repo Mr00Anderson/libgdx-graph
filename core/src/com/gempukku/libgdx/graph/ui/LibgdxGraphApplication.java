@@ -48,5 +48,7 @@ public class LibgdxGraphApplication extends ApplicationAdapter {
         libgdxGraphScreen.dispose();
         skin.dispose();
         stage.dispose();
+
+        VisUI.dispose();
     }
 }

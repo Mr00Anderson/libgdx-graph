@@ -22,19 +22,19 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer {
     }
 
     @Override
-    public PropertyBox createPropertyBox(Skin skin, JSONObject jsonObject) {
+    public PropertyBox createPropertyBox(Skin skin, String name, JSONObject jsonObject) {
         float x = ((Number) jsonObject.get("x")).floatValue();
         float y = ((Number) jsonObject.get("y")).floatValue();
         float z = ((Number) jsonObject.get("z")).floatValue();
-        return createPropertyBoxDefault(skin, x, y, z);
+        return createPropertyBoxDefault(skin, name, x, y, z);
     }
 
     @Override
     public PropertyBox createDefaultPropertyBox(Skin skin) {
-        return createPropertyBoxDefault(skin, 0f, 0f, 0f);
+        return createPropertyBoxDefault(skin, "New Vector3", 0f, 0f, 0f);
     }
 
-    private PropertyBox createPropertyBoxDefault(Skin skin, float v1, float v2, float v3) {
+    private PropertyBox createPropertyBoxDefault(Skin skin, String name, float v1, float v2, float v3) {
         final VisValidatableTextField v1Input = new VisValidatableTextField(new Validators.FloatValidator()) {
             @Override
             public float getPrefWidth() {
@@ -67,6 +67,7 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer {
         table.add(v3Input).grow();
 
         return new PropertyBoxImpl(skin, "Vector3",
+                name,
                 PropertyType.Vector3,
                 new PropertyDefaultBox() {
                     @Override

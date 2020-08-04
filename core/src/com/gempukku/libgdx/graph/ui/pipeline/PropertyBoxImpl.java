@@ -16,14 +16,14 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
     private PropertyDefaultBox propertyDefaultBox;
     private TextField textField;
 
-    public PropertyBoxImpl(Skin skin, String type, PropertyType propertyType,
+    public PropertyBoxImpl(Skin skin, String type, String name, PropertyType propertyType,
                            PropertyDefaultBox propertyDefaultBox) {
         super(skin);
         this.type = type;
         this.propertyType = propertyType;
         this.propertyDefaultBox = propertyDefaultBox;
 
-        textField = new TextField("", skin);
+        textField = new TextField(name, skin);
         Table headerTable = new Table(skin);
         headerTable.add(new Label("Name:", skin));
         headerTable.add(textField).growX();

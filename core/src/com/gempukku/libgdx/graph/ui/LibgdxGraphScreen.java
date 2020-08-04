@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.gempukku.libgdx.graph.ui.pipeline.PipelineDesignTab;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogListener;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
@@ -29,11 +30,12 @@ public class LibgdxGraphScreen extends Table {
     private final TabbedPane tabbedPane;
     private PipelineDesignTab pipelineDesignTab;
     private Skin skin;
+    private final Table insideTable;
 
     public LibgdxGraphScreen(Skin skin) {
         this.skin = skin;
         setFillParent(true);
-        final Table insideTable = new Table(skin);
+        insideTable = new Table(skin);
 
         tabbedPane = new TabbedPane();
         tabbedPane.addListener(
@@ -70,6 +72,16 @@ public class LibgdxGraphScreen extends Table {
         newMenuItem.setSubMenu(createTemplateMenu());
         fileMenu.addItem(newMenuItem);
 
+        MenuItem open = new MenuItem("Open");
+        open.addListener(
+                new ClickListener(Input.Buttons.LEFT) {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        open();
+                    }
+                });
+        fileMenu.addItem(open);
+
         MenuItem save = new MenuItem("Save");
         save.setShortcut(Input.Keys.CONTROL_LEFT, Input.Keys.S);
         save.addListener(
@@ -80,7 +92,68 @@ public class LibgdxGraphScreen extends Table {
                     }
                 });
         fileMenu.addItem(save);
+
+        fileMenu.addSeparator();
+
+        MenuItem close = new MenuItem("Close");
+        close.addListener(
+                new ClickListener(Input.Buttons.LEFT) {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        close();
+                    }
+                });
+        fileMenu.addItem(close);
+
         return fileMenu;
+    }
+
+    private void close() {
+        if (pipelineDesignTab != null && pipelineDesignTab.isDirty()) {
+            Dialogs.showOptionDialog(getStage(), "Pipeline modified",
+                    "Current pipeline has been modified, would you like to save it?",
+                    Dialogs.OptionDialogType.YES_NO_CANCEL, new OptionDialogListener() {
+                        @Override
+                        public void yes() {
+                            save();
+                            Gdx.app.exit();
+                        }
+
+                        @Override
+                        public void no() {
+                            Gdx.app.exit();
+                        }
+
+                        @Override
+                        public void cancel() {
+
+                        }
+                    });
+        } else {
+            Gdx.app.exit();
+        }
+    }
+
+    private void open() {
+        if (pipelineDesignTab != null && pipelineDesignTab.isDirty()) {
+            Dialogs.showErrorDialog(getStage(), "Current pipeline has been modified, close it or save it");
+        } else {
+            removeAllTabs();
+
+            FileChooser fileChooser = new FileChooser(FileChooser.Mode.OPEN);
+            fileChooser.setModal(true);
+            fileChooser.setSelectionMode(FileChooser.SelectionMode.FILES);
+            fileChooser.setListener(new FileChooserAdapter() {
+                @Override
+                public void selected(Array<FileHandle> file) {
+                    FileHandle selectedFile = file.get(0);
+                    loadTemplate(selectedFile);
+                    editedFile = selectedFile;
+                    pipelineDesignTab.setDirty(false);
+                }
+            });
+            getStage().addActor(fileChooser.fadeIn());
+        }
     }
 
     private void save() {
@@ -144,12 +217,17 @@ public class LibgdxGraphScreen extends Table {
         if (pipelineDesignTab != null && pipelineDesignTab.isDirty()) {
             Dialogs.showErrorDialog(getStage(), "Current pipeline has been modified, close it or save it");
         } else {
-            tabbedPane.removeAll();
+            removeAllTabs();
             pipelineDesignTab = new PipelineDesignTab(skin, fileHandle);
             pipelineDesignTab.awaken();
             tabbedPane.add(pipelineDesignTab);
             editedFile = null;
         }
+    }
+
+    private void removeAllTabs() {
+        tabbedPane.removeAll();
+        insideTable.clearChildren();
     }
 
     public void resized(int width, int height) {

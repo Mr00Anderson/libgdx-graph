@@ -31,8 +31,9 @@ public class PipelineSerializer {
             }
             for (JSONObject property : (List<JSONObject>) pipeline.get("properties")) {
                 String type = (String) property.get("type");
+                String name = (String) property.get("name");
                 JSONObject data = (JSONObject) property.get("data");
-                pipelineLoaderCallback.addPipelineProperty(type, data);
+                pipelineLoaderCallback.addPipelineProperty(type, name, data);
             }
 
             pipelineLoaderCallback.end();
