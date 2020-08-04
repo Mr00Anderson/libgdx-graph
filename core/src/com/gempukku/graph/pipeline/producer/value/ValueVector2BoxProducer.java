@@ -15,29 +15,35 @@ import org.json.simple.JSONObject;
 
 public class ValueVector2BoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Vector2";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("ValueVector2");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-        float v1 = ((Number) jsonObject.get("v1")).floatValue();
-        float v2 = ((Number) jsonObject.get("v2")).floatValue();
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
+        float v1 = ((Number) data.get("v1")).floatValue();
+        float v2 = ((Number) data.get("v2")).floatValue();
 
-        return createGraphBox(skin, id, x, y, v1, v2);
+        return createGraphBox(skin, id, v1, v2);
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
-        return createGraphBox(skin, id, x, y, 0, 0);
+    public GraphBox createDefault(Skin skin, String id) {
+        return createGraphBox(skin, id, 0, 0);
     }
 
-    private GraphBox createGraphBox(Skin skin, String id, float x, float y, float v1, float v2) {
-        GraphBoxImpl end = new GraphBoxImpl(id, "ValueVector2", "Vector2", skin);
-        end.setPosition(x, y);
+    private GraphBox createGraphBox(Skin skin, String id, float v1, float v2) {
+        GraphBoxImpl end = new GraphBoxImpl(id, "ValueVector2", skin);
         end.addGraphBoxPart(createValuePart(skin, id, v1, v2));
 
         return end;

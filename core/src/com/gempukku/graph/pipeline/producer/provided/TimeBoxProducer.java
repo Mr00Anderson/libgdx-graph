@@ -9,27 +9,32 @@ import org.json.simple.JSONObject;
 
 public class TimeBoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Time";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("Time");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-
-        return createGraphBox(skin, id, x, y);
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject jsonObject) {
+        return createGraphBox(skin, id);
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
-        return createGraphBox(skin, id, x, y);
+    public GraphBox createDefault(Skin skin, String id) {
+        return createGraphBox(skin, id);
     }
 
-    private GraphBox createGraphBox(Skin skin, String id, float x, float y) {
-        GraphBoxImpl end = new GraphBoxImpl(id, "Time", "Time", skin);
-        end.setPosition(x, y);
+    private GraphBox createGraphBox(Skin skin, String id) {
+        GraphBoxImpl end = new GraphBoxImpl(id, "Time", skin);
         end.addOutputGraphPart(skin,
                 id + ":time", "Time", PropertyType.Vector1);
         end.addOutputGraphPart(skin,

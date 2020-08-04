@@ -22,9 +22,9 @@ public class UIPipelineLoaderCallback implements PipelineLoaderCallback {
     }
 
     @Override
-    public void addPipelineParticipant(GraphBoxProducer pipelineParticipantProducer, JSONObject object) {
-        GraphBox graphBox = pipelineParticipantProducer.createPipelineGraphBox(skin, object);
-        graphContainer.addGraphBox(graphBox);
+    public void addPipelineParticipant(GraphBoxProducer pipelineParticipantProducer, String id, float x, float y, JSONObject data) {
+        GraphBox graphBox = pipelineParticipantProducer.createPipelineGraphBox(skin, id, data);
+        graphContainer.addGraphBox(graphBox, pipelineParticipantProducer.getTitle(), pipelineParticipantProducer.isCloseable(), x, y);
     }
 
     @Override

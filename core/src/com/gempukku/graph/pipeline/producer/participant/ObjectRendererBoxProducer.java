@@ -8,18 +8,23 @@ import org.json.simple.JSONObject;
 
 public class ObjectRendererBoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Default Renderer";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("ObjectRenderer");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-
-        GraphBoxImpl start = new GraphBoxImpl(id, "ObjectRenderer", "Object Renderer", skin);
-        start.setPosition(x, y);
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject jsonObject) {
+        GraphBoxImpl start = new GraphBoxImpl(id, "ObjectRenderer", skin);
         start.addTopConnector(id + ":input");
         start.addBottomConnector(id + ":output");
 
@@ -27,9 +32,8 @@ public class ObjectRendererBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
-        GraphBoxImpl start = new GraphBoxImpl(id, "ObjectRenderer", "Object Renderer", skin);
-        start.setPosition(x, y);
+    public GraphBox createDefault(Skin skin, String id) {
+        GraphBoxImpl start = new GraphBoxImpl(id, "ObjectRenderer", skin);
         start.addTopConnector(id + ":input");
         start.addBottomConnector(id + ":output");
 

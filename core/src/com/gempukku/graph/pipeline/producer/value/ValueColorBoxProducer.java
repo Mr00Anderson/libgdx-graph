@@ -20,28 +20,34 @@ import org.json.simple.JSONObject;
 
 public class ValueColorBoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Color";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("ValueColor");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-        String value = (String) jsonObject.get("color");
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
+        String value = (String) data.get("color");
 
-        return createGraphBox(skin, id, x, y, value);
+        return createGraphBox(skin, id, value);
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
-        return createGraphBox(skin, id, x, y, "FFFFFFFF");
+    public GraphBox createDefault(Skin skin, String id) {
+        return createGraphBox(skin, id, "FFFFFFFF");
     }
 
-    private GraphBox createGraphBox(Skin skin, String id, float x, float y, String value) {
-        GraphBoxImpl end = new GraphBoxImpl(id, "ValueColor", "Color", skin);
-        end.setPosition(x, y);
+    private GraphBox createGraphBox(Skin skin, String id, String value) {
+        GraphBoxImpl end = new GraphBoxImpl(id, "ValueColor", skin);
         end.addGraphBoxPart(createValuePart(skin, id, value));
 
         return end;

@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.graph.pipeline.PipelineSerializer;
@@ -37,6 +38,7 @@ import org.json.simple.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +48,7 @@ import java.util.UUID;
 public class PipelineDesignTab extends SleepingTab {
     private Map<String, PropertyBoxProducer> propertyProducers = new LinkedHashMap<>();
     private List<PropertyBox> propertyBoxes = new LinkedList<>();
+    private Map<PropertyBox, Window> propertyWindows = new HashMap<>();
 
     private final VerticalGroup pipelineProperties;
     private final GraphContainer graphContainer;
@@ -230,8 +233,20 @@ public class PipelineDesignTab extends SleepingTab {
         JSONObject pipeline = new JSONObject();
 
         JSONArray objects = new JSONArray();
-        for (GraphBox graphBox : graphContainer.getGraphBoxes()) {
-            objects.add(graphBox.serializeGraphBox());
+        for (Map.Entry<GraphBox, Window> graphBoxWindow : graphContainer.getGraphBoxes()) {
+            GraphBox graphBox = graphBoxWindow.getKey();
+            Window window = graphBoxWindow.getValue();
+            JSONObject object = new JSONObject();
+            object.put("id", graphBox.getId());
+            object.put("type", graphBox.getType());
+            object.put("x", window.getX());
+            object.put("y", window.getY());
+
+            JSONObject data = graphBox.serializeData();
+            if (data != null)
+                object.put("data", data);
+
+            objects.add(object);
         }
         pipeline.put("objects", objects);
 

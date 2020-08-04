@@ -8,18 +8,23 @@ import org.json.simple.JSONObject;
 
 public class UIRendererBoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return "UI Renderer";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("UIRenderer");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-
-        GraphBoxImpl start = new GraphBoxImpl(id, "UIRenderer", "UI Renderer", skin);
-        start.setPosition(x, y);
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject jsonObject) {
+        GraphBoxImpl start = new GraphBoxImpl(id, "UIRenderer", skin);
         start.addTopConnector(id + ":input");
         start.addBottomConnector(id + ":output");
 
@@ -27,9 +32,8 @@ public class UIRendererBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
-        GraphBoxImpl start = new GraphBoxImpl(id, "UIRenderer", "UI Renderer", skin);
-        start.setPosition(x, y);
+    public GraphBox createDefault(Skin skin, String id) {
+        GraphBoxImpl start = new GraphBoxImpl(id, "UIRenderer", skin);
         start.addTopConnector(id + ":input");
         start.addBottomConnector(id + ":output");
 

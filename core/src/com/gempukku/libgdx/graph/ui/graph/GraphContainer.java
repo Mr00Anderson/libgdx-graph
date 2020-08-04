@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -42,6 +44,7 @@ public class GraphContainer extends WidgetGroup {
     private static final float CONNECTOR_RADIUS = 5;
 
     private List<GraphBox> graphBoxes = new LinkedList<>();
+    private Map<GraphBox, Window> graphBoxWindowMap = new HashMap<>();
     private List<GraphConnection> graphConnections = new LinkedList<>();
 
     private Map<String, Shape> connectionNodeMap = new HashMap<>();
@@ -111,8 +114,7 @@ public class GraphContainer extends WidgetGroup {
     }
 
     private boolean containedInWindow(float x, float y) {
-        for (GraphBox graphBox : graphBoxes) {
-            Window window = graphBox.getWindow();
+        for (Window window : graphBoxWindowMap.values()) {
             float x1 = window.getX();
             float y1 = window.getY();
             float width = window.getWidth();
@@ -201,7 +203,7 @@ public class GraphContainer extends WidgetGroup {
 
         popupMenu.addSeparator();
         for (final PropertyProducer propertyProducer : propertyProducerProvider.getPropertyProducers()) {
-            String name = propertyProducer.getName();
+            final String name = propertyProducer.getName();
             MenuItem valueMenuItem = new MenuItem(name);
             valueMenuItem.addListener(
                     new ClickListener(Input.Buttons.LEFT) {
@@ -209,7 +211,7 @@ public class GraphContainer extends WidgetGroup {
                         public void clicked(InputEvent event, float x, float y) {
                             String id = UUID.randomUUID().toString().replace("-", "");
                             GraphBox graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
-                            addGraphBox(graphBox);
+                            addGraphBox(graphBox, name, true, popupX, popupY);
                         }
                     });
             popupMenu.addItem(valueMenuItem);
@@ -222,7 +224,7 @@ public class GraphContainer extends WidgetGroup {
         MenuItem valuesMenuItem = new MenuItem(menuName);
         PopupMenu valuesMenu = new PopupMenu();
         for (Map.Entry<String, GraphBoxProducer> valueEntry : producerMap.entrySet()) {
-            String name = valueEntry.getKey();
+            final String name = valueEntry.getKey();
             final GraphBoxProducer value = valueEntry.getValue();
             MenuItem valueMenuItem = new MenuItem(name);
             valueMenuItem.addListener(
@@ -230,8 +232,8 @@ public class GraphContainer extends WidgetGroup {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             String id = UUID.randomUUID().toString().replace("-", "");
-                            GraphBox graphBox = value.createDefault(skin, id, popupX, popupY);
-                            addGraphBox(graphBox);
+                            GraphBox graphBox = value.createDefault(skin, id);
+                            addGraphBox(graphBox, name, true, popupX, popupY);
                         }
                     });
             valuesMenu.addItem(valueMenuItem);
@@ -240,11 +242,19 @@ public class GraphContainer extends WidgetGroup {
         popupMenu.addItem(valuesMenuItem);
     }
 
-    public void addGraphBox(GraphBox graphBox) {
+    public void addGraphBox(GraphBox graphBox, String windowTitle, boolean closeable, float x, float y) {
         graphBoxes.add(graphBox);
-        Window window = graphBox.getWindow();
+        Window window = new Window(windowTitle, skin);
+        if (closeable) {
+            Table titleTable = window.getTitleTable();
+            TextButton close = new TextButton("Close", skin);
+            titleTable.add(close);
+        }
+        window.add(graphBox.getActor()).grow().row();
+        window.setPosition(x, y);
         addActor(window);
         window.setSize(Math.max(150, window.getPrefWidth()), window.getPrefHeight());
+        graphBoxWindowMap.put(graphBox, window);
         invalidate();
     }
 
@@ -266,8 +276,9 @@ public class GraphContainer extends WidgetGroup {
         connections.clear();
 
         Vector2 from = new Vector2();
-        for (GraphBox graphBox : graphBoxes) {
-            Window window = graphBox.getWindow();
+        for (Map.Entry<GraphBox, Window> graphBoxWindowEntry : graphBoxWindowMap.entrySet()) {
+            GraphBox graphBox = graphBoxWindowEntry.getKey();
+            Window window = graphBoxWindowEntry.getValue();
             float windowX = window.getX();
             float windowY = window.getY();
             for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
@@ -306,9 +317,9 @@ public class GraphContainer extends WidgetGroup {
         Vector2 to = new Vector2();
         for (GraphConnection graphConnection : graphConnections) {
             NodeInfo fromNode = graphConnection.getFrom();
-            calculateConnection(from, fromNode.getGraphBox(), fromNode.getOutputConnector());
+            calculateConnection(from, graphBoxWindowMap.get(fromNode.getGraphBox()), fromNode.getOutputConnector());
             NodeInfo toNode = graphConnection.getTo();
-            calculateConnection(to, toNode.getGraphBox(), toNode.getInputConnector());
+            calculateConnection(to, graphBoxWindowMap.get(toNode.getGraphBox()), toNode.getInputConnector());
 
             Shape shape = basicStroke.createStrokedShape(new Line2D.Float(from.x, from.y, to.x, to.y));
 
@@ -348,9 +359,11 @@ public class GraphContainer extends WidgetGroup {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
-        for (GraphBox graphBox : graphBoxes) {
+        for (Map.Entry<GraphBox, Window> graphBoxWindowEntry : graphBoxWindowMap.entrySet()) {
+            GraphBox graphBox = graphBoxWindowEntry.getKey();
+            Window window = graphBoxWindowEntry.getValue();
             for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
-                calculateConnector(from, to, graphBox, connector);
+                calculateConnector(from, to, window, connector);
                 from.add(x, y);
                 to.add(x, y);
 
@@ -359,7 +372,7 @@ public class GraphContainer extends WidgetGroup {
             }
 
             for (GraphBoxOutputConnector connector : graphBox.getGraphBoxOutputConnectors()) {
-                calculateConnector(from, to, graphBox, connector);
+                calculateConnector(from, to, window, connector);
                 from.add(x, y);
                 to.add(x, y);
 
@@ -370,9 +383,9 @@ public class GraphContainer extends WidgetGroup {
 
         for (GraphConnection graphConnection : graphConnections) {
             NodeInfo fromNode = graphConnection.getFrom();
-            calculateConnection(from, fromNode.getGraphBox(), fromNode.getOutputConnector());
+            calculateConnection(from, graphBoxWindowMap.get(fromNode.getGraphBox()), fromNode.getOutputConnector());
             NodeInfo toNode = graphConnection.getTo();
-            calculateConnection(to, toNode.getGraphBox(), toNode.getInputConnector());
+            calculateConnection(to, graphBoxWindowMap.get(toNode.getGraphBox()), toNode.getInputConnector());
 
             from.add(x, y);
             to.add(x, y);
@@ -382,10 +395,10 @@ public class GraphContainer extends WidgetGroup {
 
         if (drawingFrom != null) {
             if (drawingFrom.isInput()) {
-                calculateConnection(from, drawingFrom.getGraphBox(), drawingFrom.getInputConnector());
+                calculateConnection(from, graphBoxWindowMap.get(drawingFrom.getGraphBox()), drawingFrom.getInputConnector());
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             } else {
-                calculateConnection(from, drawingFrom.getGraphBox(), drawingFrom.getOutputConnector());
+                calculateConnection(from, graphBoxWindowMap.get(drawingFrom.getGraphBox()), drawingFrom.getOutputConnector());
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             }
         }
@@ -393,8 +406,7 @@ public class GraphContainer extends WidgetGroup {
         shapeRenderer.end();
     }
 
-    private void calculateConnector(Vector2 from, Vector2 to, GraphBox graphBox, GraphBoxOutputConnector connector) {
-        Window window = graphBox.getWindow();
+    private void calculateConnector(Vector2 from, Vector2 to, Window window, GraphBoxOutputConnector connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {
@@ -409,8 +421,7 @@ public class GraphContainer extends WidgetGroup {
         }
     }
 
-    private void calculateConnector(Vector2 from, Vector2 to, GraphBox graphBox, GraphBoxInputConnector connector) {
-        Window window = graphBox.getWindow();
+    private void calculateConnector(Vector2 from, Vector2 to, Window window, GraphBoxInputConnector connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {
@@ -425,8 +436,8 @@ public class GraphContainer extends WidgetGroup {
         }
     }
 
-    public Iterable<? extends GraphBox> getGraphBoxes() {
-        return graphBoxes;
+    public Iterable<Map.Entry<GraphBox, Window>> getGraphBoxes() {
+        return graphBoxWindowMap.entrySet();
     }
 
     public Iterable<? extends GraphConnection> getConnections() {
@@ -438,8 +449,7 @@ public class GraphContainer extends WidgetGroup {
         shapeRenderer.updateMatrices();
     }
 
-    private void calculateConnection(Vector2 position, GraphBox graphBox, GraphBoxInputConnector connector) {
-        Window window = graphBox.getWindow();
+    private void calculateConnection(Vector2 position, Window window, GraphBoxInputConnector connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {
@@ -452,8 +462,7 @@ public class GraphContainer extends WidgetGroup {
         }
     }
 
-    private void calculateConnection(Vector2 position, GraphBox graphBox, GraphBoxOutputConnector connector) {
-        Window window = graphBox.getWindow();
+    private void calculateConnection(Vector2 position, Window window, GraphBoxOutputConnector connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {

@@ -12,27 +12,32 @@ import java.util.Arrays;
 
 public class SplitBoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Split";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("Split");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-
-        return createGraphBox(skin, id, x, y);
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject jsonObject) {
+        return createGraphBox(skin, id);
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
-        return createGraphBox(skin, id, x, y);
+    public GraphBox createDefault(Skin skin, String id) {
+        return createGraphBox(skin, id);
     }
 
-    private GraphBox createGraphBox(Skin skin, String id, float x, float y) {
-        GraphBoxImpl end = new GraphBoxImpl(id, "Split", "Split", skin);
-        end.setPosition(x, y);
+    private GraphBox createGraphBox(Skin skin, String id) {
+        GraphBoxImpl end = new GraphBoxImpl(id, "Split", skin);
         end.addTwoSideGraphPart(skin,
                 id + ":input", "Input", Predicates.in(Arrays.asList(PropertyType.Vector2, PropertyType.Vector3, PropertyType.Color)),
                 id + ":x", "X", PropertyType.Vector1);

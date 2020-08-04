@@ -10,18 +10,23 @@ import org.json.simple.JSONObject;
 
 public class StartGraphBoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return true;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Start";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("PipelineStart");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-
-        GraphBoxImpl start = new GraphBoxImpl(id, "PipelineStart", "Start", skin);
-        start.setPosition(x, y);
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject jsonObject) {
+        GraphBoxImpl start = new GraphBoxImpl(id, "PipelineStart", skin);
         start.addBottomConnector(id + ":output");
         start.addInputGraphPart(skin,
                 id + ":background", "Background color", Predicates.equalTo(PropertyType.Color));
@@ -32,7 +37,7 @@ public class StartGraphBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
+    public GraphBox createDefault(Skin skin, String id) {
         return null;
     }
 }

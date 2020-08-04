@@ -34,10 +34,13 @@ public class PipelineSerializer {
             JSONObject pipeline = (JSONObject) renderer.get("pipeline");
             for (JSONObject object : (List<JSONObject>) pipeline.get("objects")) {
                 String type = (String) object.get("type");
+                String id = (String) object.get("id");
+                float x = ((Number) object.get("x")).floatValue();
+                float y = ((Number) object.get("y")).floatValue();
                 GraphBoxProducer producer = findProducerByType(type);
                 if (producer == null)
                     throw new IOException("Unable to find pipeline producer for type: " + type);
-                pipelineLoaderCallback.addPipelineParticipant(producer, object);
+                pipelineLoaderCallback.addPipelineParticipant(producer, id, x, y, (JSONObject) object.get("data"));
             }
             for (JSONObject connection : (List<JSONObject>) pipeline.get("connections")) {
                 String from = (String) connection.get("from");

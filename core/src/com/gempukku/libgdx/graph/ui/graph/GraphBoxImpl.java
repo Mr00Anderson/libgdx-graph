@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.graph.pipeline.PropertyType;
 import com.google.common.base.Predicate;
@@ -20,21 +19,25 @@ import java.util.Map;
 public class GraphBoxImpl implements GraphBox {
     private String id;
     private String type;
-    private Window window;
+    private Table table;
     private List<GraphBoxPart> graphBoxParts = new LinkedList<>();
     private Map<String, GraphBoxInputConnector> inputConnectors = new HashMap<>();
     private Map<String, GraphBoxOutputConnector> outputConnectors = new HashMap<>();
 
-    public GraphBoxImpl(String id, String type, String title, Skin skin) {
+    public GraphBoxImpl(String id, String type, Skin skin) {
         this.id = id;
         this.type = type;
-        window = new Window(title, skin) {
-            @Override
-            protected void positionChanged() {
-                invalidateHierarchy();
-            }
-        };
-        window.setKeepWithinStage(false);
+        table = new Table(skin);
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     public void addTopConnector(String id) {
@@ -47,7 +50,7 @@ public class GraphBoxImpl implements GraphBox {
                 }, new Supplier<Float>() {
             @Override
             public Float get() {
-                return window.getWidth() / 2f;
+                return table.getWidth() / 2f;
             }
         }));
     }
@@ -57,14 +60,9 @@ public class GraphBoxImpl implements GraphBox {
                 PropertyType.PipelineParticipant, new Supplier<Float>() {
             @Override
             public Float get() {
-                return window.getWidth() / 2f;
+                return table.getWidth() / 2f;
             }
         }));
-    }
-
-    public void setPosition(float x, float y) {
-        window.setPosition(x, y);
-        window.invalidate();
     }
 
     public void addTwoSideGraphPart(Skin skin,
@@ -111,7 +109,7 @@ public class GraphBoxImpl implements GraphBox {
     public void addGraphBoxPart(GraphBoxPart graphBoxPart) {
         graphBoxParts.add(graphBoxPart);
         final Actor actor = graphBoxPart.getActor();
-        window.add(actor).growX().row();
+        table.add(actor).growX().row();
         final GraphBoxInputConnector inputConnector = graphBoxPart.getInputConnector();
         if (inputConnector != null) {
             String id = inputConnector.getId();
@@ -154,21 +152,19 @@ public class GraphBoxImpl implements GraphBox {
     }
 
     @Override
-    public Window getWindow() {
-        return window;
+    public Actor getActor() {
+        return table;
     }
 
     @Override
-    public JSONObject serializeGraphBox() {
+    public JSONObject serializeData() {
         JSONObject result = new JSONObject();
-        result.put("id", id);
-        result.put("type", type);
-        result.put("x", window.getX());
-        result.put("y", window.getY());
 
         for (GraphBoxPart graphBoxPart : graphBoxParts)
             graphBoxPart.serializePart(result);
 
+        if (result.isEmpty())
+            return null;
         return result;
     }
 }

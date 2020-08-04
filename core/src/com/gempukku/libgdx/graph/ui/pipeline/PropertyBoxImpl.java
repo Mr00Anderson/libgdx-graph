@@ -56,15 +56,14 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
     @Override
     public GraphBox createPropertyBox(Skin skin, String id, float x, float y) {
         final String name = getName();
-        GraphBoxImpl result = new GraphBoxImpl(id, "Property", "Property", skin) {
+        GraphBoxImpl result = new GraphBoxImpl(id, "Property", skin) {
             @Override
-            public JSONObject serializeGraphBox() {
-                JSONObject result = super.serializeGraphBox();
+            public JSONObject serializeData() {
+                JSONObject result = new JSONObject();
                 result.put("Name", name);
                 return result;
             }
         };
-        result.setPosition(x, y);
         result.addOutputGraphPart(skin, id + ":value", name, propertyType);
         return result;
     }

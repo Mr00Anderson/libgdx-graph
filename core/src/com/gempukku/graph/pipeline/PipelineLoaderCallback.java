@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 public interface PipelineLoaderCallback {
     void start();
 
-    void addPipelineParticipant(GraphBoxProducer pipelineParticipantProducer, JSONObject object);
+    void addPipelineParticipant(GraphBoxProducer pipelineParticipantProducer, String id, float x, float y, JSONObject data);
 
     void addPipelineParticipantConnection(String from, String to);
 

@@ -8,24 +8,29 @@ import org.json.simple.JSONObject;
 
 public class EndGraphBoxProducer implements GraphBoxProducer {
     @Override
+    public boolean isCloseable() {
+        return false;
+    }
+
+    @Override
+    public String getTitle() {
+        return "End";
+    }
+
+    @Override
     public boolean supportsType(String type) {
         return type.equals("PipelineEnd");
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject) {
-        String id = (String) jsonObject.get("id");
-        float x = ((Number) jsonObject.get("x")).floatValue();
-        float y = ((Number) jsonObject.get("y")).floatValue();
-
-        GraphBoxImpl end = new GraphBoxImpl(id, "PipelineEnd", "End", skin);
-        end.setPosition(x, y);
+    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject jsonObject) {
+        GraphBoxImpl end = new GraphBoxImpl(id, "PipelineEnd", skin);
         end.addTopConnector(id + ":input");
         return end;
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id, float x, float y) {
+    public GraphBox createDefault(Skin skin, String id) {
         return null;
     }
 }

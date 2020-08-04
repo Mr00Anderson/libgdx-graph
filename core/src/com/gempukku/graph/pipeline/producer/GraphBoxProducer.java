@@ -7,7 +7,11 @@ import org.json.simple.JSONObject;
 public interface GraphBoxProducer {
     boolean supportsType(String type);
 
-    GraphBox createPipelineGraphBox(Skin skin, JSONObject jsonObject);
+    boolean isCloseable();
 
-    GraphBox createDefault(Skin skin, String id, float x, float y);
+    String getTitle();
+
+    GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data);
+
+    GraphBox createDefault(Skin skin, String id);
 }
