@@ -24,6 +24,8 @@ import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
 import com.gempukku.libgdx.graph.ui.graph.GraphConnection;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
+import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
+import com.gempukku.libgdx.graph.ui.graph.PropertyProducerProvider;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector1BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector3BoxProducer;
@@ -85,7 +87,13 @@ public class PipelineDesignTab extends SleepingTab {
 
         leftTable.add(buttons).growX().row();
 
-        graphContainer = new GraphContainer(skin);
+        graphContainer = new GraphContainer(skin,
+                new PropertyProducerProvider() {
+                    @Override
+                    public Iterable<? extends PropertyProducer> getPropertyProducers() {
+                        return propertyBoxes;
+                    }
+                });
         graphContainer.addListener(
                 new GraphChangedListener() {
                     @Override

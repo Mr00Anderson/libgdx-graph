@@ -49,11 +49,13 @@ public class GraphContainer extends WidgetGroup {
 
     private ShapeRenderer shapeRenderer;
     private Skin skin;
+    private PropertyProducerProvider propertyProducerProvider;
 
     private NodeInfo drawingFrom;
 
-    public GraphContainer(Skin skin) {
+    public GraphContainer(Skin skin, PropertyProducerProvider propertyProducerProvider) {
         this.skin = skin;
+        this.propertyProducerProvider = propertyProducerProvider;
 
         valueProducers.put("Color", new ValueColorBoxProducer());
         valueProducers.put("Vector1", new ValueVector1BoxProducer());
@@ -196,6 +198,22 @@ public class GraphContainer extends WidgetGroup {
         createSubMenu(popupX, popupY, popupMenu, "Values", this.valueProducers);
         createSubMenu(popupX, popupY, popupMenu, "Provided", providedProducers);
         createSubMenu(popupX, popupY, popupMenu, "Math", mathProducers);
+
+        popupMenu.addSeparator();
+        for (final PropertyProducer propertyProducer : propertyProducerProvider.getPropertyProducers()) {
+            String name = propertyProducer.getName();
+            MenuItem valueMenuItem = new MenuItem(name);
+            valueMenuItem.addListener(
+                    new ClickListener(Input.Buttons.LEFT) {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            String id = UUID.randomUUID().toString().replace("-", "");
+                            GraphBox graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
+                            addGraphBox(graphBox);
+                        }
+                    });
+            popupMenu.addItem(valueMenuItem);
+        }
 
         popupMenu.showMenu(getStage(), popupX + getX(), popupY + getY());
     }

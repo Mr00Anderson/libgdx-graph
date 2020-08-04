@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.gempukku.graph.pipeline.PropertyType;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
@@ -47,6 +48,7 @@ public class PropertyVector1BoxProducer implements PropertyBoxProducer {
         table.add(v1Input).grow();
 
         return new PropertyBoxImpl(skin, id, "Vector1",
+                PropertyType.Vector1,
                 new PropertyDefaultBox() {
                     @Override
                     public Actor getActor() {
