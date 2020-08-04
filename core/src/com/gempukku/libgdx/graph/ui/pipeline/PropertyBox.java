@@ -5,7 +5,9 @@ import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
 import org.json.simple.JSONObject;
 
 public interface PropertyBox extends PropertyProducer {
-    JSONObject serializeProperty();
+    String getType();
+
+    JSONObject serializeData();
 
     Actor getActor();
 }

@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-import com.gempukku.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.pipeline.PropertyType;
 
 public interface GraphBoxInputConnector {
     enum Side {

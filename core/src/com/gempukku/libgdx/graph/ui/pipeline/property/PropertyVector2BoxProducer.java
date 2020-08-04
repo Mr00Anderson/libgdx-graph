@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.gempukku.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.pipeline.PropertyType;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
@@ -65,9 +65,11 @@ public class PropertyVector2BoxProducer implements PropertyBoxProducer {
                     }
 
                     @Override
-                    public void serializeDefault(JSONObject result) {
+                    public JSONObject serializeDefault() {
+                        JSONObject result = new JSONObject();
                         result.put("x", Float.parseFloat(v1Input.getText()));
                         result.put("y", Float.parseFloat(v2Input.getText()));
+                        return result;
                     }
                 });
     }

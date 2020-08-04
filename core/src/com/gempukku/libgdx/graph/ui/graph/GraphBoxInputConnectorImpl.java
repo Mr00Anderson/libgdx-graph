@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-import com.gempukku.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.pipeline.PropertyType;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 

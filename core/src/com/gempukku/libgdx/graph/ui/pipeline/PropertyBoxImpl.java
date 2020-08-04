@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.gempukku.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.pipeline.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import org.json.simple.JSONObject;
@@ -33,17 +33,21 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
     }
 
     @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
     public String getName() {
         return textField.getText();
     }
 
     @Override
-    public JSONObject serializeProperty() {
-        JSONObject result = new JSONObject();
-        result.put("type", type);
-        result.put("name", getName());
-        propertyDefaultBox.serializeDefault(result);
-        return result;
+    public JSONObject serializeData() {
+        JSONObject defaults = propertyDefaultBox.serializeDefault();
+        if (defaults == null)
+            return null;
+        return defaults;
     }
 
     @Override
