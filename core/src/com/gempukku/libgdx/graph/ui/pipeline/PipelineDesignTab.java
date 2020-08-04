@@ -25,6 +25,8 @@ import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
 import com.gempukku.libgdx.graph.ui.graph.GraphConnection;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector1BoxProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector3BoxProducer;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import org.json.simple.JSONArray;
@@ -53,6 +55,8 @@ public class PipelineDesignTab extends SleepingTab {
         super(true, false);
 
         propertyProducers.put("Vector1", new PropertyVector1BoxProducer());
+        propertyProducers.put("Vector2", new PropertyVector2BoxProducer());
+        propertyProducers.put("Vector3", new PropertyVector3BoxProducer());
 
         this.skin = skin;
         contentTable = new Table(skin);
@@ -216,12 +220,13 @@ public class PipelineDesignTab extends SleepingTab {
 
     private JSONObject serializePipeline() {
         JSONObject pipeline = new JSONObject();
+
         JSONArray objects = new JSONArray();
         for (GraphBox graphBox : graphContainer.getGraphBoxes()) {
             objects.add(graphBox.serializeGraphBox());
         }
-
         pipeline.put("objects", objects);
+
         JSONArray connections = new JSONArray();
         for (GraphConnection connection : graphContainer.getConnections()) {
             JSONObject conn = new JSONObject();
@@ -229,8 +234,14 @@ public class PipelineDesignTab extends SleepingTab {
             conn.put("to", connection.getTo().getInputConnector().getId());
             connections.add(conn);
         }
-
         pipeline.put("connections", connections);
+
+        JSONArray properties = new JSONArray();
+        for (PropertyBox propertyBox : propertyBoxes) {
+            properties.add(propertyBox.serializeProperty());
+        }
+        pipeline.put("properties", properties);
+
         return pipeline;
     }
 
