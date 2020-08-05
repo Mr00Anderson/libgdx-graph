@@ -1,7 +1,7 @@
 package com.gempukku.libgdx.graph.ui.producer.provided;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.libgdx.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;

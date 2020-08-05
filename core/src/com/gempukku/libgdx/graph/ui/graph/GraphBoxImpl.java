@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.gempukku.libgdx.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
 import org.json.simple.JSONObject;
@@ -45,7 +45,7 @@ public class GraphBoxImpl implements GraphBox {
                 new Predicate<PropertyType>() {
                     @Override
                     public boolean apply(@Nullable PropertyType propertyType) {
-                        return propertyType == PropertyType.PipelineParticipant;
+                        return propertyType == PropertyType.RenderPipeline;
                     }
                 }, new Supplier<Float>() {
             @Override
@@ -57,7 +57,7 @@ public class GraphBoxImpl implements GraphBox {
 
     public void addBottomConnector(String id) {
         outputConnectors.put(id, new GraphBoxOutputConnectorImpl(id, GraphBoxOutputConnector.Side.Bottom,
-                PropertyType.PipelineParticipant, new Supplier<Float>() {
+                PropertyType.RenderPipeline, new Supplier<Float>() {
             @Override
             public Float get() {
                 return table.getWidth() / 2f;

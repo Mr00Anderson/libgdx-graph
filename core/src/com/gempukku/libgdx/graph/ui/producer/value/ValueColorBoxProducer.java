@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.gempukku.libgdx.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
@@ -48,7 +48,7 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
 
     private GraphBox createGraphBox(Skin skin, String id, String value) {
         GraphBoxImpl end = new GraphBoxImpl(id, "ValueColor", skin);
-        end.addGraphBoxPart(createValuePart(skin, id, value));
+        end.addGraphBoxPart(createValuePart(skin, id + ":value", value));
 
         return end;
     }

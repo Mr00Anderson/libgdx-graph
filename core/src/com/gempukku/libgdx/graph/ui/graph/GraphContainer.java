@@ -382,6 +382,23 @@ public class GraphContainer extends WidgetGroup {
         }
     }
 
+    public GraphBox getGraphBoxById(String id) {
+        for (GraphBox graphBox : graphBoxes) {
+            if (graphBox.getId().equals(id))
+                return graphBox;
+        }
+        return null;
+    }
+
+    public List<GraphConnection> getIncomingConnections(GraphBox graphBox) {
+        List<GraphConnection> result = new LinkedList<>();
+        for (GraphConnection graphConnection : graphConnections) {
+            if (graphConnection.getTo().getGraphBox() == graphBox)
+                result.add(graphConnection);
+        }
+        return result;
+    }
+
     public Iterable<Map.Entry<GraphBox, Window>> getGraphBoxes() {
         return graphBoxWindowMap.entrySet();
     }

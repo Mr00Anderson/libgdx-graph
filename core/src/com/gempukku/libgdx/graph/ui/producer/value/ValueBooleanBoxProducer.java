@@ -3,7 +3,7 @@ package com.gempukku.libgdx.graph.ui.producer.value;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.libgdx.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
@@ -41,7 +41,7 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
 
     private GraphBox createGraphBox(Skin skin, String id, boolean v) {
         GraphBoxImpl end = new GraphBoxImpl(id, "ValueBool", skin);
-        end.addGraphBoxPart(createValuePart(skin, id, v));
+        end.addGraphBoxPart(createValuePart(skin, id + ":value", v));
 
         return end;
     }
@@ -56,7 +56,7 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
                 new GraphBoxPartImpl.Callback() {
                     @Override
                     public void serialize(JSONObject object) {
-                        object.put("v", checkBox.isChecked());
+                        object.put("value", checkBox.isChecked());
                     }
                 });
         colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, PropertyType.Boolean);

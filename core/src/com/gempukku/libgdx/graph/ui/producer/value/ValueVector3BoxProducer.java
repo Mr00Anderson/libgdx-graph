@@ -3,7 +3,7 @@ package com.gempukku.libgdx.graph.ui.producer.value;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.libgdx.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
@@ -45,7 +45,7 @@ public class ValueVector3BoxProducer implements GraphBoxProducer {
 
     private GraphBox createGraphBox(Skin skin, String id, float v1, float v2, float v3) {
         GraphBoxImpl end = new GraphBoxImpl(id, "ValueVector3", skin);
-        end.addGraphBoxPart(createValuePart(skin, id, v1, v2, v3));
+        end.addGraphBoxPart(createValuePart(skin, id + ":value", v1, v2, v3));
 
         return end;
     }

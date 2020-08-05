@@ -1,7 +1,6 @@
 package com.gempukku.libgdx.graph.ui.pipeline;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -15,10 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.gempukku.libgdx.graph.PipelineConfiguration;
-import com.gempukku.libgdx.graph.pipeline.PipelineSerializer;
 import com.gempukku.libgdx.graph.ui.AwareTab;
-import com.gempukku.libgdx.graph.ui.UIPipelineLoaderCallback;
+import com.gempukku.libgdx.graph.ui.GraphValidator;
+import com.gempukku.libgdx.graph.ui.UIPipelineConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
@@ -32,8 +30,6 @@ import com.kotcrab.vis.ui.widget.PopupMenu;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +44,7 @@ public class PipelineDesignTab extends AwareTab {
     private Table contentTable;
     private Skin skin;
 
-    public PipelineDesignTab(Skin skin, FileHandle source) {
+    public PipelineDesignTab(Skin skin) {
         super(true, false);
 
         this.skin = skin;
@@ -72,6 +68,7 @@ public class PipelineDesignTab extends AwareTab {
                     @Override
                     protected boolean graphChanged(GraphChangedEvent event) {
                         setDirty(true);
+                        updatePipelineValidation();
                         return true;
                     }
                 });
@@ -79,18 +76,18 @@ public class PipelineDesignTab extends AwareTab {
         SplitPane splitPane = new SplitPane(leftTable, graphContainer, false, skin);
 
         splitPane.setMaxSplitAmount(0.3f);
-        try {
-            InputStream stream = source.read();
-            try {
-                PipelineSerializer.loadPipeline(stream, new UIPipelineLoaderCallback(skin, this, graphContainer));
-            } finally {
-                stream.close();
-            }
-        } catch (IOException exp) {
-            throw new RuntimeException("Unable to load default pipeline definition", exp);
-        }
 
         contentTable.add(splitPane).grow().row();
+    }
+
+    public GraphContainer getGraphContainer() {
+        return graphContainer;
+    }
+
+    private void updatePipelineValidation() {
+        GraphBox end = graphContainer.getGraphBoxById("end");
+        GraphValidator.ValidationResult validationResult = GraphValidator.validateGraph(graphContainer, end);
+        System.out.println("Validation result: " + validationResult);
     }
 
     private PopupMenuProducer createPopupMenuProducer() {
@@ -99,7 +96,7 @@ public class PipelineDesignTab extends AwareTab {
             public PopupMenu createPopupMenu(final float popupX, final float popupY) {
                 PopupMenu popupMenu = new PopupMenu();
 
-                for (Map.Entry<String, Map<String, GraphBoxProducer>> producersEntry : PipelineConfiguration.graphBoxProducers.entrySet()) {
+                for (Map.Entry<String, Map<String, GraphBoxProducer>> producersEntry : UIPipelineConfiguration.graphBoxProducers.entrySet()) {
                     String menuName = producersEntry.getKey();
                     Map<String, GraphBoxProducer> producer = producersEntry.getValue();
                     createSubMenu(popupX, popupY, popupMenu, menuName, producer);
@@ -132,7 +129,7 @@ public class PipelineDesignTab extends AwareTab {
         for (Map.Entry<String, GraphBoxProducer> valueEntry : producerMap.entrySet()) {
             final String name = valueEntry.getKey();
             final GraphBoxProducer value = valueEntry.getValue();
-            if (!PipelineConfiguration.notAddableProducers.contains(value)) {
+            if (!UIPipelineConfiguration.notAddableProducers.contains(value)) {
                 MenuItem valueMenuItem = new MenuItem(name);
                 valueMenuItem.addListener(
                         new ClickListener(Input.Buttons.LEFT) {
@@ -172,7 +169,7 @@ public class PipelineDesignTab extends AwareTab {
 
     private PopupMenu createPopupMenu(final Skin skin) {
         PopupMenu menu = new PopupMenu();
-        for (Map.Entry<String, PropertyBoxProducer> propertyEntry : PipelineConfiguration.propertyProducers.entrySet()) {
+        for (Map.Entry<String, PropertyBoxProducer> propertyEntry : UIPipelineConfiguration.propertyProducers.entrySet()) {
             final String name = propertyEntry.getKey();
             final PropertyBoxProducer value = propertyEntry.getValue();
             MenuItem valueMenuItem = new MenuItem(name);
@@ -261,8 +258,12 @@ public class PipelineDesignTab extends AwareTab {
         JSONArray connections = new JSONArray();
         for (GraphConnection connection : graphContainer.getConnections()) {
             JSONObject conn = new JSONObject();
-            conn.put("from", connection.getFrom().getOutputConnector().getId());
-            conn.put("to", connection.getTo().getInputConnector().getId());
+            String[] from = connection.getFrom().getOutputConnector().getId().split(":", 2);
+            String[] to = connection.getTo().getInputConnector().getId().split(":", 2);
+            conn.put("fromNode", from[0]);
+            conn.put("fromField", from[1]);
+            conn.put("toNode", to[0]);
+            conn.put("toField", to[1]);
             connections.add(conn);
         }
         pipeline.put("connections", connections);

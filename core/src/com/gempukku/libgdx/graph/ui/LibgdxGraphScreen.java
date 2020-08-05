@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.gempukku.libgdx.graph.PipelineLoader;
 import com.gempukku.libgdx.graph.ui.pipeline.PipelineDesignTab;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogListener;
@@ -23,6 +24,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
 public class LibgdxGraphScreen extends Table {
@@ -218,10 +220,19 @@ public class LibgdxGraphScreen extends Table {
             Dialogs.showErrorDialog(getStage(), "Current pipeline has been modified, close it or save it");
         } else {
             removeAllTabs();
-            pipelineDesignTab = new PipelineDesignTab(skin, fileHandle);
-            pipelineDesignTab.awaken();
-            tabbedPane.add(pipelineDesignTab);
-            editedFile = null;
+            try {
+                InputStream stream = fileHandle.read();
+                try {
+                    pipelineDesignTab = PipelineLoader.loadPipeline(stream, new UIPipelineLoaderCallback(skin));
+                    pipelineDesignTab.awaken();
+                    tabbedPane.add(pipelineDesignTab);
+                    editedFile = null;
+                } finally {
+                    stream.close();
+                }
+            } catch (IOException exp) {
+                throw new RuntimeException("Unable to load default pipeline definition", exp);
+            }
         }
     }
 

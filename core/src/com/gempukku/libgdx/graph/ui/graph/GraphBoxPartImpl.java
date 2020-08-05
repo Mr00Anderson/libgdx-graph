@@ -1,7 +1,7 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.gempukku.libgdx.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.google.common.base.Predicate;
 import org.json.simple.JSONObject;
 

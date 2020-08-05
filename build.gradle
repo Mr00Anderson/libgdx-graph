@@ -1,6 +1,4 @@
 buildscript {
-
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -10,7 +8,6 @@ buildscript {
         google()
     }
     dependencies {
-
 
     }
 }
@@ -50,7 +47,6 @@ project(":desktop") {
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
         api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
-
     }
 }
 
@@ -61,10 +57,36 @@ project(":core") {
     targetCompatibility = 1.7
 
     dependencies {
-        api "com.google.guava:guava:11.0.2"
-        api "com.googlecode.json-simple:json-simple:1.1.1"
+        implementation project(":libgdx-graph")
         // https://mvnrepository.com/artifact/com.kotcrab.vis/vis-ui
         api group: 'com.kotcrab.vis', name: 'vis-ui', version: '1.4.6'
+    }
+}
+
+project(":libgdx-graph-test") {
+    apply plugin: "java-library"
+
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.7
+
+    dependencies {
+        implementation project(":libgdx-graph")
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+    }
+}
+
+project(":libgdx-graph") {
+    apply plugin: "java-library"
+
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.7
+
+    dependencies {
+        api "com.google.guava:guava:11.0.2"
+        api "com.googlecode.json-simple:json-simple:1.1.1"
 
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"

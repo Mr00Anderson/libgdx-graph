@@ -4,7 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.gempukku.libgdx.graph.pipeline.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;

@@ -1,1 +1,1 @@
-include 'desktop', 'core'
+include 'desktop', 'core', 'libgdx-graph', 'libgdx-graph-test'
