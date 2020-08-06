@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.renderer;
 
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.property.PropertyPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.EndPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.StartPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueBooleanPipelineNodeProducer;
@@ -8,6 +9,7 @@ import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueColorPipeli
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector1PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector2PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector3PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.property.ColorPipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.PipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.Vector1PipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.Vector2PipelinePropertyProducer;
@@ -30,10 +32,12 @@ public class RendererPipelineConfiguration {
         pipelineNodeProducers.put("ValueVector3", new ValueVector3PipelineNodeProducer());
         pipelineNodeProducers.put("ValueColor", new ValueColorPipelineNodeProducer());
         pipelineNodeProducers.put("ValueBoolean", new ValueBooleanPipelineNodeProducer());
+        pipelineNodeProducers.put("Property", new PropertyPipelineNodeProducer());
 
         pipelinePropertyProducers.add(new Vector1PipelinePropertyProducer());
         pipelinePropertyProducers.add(new Vector2PipelinePropertyProducer());
         pipelinePropertyProducers.add(new Vector3PipelinePropertyProducer());
+        pipelinePropertyProducers.add(new ColorPipelinePropertyProducer());
     }
 
     private RendererPipelineConfiguration() {

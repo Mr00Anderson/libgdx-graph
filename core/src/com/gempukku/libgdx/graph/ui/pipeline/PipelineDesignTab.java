@@ -87,7 +87,6 @@ public class PipelineDesignTab extends AwareTab {
     private void updatePipelineValidation() {
         GraphBox end = graphContainer.getGraphBoxById("end");
         GraphValidator.ValidationResult validationResult = GraphValidator.validateGraph(graphContainer, end);
-        System.out.println("Validation result: " + validationResult);
     }
 
     private PopupMenuProducer createPopupMenuProducer() {

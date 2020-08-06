@@ -40,6 +40,7 @@ public class WritablePipelineProperty implements PipelineProperty {
         }
     }
 
+    @Override
     public Object getValue() {
         if (!initialized && useDefault) {
             value = defaultValueSupplier.get();

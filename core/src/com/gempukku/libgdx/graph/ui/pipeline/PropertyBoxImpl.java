@@ -62,7 +62,7 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
             @Override
             public JSONObject serializeData() {
                 JSONObject result = new JSONObject();
-                result.put("Name", name);
+                result.put("name", name);
                 return result;
             }
         };

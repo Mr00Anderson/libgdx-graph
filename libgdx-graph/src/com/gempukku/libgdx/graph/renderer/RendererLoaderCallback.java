@@ -40,6 +40,8 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
     @Override
     public void addPipelineProperty(String type, String name, JSONObject data) {
         PipelinePropertyProducer propertyProducer = findPropertyProducerByType(type);
+        if (propertyProducer == null)
+            throw new IllegalStateException("Unable to find property producer for type: " + type);
         propertyMap.put(name, propertyProducer.createProperty(data));
     }
 
@@ -67,6 +69,8 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
 
         PipelineNodeInfo nodeInfo = nodes.get(nodeId);
         PipelineNodeProducer nodeProducer = RendererPipelineConfiguration.pipelineNodeProducers.get(nodeInfo.type);
+        if (nodeProducer == null)
+            throw new IllegalStateException("Unable to find node producer for type: " + nodeInfo.type);
         Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers = new HashMap<>();
         for (PipelineNodeInput nodeInput : nodeProducer.getConfiguration().getNodeInputs()) {
             String inputName = nodeInput.getName();

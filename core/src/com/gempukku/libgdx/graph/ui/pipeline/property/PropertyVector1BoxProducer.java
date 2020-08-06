@@ -14,8 +14,6 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
 public class PropertyVector1BoxProducer implements PropertyBoxProducer {
-    private Actor actor;
-
     @Override
     public boolean supportsType(String type) {
         return type.equals("Vector1");

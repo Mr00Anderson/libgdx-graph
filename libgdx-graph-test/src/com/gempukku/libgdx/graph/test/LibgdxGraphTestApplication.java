@@ -3,6 +3,7 @@ package com.gempukku.libgdx.graph.test;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -68,12 +69,18 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         try {
             InputStream stream = Gdx.files.local("pipeline.json").read();
             try {
-                return PipelineLoader.loadPipeline(stream, new RendererLoaderCallback());
+                PipelineRenderer pipelineRenderer = PipelineLoader.loadPipeline(stream, new RendererLoaderCallback());
+                setupPipeline(pipelineRenderer);
+                return pipelineRenderer;
             } finally {
                 stream.close();
             }
         } catch (IOException exp) {
             throw new RuntimeException("Unable to load pipeline", exp);
         }
+    }
+
+    private void setupPipeline(PipelineRenderer pipelineRenderer) {
+        pipelineRenderer.setPipelineProperty("Background Color", Color.BLACK);
     }
 }

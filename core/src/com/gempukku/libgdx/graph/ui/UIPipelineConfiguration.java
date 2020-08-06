@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.ui;
 
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector1BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector3BoxProducer;
@@ -60,6 +61,7 @@ public class UIPipelineConfiguration {
         propertyProducers.put("Vector1", new PropertyVector1BoxProducer());
         propertyProducers.put("Vector2", new PropertyVector2BoxProducer());
         propertyProducers.put("Vector3", new PropertyVector3BoxProducer());
+        propertyProducers.put("Color", new PropertyColorBoxProducer());
     }
 
     private UIPipelineConfiguration() {
