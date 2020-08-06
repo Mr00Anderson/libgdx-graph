@@ -44,10 +44,10 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
 
     @Override
     public JSONObject serializeData() {
-        JSONObject defaults = propertyDefaultBox.serializeDefault();
-        if (defaults == null)
+        JSONObject data = propertyDefaultBox.serializeData();
+        if (data == null)
             return null;
-        return defaults;
+        return data;
     }
 
     @Override
@@ -63,6 +63,7 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
             public JSONObject serializeData() {
                 JSONObject result = new JSONObject();
                 result.put("name", name);
+                result.put("type", propertyType.name());
                 return result;
             }
         };

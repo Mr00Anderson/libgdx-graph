@@ -6,5 +6,5 @@ import org.json.simple.JSONObject;
 public interface PropertyDefaultBox {
     Actor getActor();
 
-    JSONObject serializeDefault();
+    JSONObject serializeData();
 }

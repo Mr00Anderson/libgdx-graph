@@ -6,6 +6,7 @@ import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector1BoxProducer
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.gempukku.libgdx.graph.ui.producer.PropertyGraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.part.MergeBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.part.SplitBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.provided.ScreenSizeBoxProducer;
@@ -37,6 +38,9 @@ public class UIPipelineConfiguration {
         valueProducers.put("Vector2", new ValueVector2BoxProducer());
         valueProducers.put("Vector3", new ValueVector3BoxProducer());
         valueProducers.put("Boolean", new ValueBooleanBoxProducer());
+        PropertyGraphBoxProducer propertyProducer = new PropertyGraphBoxProducer();
+        notAddableProducers.add(propertyProducer);
+        valueProducers.put("Property", propertyProducer);
         graphBoxProducers.put("Value", valueProducers);
 
         Map<String, GraphBoxProducer> providedProducers = new LinkedHashMap<>();

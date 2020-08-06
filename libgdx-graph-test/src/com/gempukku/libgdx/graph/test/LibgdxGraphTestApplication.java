@@ -81,6 +81,6 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     }
 
     private void setupPipeline(PipelineRenderer pipelineRenderer) {
-        pipelineRenderer.setPipelineProperty("Background Color", Color.BLACK);
+        pipelineRenderer.setPipelineProperty("Background Color", Color.RED);
     }
 }

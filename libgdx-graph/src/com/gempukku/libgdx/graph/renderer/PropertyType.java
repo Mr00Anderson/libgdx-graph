@@ -3,7 +3,9 @@ package com.gempukku.libgdx.graph.renderer;
 public enum PropertyType {
     Vector1(true), Vector2(true), Vector3(true),
     Color(true), TextureRegion(true),
-    Boolean(true), RenderPipeline(false);
+    Boolean(true), RenderPipeline(false),
+    Stage(true), Camera(true),
+    Lights(true), Models(true);
 
     private boolean supportsMultiple;
 
@@ -27,6 +29,10 @@ public enum PropertyType {
                 return value instanceof Boolean;
             case RenderPipeline:
                 return value instanceof RenderPipeline;
+            case Stage:
+                return value instanceof com.badlogic.gdx.scenes.scene2d.Stage;
+            case Camera:
+                return value instanceof com.badlogic.gdx.graphics.Camera;
         }
         return false;
     }

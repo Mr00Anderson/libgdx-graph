@@ -74,8 +74,8 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
 
         final Table table = new Table();
         table.add(new Label("Default: ", skin));
-        table.add(new Label("Color", skin));
-        table.add(image).grow();
+        table.add(new Label("Color", skin)).growX();
+        table.add(image);
 
         return new PropertyBoxImpl(skin, "Color",
                 name,
@@ -87,7 +87,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
                     }
 
                     @Override
-                    public JSONObject serializeDefault() {
+                    public JSONObject serializeData() {
                         JSONObject result = new JSONObject();
                         result.put("color", image.getColor().toString());
                         return result;

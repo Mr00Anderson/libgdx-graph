@@ -54,7 +54,7 @@ public class PropertyVector1BoxProducer implements PropertyBoxProducer {
                     }
 
                     @Override
-                    public JSONObject serializeDefault() {
+                    public JSONObject serializeData() {
                         JSONObject result = new JSONObject();
                         result.put("x", Float.parseFloat(v1Input.getText()));
                         return result;
