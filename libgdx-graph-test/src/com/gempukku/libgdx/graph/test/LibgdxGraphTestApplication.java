@@ -2,6 +2,7 @@ package com.gempukku.libgdx.graph.test;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private Stage stage;
     private Skin skin;
+    private long lastProcessedInput;
 
     private PipelineRenderer pipelineRenderer;
 
@@ -36,9 +38,22 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     @Override
     public void render() {
+        reloadRendererIfNeeded();
         stage.act();
 
         pipelineRenderer.render(RenderOutputs.drawToScreen);
+    }
+
+    private void reloadRendererIfNeeded() {
+        long currentTime = System.currentTimeMillis();
+        if (lastProcessedInput + 200 < currentTime) {
+            if (Gdx.input.isKeyPressed(Input.Keys.R)) {
+                System.out.println("Reloading...");
+                lastProcessedInput = currentTime;
+                pipelineRenderer.dispose();
+                pipelineRenderer = loadPipelineRenderer();
+            }
+        }
     }
 
     @Override
@@ -50,7 +65,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     private PipelineRenderer loadPipelineRenderer() {
         try {
-            InputStream stream = Gdx.files.internal("pipeline/minimum.json").read();
+            InputStream stream = Gdx.files.local("pipeline.json").read();
             try {
                 return PipelineLoader.loadPipeline(stream, new RendererLoaderCallback());
             } finally {

@@ -11,6 +11,7 @@ public class ValuePipelineNode implements PipelineNode {
     public ValuePipelineNode(String propertyName, Object value) {
         this.propertyName = propertyName;
         this.value = Suppliers.ofInstance(value);
+        System.out.println("Node value: " + value);
     }
 
     @Override

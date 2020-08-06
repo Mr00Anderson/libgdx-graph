@@ -2,13 +2,17 @@ package com.gempukku.libgdx.graph.ui.producer.value;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.ui.WhitePixel;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
@@ -54,8 +58,19 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
     }
 
     private GraphBoxPartImpl createValuePart(Skin skin, String id, String value) {
-        final Image image = new Image();
-        image.setColor(Color.valueOf(value));
+        Color color = Color.valueOf(value);
+
+        final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.texture);
+        BaseDrawable baseDrawable = new BaseDrawable(drawable) {
+            @Override
+            public void draw(Batch batch, float x, float y, float width, float height) {
+                drawable.draw(batch, x, y, width, height);
+            }
+        };
+        baseDrawable.setMinSize(20, 20);
+
+        final Image image = new Image(baseDrawable);
+        image.setColor(color);
 
         final ColorPicker picker = new ColorPicker(new ColorPickerAdapter() {
             @Override
@@ -63,22 +78,25 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
                 image.setColor(newColor);
             }
         });
+        picker.setColor(color);
 
         image.addListener(
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        System.out.println(image.getWidth() + " " + image.getHeight());
                         //displaying picker with fade in animation
                         image.getStage().addActor(picker.fadeIn());
                     }
                 });
 
 
-        HorizontalGroup horizontalGroup = new HorizontalGroup();
-        horizontalGroup.addActor(new Label("Color", skin));
-        horizontalGroup.addActor(image);
+        Table table = new Table();
+        table.add(new Label("Color", skin)).growX();
+        table.add(image);
+        table.row();
 
-        GraphBoxPartImpl colorPart = new GraphBoxPartImpl(horizontalGroup,
+        GraphBoxPartImpl colorPart = new GraphBoxPartImpl(table,
                 new GraphBoxPartImpl.Callback() {
                     @Override
                     public void serialize(JSONObject object) {
