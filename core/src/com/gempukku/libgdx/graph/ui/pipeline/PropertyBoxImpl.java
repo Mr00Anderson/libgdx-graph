@@ -29,7 +29,8 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
         headerTable.add(textField).growX();
         headerTable.row();
         add(headerTable).growX().row();
-        add(propertyDefaultBox.getActor()).growX().row();
+        if (propertyDefaultBox != null)
+            add(propertyDefaultBox.getActor()).growX().row();
     }
 
     @Override
@@ -44,10 +45,14 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
 
     @Override
     public JSONObject serializeData() {
-        JSONObject data = propertyDefaultBox.serializeData();
-        if (data == null)
+        if (propertyDefaultBox != null) {
+            JSONObject data = propertyDefaultBox.serializeData();
+            if (data == null)
+                return null;
+            return data;
+        } else {
             return null;
-        return data;
+        }
     }
 
     @Override

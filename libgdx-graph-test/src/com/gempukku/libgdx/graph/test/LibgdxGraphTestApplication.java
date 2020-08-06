@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.PipelineLoader;
@@ -26,6 +27,10 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     public void create() {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         stage = new Stage(new ScreenViewport());
+
+        Label label = new Label("This is a label", skin);
+        label.setPosition(0, 0);
+        stage.addActor(label);
 
         pipelineRenderer = loadPipelineRenderer();
 
@@ -82,5 +87,6 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     private void setupPipeline(PipelineRenderer pipelineRenderer) {
         pipelineRenderer.setPipelineProperty("Background Color", Color.RED);
+        pipelineRenderer.setPipelineProperty("Stage", stage);
     }
 }

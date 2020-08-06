@@ -24,15 +24,15 @@ public class ObjectRendererBoxProducer implements GraphBoxProducer {
 
     @Override
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject jsonObject) {
-        GraphBoxImpl start = new GraphBoxImpl(id, "ObjectRenderer", skin);
-        start.addTopConnector(id + ":input");
-        start.addBottomConnector(id + ":output");
-
-        return start;
+        return createGraphBox(skin, id);
     }
 
     @Override
     public GraphBox createDefault(Skin skin, String id) {
+        return createGraphBox(skin, id);
+    }
+
+    private GraphBox createGraphBox(Skin skin, String id) {
         GraphBoxImpl start = new GraphBoxImpl(id, "ObjectRenderer", skin);
         start.addTopConnector(id + ":input");
         start.addBottomConnector(id + ":output");

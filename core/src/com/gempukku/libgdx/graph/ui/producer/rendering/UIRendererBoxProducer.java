@@ -39,8 +39,8 @@ public class UIRendererBoxProducer implements GraphBoxProducer {
         start.addTopConnector(id + ":input");
         start.addBottomConnector(id + ":output");
         start.addInputGraphPart(
-                skin, id + ":camera", "Camera",
-                Predicates.equalTo(PropertyType.Camera));
+                skin, id + ":stage", "Stage",
+                Predicates.equalTo(PropertyType.Stage));
 
         return start;
     }
