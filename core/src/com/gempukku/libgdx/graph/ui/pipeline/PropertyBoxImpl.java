@@ -25,7 +25,7 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
 
         textField = new TextField(name, skin);
         Table headerTable = new Table(skin);
-        headerTable.add(new Label("Name:", skin));
+        headerTable.add(new Label("Name: ", skin));
         headerTable.add(textField).growX();
         headerTable.row();
         add(headerTable).growX().row();

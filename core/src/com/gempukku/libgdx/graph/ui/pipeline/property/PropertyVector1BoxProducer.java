@@ -40,8 +40,7 @@ public class PropertyVector1BoxProducer implements PropertyBoxProducer {
         v1Input.setText(String.valueOf(v1));
 
         final Table table = new Table();
-        table.add(new Label("Default: ", skin));
-        table.add(new Label("X", skin));
+        table.add(new Label("X ", skin));
         table.add(v1Input).grow();
 
         return new PropertyBoxImpl(skin, "Vector1",

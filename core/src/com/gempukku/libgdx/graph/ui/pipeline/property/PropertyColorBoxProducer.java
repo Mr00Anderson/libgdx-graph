@@ -43,12 +43,17 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
         Color color = Color.valueOf(colorStr);
 
         final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.texture);
-        BaseDrawable baseDrawable = new BaseDrawable(drawable) {
+        final BaseDrawable baseDrawable = new BaseDrawable(drawable) {
             @Override
             public void draw(Batch batch, float x, float y, float width, float height) {
+                Color oldColor = new Color(batch.getColor());
+                batch.setColor(Color.WHITE);
+                drawable.draw(batch, x - 1, y - 1, width + 2, height + 2);
+                batch.setColor(oldColor);
                 drawable.draw(batch, x, y, width, height);
             }
         };
+        baseDrawable.setPadding(1, 1, 1, 1);
         baseDrawable.setMinSize(20, 20);
 
         final Image image = new Image(baseDrawable);
@@ -73,7 +78,6 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
                 });
 
         final Table table = new Table();
-        table.add(new Label("Default: ", skin));
         table.add(new Label("Color", skin)).growX();
         table.add(image);
 

@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.ui.pipeline;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -9,10 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.libgdx.graph.ui.AwareTab;
 import com.gempukku.libgdx.graph.ui.GraphValidator;
@@ -27,6 +29,8 @@ import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
+import com.kotcrab.vis.ui.widget.VisImageButton;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -69,13 +73,14 @@ public class PipelineDesignTab extends AwareTab {
                     protected boolean graphChanged(GraphChangedEvent event) {
                         setDirty(true);
                         updatePipelineValidation();
+                        event.stop();
                         return true;
                     }
                 });
 
         SplitPane splitPane = new SplitPane(leftTable, graphContainer, false, skin);
 
-        splitPane.setMaxSplitAmount(0.3f);
+        splitPane.setMaxSplitAmount(0.2f);
 
         contentTable.add(splitPane).grow().row();
     }
@@ -150,8 +155,9 @@ public class PipelineDesignTab extends AwareTab {
         final VerticalGroup pipelineProperties = new VerticalGroup();
         pipelineProperties.grow();
         Table headerTable = new Table();
+        headerTable.setBackground(skin.getDrawable("vis-blue"));
         headerTable.add(new Label("Pipeline properties", skin)).growX();
-        final TextButton newPropertyButton = new TextButton("+", skin);
+        final VisTextButton newPropertyButton = new VisTextButton("Add", "menu-bar");
         newPropertyButton.addListener(
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
@@ -191,8 +197,18 @@ public class PipelineDesignTab extends AwareTab {
         final Actor actor = propertyBox.getActor();
 
         final Table table = new Table(skin);
+        final Drawable window = skin.getDrawable("window");
+        BaseDrawable wrapper = new BaseDrawable(window) {
+            @Override
+            public void draw(Batch batch, float x, float y, float width, float height) {
+                window.draw(batch, x, y, width, height);
+                ;
+            }
+        };
+        wrapper.setTopHeight(3);
+        table.setBackground(wrapper);
         table.add(new Label(type, skin)).growX();
-        TextButton removeButton = new TextButton("-", skin);
+        VisImageButton removeButton = new VisImageButton("close-window");
         removeButton.addListener(
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
@@ -204,8 +220,9 @@ public class PipelineDesignTab extends AwareTab {
                 });
         table.add(removeButton);
         table.row();
+        table.add(actor).colspan(2).growX();
+        table.row();
         pipelineProperties.addActor(table);
-        pipelineProperties.addActor(actor);
     }
 
     @Override

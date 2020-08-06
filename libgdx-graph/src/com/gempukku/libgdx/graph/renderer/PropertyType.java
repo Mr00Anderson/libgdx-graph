@@ -1,5 +1,7 @@
 package com.gempukku.libgdx.graph.renderer;
 
+import com.badlogic.gdx.graphics.g3d.Environment;
+
 public enum PropertyType {
     Vector1(true), Vector2(true), Vector3(true),
     Color(true), TextureRegion(true),
@@ -31,8 +33,13 @@ public enum PropertyType {
                 return value instanceof RenderPipeline;
             case Stage:
                 return value instanceof com.badlogic.gdx.scenes.scene2d.Stage;
+            case Models:
+                return value instanceof PipelineRendererModels;
+            case Lights:
+                return value instanceof Environment;
             case Camera:
                 return value instanceof com.badlogic.gdx.graphics.Camera;
+
         }
         return false;
     }

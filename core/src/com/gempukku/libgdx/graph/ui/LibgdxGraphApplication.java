@@ -21,7 +21,7 @@ public class LibgdxGraphApplication extends ApplicationAdapter {
         WhitePixel.initialize();
         FileChooser.setDefaultPrefsName("com.gempukku.libgdx.graph.ui.filechooser");
 
-        skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin = new Skin(VisUI.SkinScale.X1.getSkinFile());//Gdx.files.internal("uiskin.json"));
         stage = new Stage(new ScreenViewport());
 
         libgdxGraphScreen = new LibgdxGraphScreen(skin);

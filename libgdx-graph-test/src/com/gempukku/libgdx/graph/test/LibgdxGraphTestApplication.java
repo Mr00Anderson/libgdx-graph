@@ -3,13 +3,24 @@ package com.gempukku.libgdx.graph.test;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
+import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.PipelineLoader;
 import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
+import com.gempukku.libgdx.graph.renderer.PipelineRendererModels;
 import com.gempukku.libgdx.graph.renderer.RenderOutputs;
 import com.gempukku.libgdx.graph.renderer.RendererLoaderCallback;
 
@@ -22,15 +33,37 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private long lastProcessedInput;
 
     private PipelineRenderer pipelineRenderer;
+    private PipelineRendererModels models;
+    private Model sphereModel;
+    private Environment environment;
+    private Camera camera;
 
     @Override
     public void create() {
+        WhitePixel.initialize();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         stage = new Stage(new ScreenViewport());
 
         Label label = new Label("This is a label", skin);
         label.setPosition(0, 0);
         stage.addActor(label);
+
+        ModelBuilder modelBuilder = new ModelBuilder();
+        sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
+                new Material(TextureAttribute.createDiffuse(WhitePixel.texture)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+
+        models = new PipelineRendererModels();
+        models.addModelInstance(new ModelInstance(sphereModel));
+
+        environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2f, 0.2f, 0.2f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+
+        camera = new PerspectiveCamera();
+        camera.position.set(2, 2, 2);
+        camera.lookAt(0, 0, 0);
+        camera.update();
 
         pipelineRenderer = loadPipelineRenderer();
 
@@ -65,9 +98,11 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        sphereModel.dispose();
         pipelineRenderer.dispose();
         skin.dispose();
         stage.dispose();
+        WhitePixel.dispose();
     }
 
     private PipelineRenderer loadPipelineRenderer() {
@@ -86,7 +121,10 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     }
 
     private void setupPipeline(PipelineRenderer pipelineRenderer) {
-        pipelineRenderer.setPipelineProperty("Background Color", Color.RED);
+        //pipelineRenderer.setPipelineProperty("Background Color", Color.RED);
         pipelineRenderer.setPipelineProperty("Stage", stage);
+        pipelineRenderer.setPipelineProperty("Models", models);
+        pipelineRenderer.setPipelineProperty("Lights", environment);
+        pipelineRenderer.setPipelineProperty("Camera", camera);
     }
 }

@@ -1,7 +1,10 @@
 package com.gempukku.libgdx.graph.ui;
 
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyCameraBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyColorBoxProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyLightsBoxProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyModelsBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyStageBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector1BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
@@ -12,8 +15,8 @@ import com.gempukku.libgdx.graph.ui.producer.part.MergeBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.part.SplitBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.provided.ScreenSizeBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.provided.TimeBoxProducer;
+import com.gempukku.libgdx.graph.ui.producer.rendering.DefaultRendererBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.rendering.EndGraphBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.rendering.ObjectRendererBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.rendering.StartGraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.rendering.UIRendererBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueBooleanBoxProducer;
@@ -59,7 +62,7 @@ public class UIPipelineConfiguration {
         EndGraphBoxProducer endProducer = new EndGraphBoxProducer();
         notAddableProducers.add(endProducer);
         renderingProducers.put("End", endProducer);
-        renderingProducers.put("Default renderer", new ObjectRendererBoxProducer());
+        renderingProducers.put("Default renderer", new DefaultRendererBoxProducer());
         renderingProducers.put("UI renderer", new UIRendererBoxProducer());
         graphBoxProducers.put("Rendering", renderingProducers);
 
@@ -68,6 +71,9 @@ public class UIPipelineConfiguration {
         propertyProducers.put("Vector3", new PropertyVector3BoxProducer());
         propertyProducers.put("Color", new PropertyColorBoxProducer());
         propertyProducers.put("Stage", new PropertyStageBoxProducer());
+        propertyProducers.put("Models", new PropertyModelsBoxProducer());
+        propertyProducers.put("Lights", new PropertyLightsBoxProducer());
+        propertyProducers.put("Camera", new PropertyCameraBoxProducer());
     }
 
     private UIPipelineConfiguration() {

@@ -166,7 +166,7 @@ public class GraphContainer extends WidgetGroup {
         VisWindow window = new VisWindow(windowTitle) {
             @Override
             protected void positionChanged() {
-                invalidateHierarchy();
+                fire(new GraphChangedEvent());
             }
 
             @Override
@@ -213,8 +213,6 @@ public class GraphContainer extends WidgetGroup {
     public void layout() {
         super.layout();
         recreateClickableShapes();
-
-        fire(GraphChangedEvent.INSTANCE);
     }
 
     private void recreateClickableShapes() {

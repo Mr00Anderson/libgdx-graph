@@ -17,6 +17,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
@@ -76,6 +77,7 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
             @Override
             public void finished(Color newColor) {
                 image.setColor(newColor);
+                image.fire(new GraphChangedEvent());
             }
         });
         picker.setColor(color);
