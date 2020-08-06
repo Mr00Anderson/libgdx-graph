@@ -1,15 +1,17 @@
 package com.gempukku.libgdx.graph.renderer.impl;
 
 import com.gempukku.libgdx.graph.renderer.PipelineProperty;
+import com.gempukku.libgdx.graph.renderer.PipelinePropertySource;
 import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
 import com.gempukku.libgdx.graph.renderer.RenderOutput;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNode;
+import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.node.EndPipelineNode;
 
 import java.util.Map;
 
-public class PipelineRendererImpl implements PipelineRenderer {
+public class PipelineRendererImpl implements PipelineRenderer, PipelineRenderingContext {
     private Iterable<PipelineNode> nodes;
     private Map<String, WritablePipelineProperty> pipelinePropertyMap;
     private EndPipelineNode endNode;
@@ -49,12 +51,17 @@ public class PipelineRendererImpl implements PipelineRenderer {
     }
 
     @Override
-    public void render(RenderOutput renderOutput) {
+    public PipelinePropertySource getPipelinePropertySource() {
+        return this;
+    }
+
+    @Override
+    public void render(float delta, RenderOutput renderOutput) {
         for (PipelineNode node : nodes) {
-            node.startFrame();
+            node.startFrame(delta);
         }
 
-        RenderPipeline renderPipeline = endNode.executePipeline();
+        RenderPipeline renderPipeline = endNode.executePipeline(this);
         renderOutput.output(renderPipeline);
 
         for (PipelineNode node : nodes) {

@@ -1,13 +1,14 @@
 package com.gempukku.libgdx.graph.renderer.loader.value.producer;
 
 import com.badlogic.gdx.math.Vector2;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeOutputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.node.ValuePipelineNode;
-import com.google.common.base.Supplier;
+import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
@@ -32,7 +33,7 @@ public class ValueVector2PipelineNodeProducer implements PipelineNodeProducer {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, Map<String, Supplier<?>> inputSuppliers) {
+    public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers) {
         return new ValuePipelineNode("value", new Vector2(
                 ((Number) data.get("v1")).floatValue(),
                 ((Number) data.get("v2")).floatValue()));

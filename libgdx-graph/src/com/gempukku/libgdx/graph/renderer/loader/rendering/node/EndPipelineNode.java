@@ -1,18 +1,19 @@
 package com.gempukku.libgdx.graph.renderer.loader.rendering.node;
 
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNode;
-import com.google.common.base.Supplier;
+import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
+import com.google.common.base.Function;
 
 public class EndPipelineNode implements PipelineNode {
-    private Supplier<RenderPipeline> renderPipeline;
+    private Function<PipelineRenderingContext, RenderPipeline> renderPipeline;
 
-    public EndPipelineNode(Supplier<RenderPipeline> renderPipeline) {
+    public EndPipelineNode(Function<PipelineRenderingContext, RenderPipeline> renderPipeline) {
         this.renderPipeline = renderPipeline;
     }
 
     @Override
-    public void startFrame() {
+    public void startFrame(float delta) {
 
     }
 
@@ -20,9 +21,8 @@ public class EndPipelineNode implements PipelineNode {
     public void endFrame() {
     }
 
-
     @Override
-    public Supplier<?> getOutputSupplier(String name) {
+    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name) {
         return null;
     }
 
@@ -31,7 +31,7 @@ public class EndPipelineNode implements PipelineNode {
 
     }
 
-    public RenderPipeline executePipeline() {
-        return renderPipeline.get();
+    public RenderPipeline executePipeline(PipelineRenderingContext pipelineRenderingContext) {
+        return renderPipeline.apply(pipelineRenderingContext);
     }
 }

@@ -3,15 +3,16 @@ package com.gempukku.libgdx.graph.renderer.loader.rendering.producer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeInputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeOutputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.node.StartPipelineNode;
+import com.google.common.base.Function;
 import com.google.common.base.Predicates;
-import com.google.common.base.Supplier;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
@@ -40,9 +41,9 @@ public class StartPipelineNodeProducer implements PipelineNodeProducer {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, Map<String, Supplier<?>> inputSuppliers) {
-        return new StartPipelineNode(
-                (Supplier<Color>) inputSuppliers.get("background"),
-                (Supplier<Vector2>) inputSuppliers.get("size"));
+    public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers) {
+        return new StartPipelineNode(configuration,
+                (Function<PipelineRenderingContext, Color>) inputSuppliers.get("background"),
+                (Function<PipelineRenderingContext, Vector2>) inputSuppliers.get("size"));
     }
 }

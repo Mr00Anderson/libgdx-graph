@@ -1,29 +1,35 @@
 package com.gempukku.libgdx.graph.renderer.loader.value.node;
 
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNode;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
+import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
+import com.google.common.base.Function;
+
+import javax.annotation.Nullable;
 
 public class ValuePipelineNode implements PipelineNode {
     private String propertyName;
-    private Supplier<Object> value;
+    private Function<PipelineRenderingContext, Object> value;
 
-    public ValuePipelineNode(String propertyName, Object value) {
+    public ValuePipelineNode(String propertyName, final Object value) {
         this.propertyName = propertyName;
-        this.value = Suppliers.ofInstance(value);
-        System.out.println("Node value: " + value);
+        this.value = new Function<PipelineRenderingContext, Object>() {
+            @Override
+            public Object apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
+                return value;
+            }
+        };
     }
 
     @Override
-    public Supplier<?> getOutputSupplier(String name) {
+    public void startFrame(float delta) {
+
+    }
+
+    @Override
+    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name) {
         if (!name.equals(propertyName))
             throw new IllegalArgumentException();
         return value;
-    }
-
-    @Override
-    public void startFrame() {
-
     }
 
     @Override

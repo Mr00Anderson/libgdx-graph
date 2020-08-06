@@ -5,7 +5,7 @@ public interface PipelineRenderer extends PipelinePropertySource {
 
     void unsetPipelineProperty(String property);
 
-    void render(RenderOutput renderOutput);
+    void render(float delta, RenderOutput renderOutput);
 
     void dispose();
 }

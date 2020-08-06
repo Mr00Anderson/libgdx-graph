@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.renderer;
 
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.EndPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.StartPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueBooleanPipelineNodeProducer;

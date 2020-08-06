@@ -3,12 +3,13 @@ package com.gempukku.libgdx.graph.renderer;
 import com.gempukku.libgdx.graph.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.renderer.impl.PipelineRendererImpl;
 import com.gempukku.libgdx.graph.renderer.impl.WritablePipelineProperty;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeInput;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.node.EndPipelineNode;
 import com.gempukku.libgdx.graph.renderer.property.PipelinePropertyProducer;
-import com.google.common.base.Supplier;
+import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
 
         PipelineNodeInfo nodeInfo = nodes.get(nodeId);
         PipelineNodeProducer nodeProducer = RendererPipelineConfiguration.pipelineNodeProducers.get(nodeInfo.type);
-        Map<String, Supplier<?>> inputSuppliers = new HashMap<>();
+        Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers = new HashMap<>();
         for (PipelineNodeInput nodeInput : nodeProducer.getConfiguration().getNodeInputs()) {
             String inputName = nodeInput.getName();
             PipelineVertextInfo vertexInfo = findInputProducer(nodeId, inputName);

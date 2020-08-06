@@ -7,30 +7,39 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.gempukku.libgdx.graph.renderer.RenderPipeline;
 import com.gempukku.libgdx.graph.renderer.impl.RenderPipelineImpl;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.rendering.WorkerSupplier;
-import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
+import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
+import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.google.common.base.Function;
 
-import java.util.HashMap;
+import javax.annotation.Nullable;
 import java.util.Map;
 
-public class StartPipelineNode implements PipelineNode {
-    private Supplier<Color> color;
-    private Supplier<Vector2> size;
-    private Map<String, WorkerSupplier<Object>> workerSuppliers = new HashMap<>();
+public class StartPipelineNode extends OncePerFrameJobPipelineNode {
+    private Function<PipelineRenderingContext, Color> color;
+    private Function<PipelineRenderingContext, Vector2> size;
 
     private RenderPipelineImpl renderPipeline;
 
-    public StartPipelineNode(Supplier<Color> color, Supplier<Vector2> size) {
+    public StartPipelineNode(PipelineNodeConfiguration configuration,
+                             Function<PipelineRenderingContext, Color> color,
+                             Function<PipelineRenderingContext, Vector2> size) {
+        super(configuration);
         if (color == null) {
-            color = Suppliers.ofInstance(new Color(0, 0, 0, 1));
+            final Color defaultColor = Color.BLACK;
+            color = new Function<PipelineRenderingContext, Color>() {
+                @Override
+                public Color apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
+                    return defaultColor;
+                }
+            };
         }
         if (size == null) {
-            size = new Supplier<Vector2>() {
+            size = new Function<PipelineRenderingContext, Vector2>() {
                 @Override
-                public Vector2 get() {
+                public Vector2 apply(@Nullable PipelineRenderingContext o) {
                     return new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
                 }
             };
@@ -41,13 +50,9 @@ public class StartPipelineNode implements PipelineNode {
     }
 
     @Override
-    public void startFrame() {
-
-    }
-
-    public void executeNode() {
-        Vector2 bufferSize = size.get();
-        Color backgroundColor = color.get();
+    protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
+        Vector2 bufferSize = size.apply(pipelineRenderingContext);
+        Color backgroundColor = color.apply(pipelineRenderingContext);
 
         FrameBuffer frameBuffer = renderPipeline.getNewFrameBuffer(MathUtils.round(bufferSize.x), MathUtils.round(bufferSize.y), Pixmap.Format.RGBA8888);
         renderPipeline.setCurrentBuffer(frameBuffer);
@@ -57,35 +62,15 @@ public class StartPipelineNode implements PipelineNode {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
         frameBuffer.end();
 
-        WorkerSupplier<Object> output = workerSuppliers.get("output");
+        OutputValue<RenderPipeline> output = outputValues.get("output");
         if (output != null)
             output.setValue(renderPipeline);
     }
 
     @Override
     public void endFrame() {
+        super.endFrame();
         renderPipeline.ageOutBuffers();
-        for (WorkerSupplier<?> value : workerSuppliers.values()) {
-            value.resetValue();
-        }
-    }
-
-    @Override
-    public Supplier<?> getOutputSupplier(String name) {
-        if (!name.equals("output"))
-            throw new IllegalArgumentException();
-        WorkerSupplier<Object> workerSupplier = workerSuppliers.get(name);
-        if (workerSupplier == null) {
-            workerSupplier = new WorkerSupplier<>(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            executeNode();
-                        }
-                    });
-            workerSuppliers.put(name, workerSupplier);
-        }
-        return workerSupplier;
     }
 
     @Override

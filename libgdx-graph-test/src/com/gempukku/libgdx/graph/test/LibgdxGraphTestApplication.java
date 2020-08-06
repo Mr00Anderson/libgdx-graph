@@ -38,10 +38,11 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     @Override
     public void render() {
+        float delta = Gdx.graphics.getDeltaTime();
         reloadRendererIfNeeded();
         stage.act();
 
-        pipelineRenderer.render(RenderOutputs.drawToScreen);
+        pipelineRenderer.render(delta, RenderOutputs.drawToScreen);
     }
 
     private void reloadRendererIfNeeded() {

@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.renderer.loader;
+package com.gempukku.libgdx.graph.renderer.loader.node;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
