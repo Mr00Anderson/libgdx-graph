@@ -7,6 +7,7 @@ import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.EndPipelineN
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.StartPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.UIRendererPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.provided.ScreenSizePipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.rendering.provided.TimePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueBooleanPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueColorPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector1PipelineNodeProducer;
@@ -44,6 +45,7 @@ public class RendererPipelineConfiguration {
         pipelineNodeProducers.put("ValueBoolean", new ValueBooleanPipelineNodeProducer());
 
         pipelineNodeProducers.put("ScreenSize", new ScreenSizePipelineNodeProducer());
+        pipelineNodeProducers.put("Time", new TimePipelineNodeProducer());
 
         pipelineNodeProducers.put("Property", new PropertyPipelineNodeProducer());
 
