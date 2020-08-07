@@ -166,6 +166,7 @@ public class GraphContainer extends WidgetGroup {
         VisWindow window = new VisWindow(windowTitle) {
             @Override
             protected void positionChanged() {
+                recreateClickableShapes();
                 fire(new GraphChangedEvent());
             }
 
@@ -212,6 +213,7 @@ public class GraphContainer extends WidgetGroup {
     @Override
     public void layout() {
         super.layout();
+        System.out.println("Layout");
         recreateClickableShapes();
     }
 

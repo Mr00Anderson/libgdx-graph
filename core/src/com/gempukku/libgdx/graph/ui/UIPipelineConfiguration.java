@@ -50,7 +50,7 @@ public class UIPipelineConfiguration {
         Map<String, GraphBoxProducer> providedProducers = new LinkedHashMap<>();
         providedProducers.put("Time", new TimeBoxProducer());
         providedProducers.put("Screen Size", new ScreenSizeBoxProducer());
-        graphBoxProducers.put("Provided", valueProducers);
+        graphBoxProducers.put("Provided", providedProducers);
 
         Map<String, GraphBoxProducer> mathProducers = new LinkedHashMap<>();
         mathProducers.put("Split", new SplitBoxProducer());

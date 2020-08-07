@@ -38,9 +38,9 @@ public class ScreenSizeBoxProducer implements GraphBoxProducer {
         end.addOutputGraphPart(skin,
                 id + ":size", "Size", PropertyType.Vector2);
         end.addOutputGraphPart(skin,
-                id + ":width", "Width", PropertyType.Vector2);
+                id + ":width", "Width", PropertyType.Vector1);
         end.addOutputGraphPart(skin,
-                id + ":height", "Height", PropertyType.Vector2);
+                id + ":height", "Height", PropertyType.Vector1);
 
         return end;
     }
