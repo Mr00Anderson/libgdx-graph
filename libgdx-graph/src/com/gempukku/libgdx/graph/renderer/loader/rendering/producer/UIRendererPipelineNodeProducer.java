@@ -16,6 +16,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 public class UIRendererPipelineNodeProducer implements PipelineNodeProducer {
@@ -45,26 +46,32 @@ public class UIRendererPipelineNodeProducer implements PipelineNodeProducer {
 
     @Override
     public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
+        Function<PipelineRenderingContext, Stage> stageInput = (Function<PipelineRenderingContext, Stage>) inputFunctions.get("stage");
+        final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
+        if (stageInput == null)
+            stageInput = new Function<PipelineRenderingContext, Stage>() {
+                @Override
+                public Stage apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
+                    return null;
+                }
+            };
+        final Function<PipelineRenderingContext, Stage> finalStageInput = stageInput;
         return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                Function<PipelineRenderingContext, Stage> stageInput = (Function<PipelineRenderingContext, Stage>) inputFunctions.get("stage");
-                Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
-                if (stageInput != null) {
-                    Stage stage = stageInput.apply(pipelineRenderingContext);
-                    if (stage != null) {
-                        FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
-                        int width = currentBuffer.getWidth();
-                        int height = currentBuffer.getHeight();
-                        int screenWidth = stage.getViewport().getScreenWidth();
-                        int screenHeight = stage.getViewport().getScreenHeight();
-                        if (screenWidth != width || screenHeight != height)
-                            stage.getViewport().update(width, height, true);
-                        currentBuffer.begin();
-                        stage.draw();
-                        currentBuffer.end();
-                    }
+                Stage stage = finalStageInput.apply(pipelineRenderingContext);
+                if (stage != null) {
+                    FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
+                    int width = currentBuffer.getWidth();
+                    int height = currentBuffer.getHeight();
+                    int screenWidth = stage.getViewport().getScreenWidth();
+                    int screenHeight = stage.getViewport().getScreenHeight();
+                    if (screenWidth != width || screenHeight != height)
+                        stage.getViewport().update(width, height, true);
+                    currentBuffer.begin();
+                    stage.draw();
+                    currentBuffer.end();
                 }
                 OutputValue output = outputValues.get("output");
                 if (output != null)

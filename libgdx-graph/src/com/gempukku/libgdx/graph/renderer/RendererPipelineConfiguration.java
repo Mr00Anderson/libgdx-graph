@@ -1,13 +1,15 @@
 package com.gempukku.libgdx.graph.renderer;
 
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.part.MergePipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.part.SplitPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.property.PropertyPipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.provided.ScreenSizePipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.provided.TimePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.DefaultRendererPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.EndPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.StartPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.UIRendererPipelineNodeProducer;
-import com.gempukku.libgdx.graph.renderer.loader.rendering.provided.ScreenSizePipelineNodeProducer;
-import com.gempukku.libgdx.graph.renderer.loader.rendering.provided.TimePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueBooleanPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueColorPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector1PipelineNodeProducer;
@@ -46,6 +48,9 @@ public class RendererPipelineConfiguration {
 
         pipelineNodeProducers.put("ScreenSize", new ScreenSizePipelineNodeProducer());
         pipelineNodeProducers.put("Time", new TimePipelineNodeProducer());
+
+        pipelineNodeProducers.put("Merge", new MergePipelineNodeProducer());
+        pipelineNodeProducers.put("Split", new SplitPipelineNodeProducer());
 
         pipelineNodeProducers.put("Property", new PropertyPipelineNodeProducer());
 

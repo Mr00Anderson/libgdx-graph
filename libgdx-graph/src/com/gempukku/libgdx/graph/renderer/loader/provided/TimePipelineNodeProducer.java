@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.renderer.loader.rendering.provided;
+package com.gempukku.libgdx.graph.renderer.loader.provided;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.gempukku.libgdx.graph.renderer.PropertyType;

@@ -26,9 +26,6 @@ public class MergeBoxProducer implements GraphBoxProducer {
 
     @Override
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
-        float x = ((Number) data.get("x")).floatValue();
-        float y = ((Number) data.get("y")).floatValue();
-
         return createGraphBox(skin, id);
     }
 
