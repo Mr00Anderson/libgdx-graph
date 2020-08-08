@@ -5,56 +5,25 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.gempukku.libgdx.graph.renderer.PipelineRendererModels;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
+import com.gempukku.libgdx.graph.renderer.config.rendering.DefaultRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
 import com.google.common.base.Function;
-import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
 
-public class DefaultRendererPipelineNodeProducer implements PipelineNodeProducer {
-    private PipelineNodeConfigurationImpl configuration;
-
+public class DefaultRendererPipelineNodeProducer extends PipelineNodeProducerImpl {
     public DefaultRendererPipelineNodeProducer() {
-        configuration = new PipelineNodeConfigurationImpl();
-        configuration.addNodeInput(
-                new PipelineNodeInputImpl(false, "models",
-                        Predicates.equalTo(PropertyType.Models)));
-        configuration.addNodeInput(
-                new PipelineNodeInputImpl(false, "lights",
-                        Predicates.equalTo(PropertyType.Lights)));
-        configuration.addNodeInput(
-                new PipelineNodeInputImpl(false, "camera",
-                        Predicates.equalTo(PropertyType.Camera)));
-        configuration.addNodeInput(
-                new PipelineNodeInputImpl(true, "input",
-                        Predicates.equalTo(PropertyType.RenderPipeline)));
-        configuration.addNodeOutput(
-                new PipelineNodeOutputImpl("output", PropertyType.RenderPipeline));
-    }
-
-    @Override
-    public boolean supportsType(String type) {
-        return type.equals("DefaultRenderer");
-    }
-
-    @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+        super(new DefaultRendererPipelineNodeConfiguration());
     }
 
     @Override
     public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        return new OncePerFrameJobPipelineNode(configuration) {
+        return new OncePerFrameJobPipelineNode(getConfiguration()) {
             private ModelBatch modelBatch = new ModelBatch();
 
             @Override

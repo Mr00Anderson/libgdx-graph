@@ -13,6 +13,7 @@ import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.PropertyGraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.part.MergeBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.part.SplitBoxProducer;
+import com.gempukku.libgdx.graph.ui.producer.postprocessor.BloomPostProcessorBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.provided.ScreenSizeBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.provided.TimeBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.rendering.DefaultRendererBoxProducer;
@@ -65,6 +66,10 @@ public class UIPipelineConfiguration {
         renderingProducers.put("Default renderer", new DefaultRendererBoxProducer());
         renderingProducers.put("UI renderer", new UIRendererBoxProducer());
         graphBoxProducers.put("Rendering", renderingProducers);
+
+        Map<String, GraphBoxProducer> postProcessorProducers = new LinkedHashMap<>();
+        postProcessorProducers.put("Bloom", new BloomPostProcessorBoxProducer());
+        graphBoxProducers.put("Post Processor", postProcessorProducers);
 
         propertyProducers.put("Vector1", new PropertyVector1BoxProducer());
         propertyProducers.put("Vector2", new PropertyVector2BoxProducer());

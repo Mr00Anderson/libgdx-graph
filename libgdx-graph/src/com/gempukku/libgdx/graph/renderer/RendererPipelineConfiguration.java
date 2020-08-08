@@ -3,6 +3,7 @@ package com.gempukku.libgdx.graph.renderer;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.part.MergePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.part.SplitPipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.postprocessor.BloomPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.property.PropertyPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.provided.ScreenSizePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.provided.TimePipelineNodeProducer;
@@ -53,6 +54,8 @@ public class RendererPipelineConfiguration {
         pipelineNodeProducers.put("Split", new SplitPipelineNodeProducer());
 
         pipelineNodeProducers.put("Property", new PropertyPipelineNodeProducer());
+
+        pipelineNodeProducers.put("Bloom", new BloomPipelineNodeProducer());
 
         pipelinePropertyProducers.add(new Vector1PipelinePropertyProducer());
         pipelinePropertyProducers.add(new Vector2PipelinePropertyProducer());

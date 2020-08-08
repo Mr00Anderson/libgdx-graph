@@ -2,30 +2,19 @@ package com.gempukku.libgdx.graph.renderer.loader.property;
 
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
 import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class PropertyPipelineNodeProducer implements PipelineNodeProducer {
+public class PropertyPipelineNodeProducer extends PipelineNodeProducerImpl {
     private PipelineNodeConfigurationImpl configuration;
 
     public PropertyPipelineNodeProducer() {
-        configuration = new PipelineNodeConfigurationImpl();
-    }
-
-    @Override
-    public boolean supportsType(String type) {
-        return type.equals("Property");
-    }
-
-    @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+        super(new PipelineNodeConfigurationImpl("Property"));
     }
 
     @Override

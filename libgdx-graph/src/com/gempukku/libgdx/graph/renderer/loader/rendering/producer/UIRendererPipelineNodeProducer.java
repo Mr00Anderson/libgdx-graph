@@ -2,46 +2,21 @@ package com.gempukku.libgdx.graph.renderer.loader.rendering.producer;
 
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
+import com.gempukku.libgdx.graph.renderer.config.rendering.UIRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
 import com.google.common.base.Function;
-import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class UIRendererPipelineNodeProducer implements PipelineNodeProducer {
-    private PipelineNodeConfigurationImpl configuration;
-
+public class UIRendererPipelineNodeProducer extends PipelineNodeProducerImpl {
     public UIRendererPipelineNodeProducer() {
-        configuration = new PipelineNodeConfigurationImpl();
-        configuration.addNodeInput(
-                new PipelineNodeInputImpl(false, "stage",
-                        Predicates.equalTo(PropertyType.Stage)));
-        configuration.addNodeInput(
-                new PipelineNodeInputImpl(true, "input",
-                        Predicates.equalTo(PropertyType.RenderPipeline)));
-        configuration.addNodeOutput(
-                new PipelineNodeOutputImpl("output", PropertyType.RenderPipeline));
-    }
-
-    @Override
-    public boolean supportsType(String type) {
-        return type.equals("UIRenderer");
-    }
-
-    @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+        super(new UIRendererPipelineNodeConfiguration());
     }
 
     @Override
@@ -56,7 +31,7 @@ public class UIRendererPipelineNodeProducer implements PipelineNodeProducer {
                 }
             };
         final Function<PipelineRenderingContext, Stage> finalStageInput = stageInput;
-        return new OncePerFrameJobPipelineNode(configuration) {
+        return new OncePerFrameJobPipelineNode(getConfiguration()) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);

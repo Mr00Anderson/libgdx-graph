@@ -4,8 +4,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class PipelineNodeConfigurationImpl implements PipelineNodeConfiguration {
+    private String type;
     private Map<String, PipelineNodeInput> nodeInputs = new LinkedHashMap<>();
     private Map<String, PipelineNodeOutput> nodeOutputs = new LinkedHashMap<>();
+
+    public PipelineNodeConfigurationImpl(String type) {
+        this.type = type;
+    }
 
     public void addNodeInput(PipelineNodeInput input) {
         nodeInputs.put(input.getName(), input);
@@ -13,6 +18,11 @@ public class PipelineNodeConfigurationImpl implements PipelineNodeConfiguration 
 
     public void addNodeOutput(PipelineNodeOutput output) {
         nodeOutputs.put(output.getName(), output);
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 
     @Override

@@ -1,35 +1,19 @@
 package com.gempukku.libgdx.graph.renderer.loader.value.producer;
 
 import com.badlogic.gdx.graphics.Color;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueColorPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
 import com.gempukku.libgdx.graph.renderer.loader.value.node.ValuePipelineNode;
 import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
 
-public class ValueColorPipelineNodeProducer implements PipelineNodeProducer {
-    private PipelineNodeConfigurationImpl configuration;
-
+public class ValueColorPipelineNodeProducer extends PipelineNodeProducerImpl {
     public ValueColorPipelineNodeProducer() {
-        configuration = new PipelineNodeConfigurationImpl();
-        configuration.addNodeOutput(
-                new PipelineNodeOutputImpl("value", null));
-    }
-
-    @Override
-    public boolean supportsType(String type) {
-        return type.equals("ValueColor");
-    }
-
-    @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+        super(new ValueColorPipelineNodeConfiguration());
     }
 
     @Override

@@ -55,6 +55,9 @@ public class GraphValidator {
     }
 
     private static ValidationResult isCyclic(GraphContainer graphContainer, GraphBox start, int expectedNodeCount) {
+        if (start == null)
+            return ValidationResult.Invalid;
+
         Set<String> visited = new HashSet<>();
         Set<String> recStack = new HashSet<>();
 

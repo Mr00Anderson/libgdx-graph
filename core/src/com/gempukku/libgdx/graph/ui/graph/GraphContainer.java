@@ -96,6 +96,7 @@ public class GraphContainer extends WidgetGroup {
 
     private void removeConnection(GraphConnection connection) {
         graphConnections.remove(connection);
+        fire(new GraphChangedEvent());
         invalidate();
     }
 
@@ -185,7 +186,7 @@ public class GraphContainer extends WidgetGroup {
         addActor(window);
         window.setSize(Math.max(150, window.getPrefWidth()), window.getPrefHeight());
         graphBoxWindowMap.put(graphBox, window);
-        invalidate();
+        fire(new GraphChangedEvent());
     }
 
     private void removeGraphBox(GraphBox graphBox) {
@@ -207,6 +208,7 @@ public class GraphContainer extends WidgetGroup {
         if (nodeFrom == null || nodeTo == null)
             throw new IllegalArgumentException("Can't find node");
         graphConnections.add(new GraphConnection(nodeFrom, nodeTo));
+        fire(new GraphChangedEvent());
         invalidate();
     }
 

@@ -14,9 +14,14 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.PipelineLoader;
 import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
@@ -42,11 +47,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     public void create() {
         WhitePixel.initialize();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        stage = new Stage(new ScreenViewport());
-
-        Label label = new Label("This is a label", skin);
-        label.setPosition(0, 0);
-        stage.addActor(label);
+        constructStage();
 
         ModelBuilder modelBuilder = new ModelBuilder();
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
@@ -61,13 +62,56 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
         camera = new PerspectiveCamera();
-        camera.position.set(2, 2, 2);
+        camera.position.set(5f, 5f, 5f);
         camera.lookAt(0, 0, 0);
         camera.update();
 
         pipelineRenderer = loadPipelineRenderer();
 
         Gdx.input.setInputProcessor(stage);
+    }
+
+    private void constructStage() {
+        stage = new Stage(new ScreenViewport());
+
+        final Slider bloomRadius = new Slider(0, 50, 1, false, skin);
+        bloomRadius.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        pipelineRenderer.setPipelineProperty("Bloom Radius", bloomRadius.getValue());
+                    }
+                });
+
+        final Slider minimalBrightness = new Slider(0, 1, 0.01f, false, skin);
+        minimalBrightness.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        pipelineRenderer.setPipelineProperty("Min Brightness", minimalBrightness.getValue());
+                    }
+                });
+
+        final Slider bloomStrength = new Slider(0, 1, 0.01f, false, skin);
+        bloomStrength.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        pipelineRenderer.setPipelineProperty("Bloom Strength", bloomStrength.getValue());
+                    }
+                });
+
+        Table tbl = new Table();
+        tbl.add(new Label("Bloom Radius", skin));
+        tbl.add(bloomRadius).row();
+        tbl.add(new Label("Min Brightness", skin));
+        tbl.add(minimalBrightness).row();
+        tbl.add(new Label("Bloom Strength", skin));
+        tbl.add(bloomStrength).row();
+        tbl.setFillParent(true);
+        tbl.align(Align.topLeft);
+
+        stage.addActor(tbl);
     }
 
     @Override

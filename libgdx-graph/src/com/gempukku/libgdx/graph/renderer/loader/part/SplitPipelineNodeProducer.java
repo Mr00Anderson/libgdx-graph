@@ -3,52 +3,24 @@ package com.gempukku.libgdx.graph.renderer.loader.part;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.config.part.SplitPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
 import com.google.common.base.Function;
-import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
-import java.util.Arrays;
 import java.util.Map;
 
-public class SplitPipelineNodeProducer implements PipelineNodeProducer {
-    private PipelineNodeConfigurationImpl configuration;
-
+public class SplitPipelineNodeProducer extends PipelineNodeProducerImpl {
     public SplitPipelineNodeProducer() {
-        configuration = new PipelineNodeConfigurationImpl();
-        configuration.addNodeInput(
-                new PipelineNodeInputImpl(true, "input", Predicates.in(Arrays.asList(PropertyType.Vector2, PropertyType.Vector3, PropertyType.Color))));
-        configuration.addNodeOutput(
-                new PipelineNodeOutputImpl("x", PropertyType.Vector1));
-        configuration.addNodeOutput(
-                new PipelineNodeOutputImpl("y", PropertyType.Vector1));
-        configuration.addNodeOutput(
-                new PipelineNodeOutputImpl("z", PropertyType.Vector1));
-        configuration.addNodeOutput(
-                new PipelineNodeOutputImpl("w", PropertyType.Vector1));
-    }
-
-    @Override
-    public boolean supportsType(String type) {
-        return type.equals("Split");
-    }
-
-    @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+        super(new SplitPipelineNodeConfiguration());
     }
 
     @Override
     public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        return new OncePerFrameJobPipelineNode(configuration) {
+        return new OncePerFrameJobPipelineNode(getConfiguration()) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 Object input = inputFunctions.get("input").apply(pipelineRenderingContext);
