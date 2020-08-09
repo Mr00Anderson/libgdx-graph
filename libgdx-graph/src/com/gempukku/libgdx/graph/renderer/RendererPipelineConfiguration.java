@@ -4,6 +4,7 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.part.MergePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.part.SplitPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.postprocessor.BloomPipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.postprocessor.GammaCorrectionPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.postprocessor.GaussianBlurPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.property.PropertyPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.provided.ScreenSizePipelineNodeProducer;
@@ -58,6 +59,7 @@ public class RendererPipelineConfiguration {
 
         pipelineNodeProducers.put("Bloom", new BloomPipelineNodeProducer());
         pipelineNodeProducers.put("GaussianBlur", new GaussianBlurPipelineNodeProducer());
+        pipelineNodeProducers.put("GammaCorrection", new GammaCorrectionPipelineNodeProducer());
 
         pipelinePropertyProducers.add(new Vector1PipelinePropertyProducer());
         pipelinePropertyProducers.add(new Vector2PipelinePropertyProducer());

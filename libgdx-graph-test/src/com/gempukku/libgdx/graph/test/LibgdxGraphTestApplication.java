@@ -110,6 +110,16 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                     }
                 });
 
+        final Slider gammaCorrection = new Slider(0, 5, 0.01f, false, skin);
+        gammaCorrection.setValue(1f);
+        gammaCorrection.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        pipelineRenderer.setPipelineProperty("Gamma Correction", gammaCorrection.getValue());
+                    }
+                });
+
         Table tbl = new Table();
         tbl.add(new Label("Bloom Radius", skin));
         tbl.add(bloomRadius).row();
@@ -117,8 +127,12 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         tbl.add(minimalBrightness).row();
         tbl.add(new Label("Bloom Strength", skin));
         tbl.add(bloomStrength).row();
+        tbl.add().height(10).colspan(2).row();
         tbl.add(new Label("Blur Radius", skin));
         tbl.add(blurRadius).row();
+        tbl.add().height(10).colspan(2).row();
+        tbl.add(new Label("Gamma Correction", skin));
+        tbl.add(gammaCorrection).row();
         tbl.setFillParent(true);
         tbl.align(Align.topLeft);
 
