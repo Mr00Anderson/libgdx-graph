@@ -92,7 +92,7 @@ public class BloomPipelineNodeProducer extends PipelineNodeProducerImpl {
 
                     newBuffer.begin();
 
-                    shaderProgram.begin();
+                    shaderProgram.bind();
 
                     vertexBufferObject.bind(shaderProgram);
                     indexBufferObject.bind();
@@ -109,8 +109,6 @@ public class BloomPipelineNodeProducer extends PipelineNodeProducerImpl {
                     Gdx.gl20.glDrawElements(Gdx.gl20.GL_TRIANGLES, indexBufferObject.getNumIndices(), GL20.GL_UNSIGNED_SHORT, 0);
                     vertexBufferObject.unbind(shaderProgram);
                     indexBufferObject.unbind();
-
-                    shaderProgram.end();
 
                     newBuffer.end();
 

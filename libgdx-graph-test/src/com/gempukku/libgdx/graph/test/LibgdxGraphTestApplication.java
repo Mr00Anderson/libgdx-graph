@@ -101,6 +101,15 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                     }
                 });
 
+        final Slider blurRadius = new Slider(0, 64, 1f, false, skin);
+        blurRadius.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        pipelineRenderer.setPipelineProperty("Blur Radius", blurRadius.getValue());
+                    }
+                });
+
         Table tbl = new Table();
         tbl.add(new Label("Bloom Radius", skin));
         tbl.add(bloomRadius).row();
@@ -108,6 +117,8 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         tbl.add(minimalBrightness).row();
         tbl.add(new Label("Bloom Strength", skin));
         tbl.add(bloomStrength).row();
+        tbl.add(new Label("Blur Radius", skin));
+        tbl.add(blurRadius).row();
         tbl.setFillParent(true);
         tbl.align(Align.topLeft);
 
