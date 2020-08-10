@@ -46,12 +46,12 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
 
     private GraphBox createGraphBox(Skin skin, String id, boolean v) {
         GraphBoxImpl end = new GraphBoxImpl(id, "ValueBool", skin);
-        end.addGraphBoxPart(createValuePart(skin, id + ":value", v));
+        end.addGraphBoxPart(createValuePart(skin, v));
 
         return end;
     }
 
-    private GraphBoxPartImpl createValuePart(Skin skin, String id, boolean v) {
+    private GraphBoxPartImpl createValuePart(Skin skin, boolean v) {
         HorizontalGroup horizontalGroup = new HorizontalGroup();
         final CheckBox checkBox = new CheckBox("Value", skin);
         checkBox.addListener(

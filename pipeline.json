@@ -2,6 +2,18 @@
   "pipeline": {
     "objects": [
       {
+        "x": 701.0,
+        "y": 112.0,
+        "id": "7d2427e384c2498b88779e75f733c0ff",
+        "type": "UIRenderer"
+      },
+      {
+        "x": 700.0,
+        "y": 437.0,
+        "id": "2a82a2a64d0c40c7bfc6c78468ee86f7",
+        "type": "GaussianBlur"
+      },
+      {
         "data": {
           "name": "Lights",
           "type": "Lights"
@@ -9,6 +21,32 @@
         "x": 461.0,
         "y": 481.0,
         "id": "ecda6fb411974804a6cba93be186590a",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "name": "Models",
+          "type": "Models"
+        },
+        "x": 461.0,
+        "y": 601.0,
+        "id": "2e50b00d93b6447aa997528949860bce",
+        "type": "Property"
+      },
+      {
+        "x": 700.0,
+        "y": 294.0,
+        "id": "a6a8d16f2f484d25874dd60aede9713a",
+        "type": "Bloom"
+      },
+      {
+        "data": {
+          "name": "Blur Radius",
+          "type": "Vector1"
+        },
+        "x": 462.0,
+        "y": 410.0,
+        "id": "3b644dbf333e42b990e44fcd3dba985a",
         "type": "Property"
       },
       {
@@ -32,19 +70,13 @@
         "type": "Property"
       },
       {
-        "x": 701.0,
-        "y": 112.0,
-        "id": "7d2427e384c2498b88779e75f733c0ff",
-        "type": "UIRenderer"
-      },
-      {
         "data": {
-          "name": "Min Brightness",
+          "name": "Bloom Radius",
           "type": "Vector1"
         },
         "x": 462.0,
-        "y": 288.0,
-        "id": "6ccc442cdddd47d7b9c9a6842fdcc836",
+        "y": 346.0,
+        "id": "ff909af41c324ff49a914753bb3073cb",
         "type": "Property"
       },
       {
@@ -58,32 +90,10 @@
         "type": "Property"
       },
       {
-        "x": 701.0,
-        "y": 25.0,
-        "id": "end",
-        "type": "PipelineEnd"
-      },
-      {
-        "data": {
-          "name": "Blur Radius",
-          "type": "Vector1"
-        },
-        "x": 462.0,
-        "y": 410.0,
-        "id": "3b644dbf333e42b990e44fcd3dba985a",
-        "type": "Property"
-      },
-      {
         "x": 254.0,
         "y": 623.0,
         "id": "94a897fe882d4d70a12614a5b0d77f12",
         "type": "ScreenSize"
-      },
-      {
-        "x": 694.0,
-        "y": 203.0,
-        "id": "2b6d517c28934ef19d4838d2d8110f1e",
-        "type": "GammaCorrection"
       },
       {
         "data": {
@@ -96,23 +106,19 @@
         "type": "Property"
       },
       {
-        "data": {
-          "name": "Bloom Radius",
-          "type": "Vector1"
-        },
-        "x": 462.0,
-        "y": 346.0,
-        "id": "ff909af41c324ff49a914753bb3073cb",
-        "type": "Property"
+        "x": 701.0,
+        "y": 25.0,
+        "id": "end",
+        "type": "PipelineEnd"
       },
       {
         "data": {
-          "name": "Models",
-          "type": "Models"
+          "name": "Min Brightness",
+          "type": "Vector1"
         },
-        "x": 461.0,
-        "y": 601.0,
-        "id": "2e50b00d93b6447aa997528949860bce",
+        "x": 462.0,
+        "y": 288.0,
+        "id": "6ccc442cdddd47d7b9c9a6842fdcc836",
         "type": "Property"
       },
       {
@@ -123,21 +129,15 @@
       },
       {
         "x": 700.0,
-        "y": 437.0,
-        "id": "2a82a2a64d0c40c7bfc6c78468ee86f7",
-        "type": "GaussianBlur"
-      },
-      {
-        "x": 700.0,
-        "y": 294.0,
-        "id": "a6a8d16f2f484d25874dd60aede9713a",
-        "type": "Bloom"
-      },
-      {
-        "x": 700.0,
         "y": 669.0,
         "id": "79c4964a2afd4e158e7660c3f5502680",
         "type": "PipelineStart"
+      },
+      {
+        "x": 694.0,
+        "y": 203.0,
+        "id": "2b6d517c28934ef19d4838d2d8110f1e",
+        "type": "GammaCorrection"
       },
       {
         "data": {
@@ -180,12 +180,6 @@
         "toField": "camera",
         "fromField": "value",
         "toNode": "42130262552043d1ba8ac6029e4333c6"
-      },
-      {
-        "fromNode": "4ab6e3102e7944d7934007e130d634ec",
-        "toField": "background",
-        "fromField": "value",
-        "toNode": "79c4964a2afd4e158e7660c3f5502680"
       },
       {
         "fromNode": "94a897fe882d4d70a12614a5b0d77f12",
@@ -252,6 +246,12 @@
         "toField": "input",
         "fromField": "output",
         "toNode": "end"
+      },
+      {
+        "fromNode": "4ab6e3102e7944d7934007e130d634ec",
+        "toField": "background",
+        "fromField": "value",
+        "toNode": "79c4964a2afd4e158e7660c3f5502680"
       }
     ],
     "properties": [

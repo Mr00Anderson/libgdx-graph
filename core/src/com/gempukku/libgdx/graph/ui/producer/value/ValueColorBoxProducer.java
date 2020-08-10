@@ -55,12 +55,12 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
 
     private GraphBox createGraphBox(Skin skin, String id, String value) {
         GraphBoxImpl end = new GraphBoxImpl(id, "ValueColor", skin);
-        end.addGraphBoxPart(createValuePart(skin, id + ":value", value));
+        end.addGraphBoxPart(createValuePart(skin, value));
 
         return end;
     }
 
-    private GraphBoxPartImpl createValuePart(Skin skin, String id, String value) {
+    private GraphBoxPartImpl createValuePart(Skin skin, String value) {
         Color color = Color.valueOf(value);
 
         final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.texture);

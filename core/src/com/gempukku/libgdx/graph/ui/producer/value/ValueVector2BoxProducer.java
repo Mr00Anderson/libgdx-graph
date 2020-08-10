@@ -49,12 +49,12 @@ public class ValueVector2BoxProducer implements GraphBoxProducer {
 
     private GraphBox createGraphBox(Skin skin, String id, float v1, float v2) {
         GraphBoxImpl end = new GraphBoxImpl(id, "ValueVector2", skin);
-        end.addGraphBoxPart(createValuePart(skin, id + ":value", v1, v2));
+        end.addGraphBoxPart(createValuePart(skin, v1, v2));
 
         return end;
     }
 
-    private GraphBoxPartImpl createValuePart(Skin skin, String id, float v1, float v2) {
+    private GraphBoxPartImpl createValuePart(Skin skin, float v1, float v2) {
         final VisValidatableTextField v1Input = new VisValidatableTextField(new Validators.FloatValidator()) {
             @Override
             public float getPrefWidth() {
