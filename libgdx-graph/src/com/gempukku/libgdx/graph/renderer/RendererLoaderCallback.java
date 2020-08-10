@@ -73,7 +73,7 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
             throw new IllegalStateException("Unable to find node producer for type: " + nodeInfo.type);
         Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers = new HashMap<>();
         for (PipelineNodeInput nodeInput : nodeProducer.getConfiguration().getNodeInputs()) {
-            String inputName = nodeInput.getName();
+            String inputName = nodeInput.getFieldId();
             PipelineVertextInfo vertexInfo = findInputProducer(nodeId, inputName);
             if (vertexInfo == null && nodeInput.isRequired())
                 throw new IllegalStateException("Required input not provided");

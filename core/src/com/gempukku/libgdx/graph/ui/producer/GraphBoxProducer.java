@@ -5,7 +5,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import org.json.simple.JSONObject;
 
 public interface GraphBoxProducer {
-    boolean supportsType(String type);
+    String getType();
 
     boolean isCloseable();
 

@@ -4,18 +4,17 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.google.common.base.Predicates;
+
+import java.util.Arrays;
 
 public class GammaCorrectionPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public GammaCorrectionPipelineNodeConfiguration() {
-        super("GammaCorrection");
+        super("GammaCorrection", "Gamma correction");
         addNodeInput(
-                new PipelineNodeInputImpl(false, "gamma",
-                        Predicates.equalTo(PropertyType.Vector1)));
+                new PipelineNodeInputImpl("gamma", "Gamma", PropertyType.Vector1));
         addNodeInput(
-                new PipelineNodeInputImpl(true, "input",
-                        Predicates.equalTo(PropertyType.RenderPipeline)));
+                new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.RenderPipeline), true, true));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", PropertyType.RenderPipeline));
+                new PipelineNodeOutputImpl("output", "Output", Arrays.asList(PropertyType.RenderPipeline), true));
     }
 }

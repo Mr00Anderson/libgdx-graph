@@ -1,12 +1,21 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
 import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.google.common.base.Predicate;
+
+import java.util.List;
 
 public interface PipelineNodeInput {
     boolean isRequired();
 
-    String getName();
+    boolean isMainConnection();
 
-    Predicate<PropertyType> getAcceptedTypes();
+    String getFieldName();
+
+    String getFieldId();
+
+    InputPropertyType getPropertyType();
+
+    interface InputPropertyType {
+        List<PropertyType> getAcceptedPropertyTypes();
+    }
 }

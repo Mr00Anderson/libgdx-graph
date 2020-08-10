@@ -12,6 +12,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.google.common.base.Predicates;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
@@ -28,8 +29,8 @@ public class ValueVector1BoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("ValueVector1");
+    public String getType() {
+        return "ValueVector1";
     }
 
     @Override
@@ -78,7 +79,7 @@ public class ValueVector1BoxProducer implements GraphBoxProducer {
                         object.put("v1", Float.parseFloat(v1Input.getText()));
                     }
                 });
-        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, PropertyType.Vector1);
+        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, Predicates.equalTo(PropertyType.Vector1));
         return colorPart;
     }
 }

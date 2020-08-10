@@ -10,6 +10,7 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
+import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
 public class PropertyBoxImpl extends Table implements PropertyBox {
@@ -81,7 +82,7 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
                 return result;
             }
         };
-        result.addOutputGraphPart(skin, id + ":value", name, propertyType);
+        result.addOutputGraphPart(skin, id + ":value", name, Predicates.equalTo(propertyType));
         return result;
     }
 }

@@ -12,6 +12,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.google.common.base.Predicates;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
@@ -28,9 +29,10 @@ public class ValueVector3BoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("ValueVector3");
+    public String getType() {
+        return "ValueVector3";
     }
+
 
     @Override
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
@@ -114,7 +116,7 @@ public class ValueVector3BoxProducer implements GraphBoxProducer {
                         object.put("v3", Float.parseFloat(v3Input.getText()));
                     }
                 });
-        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, PropertyType.Vector3);
+        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, Predicates.equalTo(PropertyType.Vector3));
         return colorPart;
     }
 }

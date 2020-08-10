@@ -11,10 +11,8 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public class PropertyPipelineNodeProducer extends PipelineNodeProducerImpl {
-    private PipelineNodeConfigurationImpl configuration;
-
     public PropertyPipelineNodeProducer() {
-        super(new PipelineNodeConfigurationImpl("Property"));
+        super(new PipelineNodeConfigurationImpl("Property", "Property"));
     }
 
     @Override

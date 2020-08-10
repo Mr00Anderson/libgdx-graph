@@ -20,8 +20,8 @@ public class GraphBoxPartImpl implements GraphBoxPart {
         inputConnector = new GraphBoxInputConnectorImpl(id, side, propertyPredicate, null);
     }
 
-    public void setOutputConnector(String id, GraphBoxOutputConnector.Side side, PropertyType propertyType) {
-        outputConnector = new GraphBoxOutputConnectorImpl(id, side, propertyType, null);
+    public void setOutputConnector(String id, GraphBoxOutputConnector.Side side, Predicate<PropertyType> propertyPredicate) {
+        outputConnector = new GraphBoxOutputConnectorImpl(id, side, propertyPredicate, null);
     }
 
     @Override

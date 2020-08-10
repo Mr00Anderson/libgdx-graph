@@ -4,12 +4,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
 public class PropertyGraphBoxProducer implements GraphBoxProducer {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Property");
+    public String getType() {
+        return "Property";
     }
 
     @Override
@@ -35,7 +36,7 @@ public class PropertyGraphBoxProducer implements GraphBoxProducer {
                 return result;
             }
         };
-        result.addOutputGraphPart(skin, id + ":value", name, propertyType);
+        result.addOutputGraphPart(skin, id + ":value", name, Predicates.equalTo(propertyType));
 
         return result;
     }

@@ -4,24 +4,23 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.google.common.base.Predicates;
 
 public class MergePipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public MergePipelineNodeConfiguration() {
-        super("Merge");
+        super("Merge", "Merge");
         addNodeInput(
-                new PipelineNodeInputImpl(false, "x", Predicates.equalTo(PropertyType.Vector1)));
+                new PipelineNodeInputImpl("x", "X", PropertyType.Vector1));
         addNodeInput(
-                new PipelineNodeInputImpl(false, "y", Predicates.equalTo(PropertyType.Vector1)));
+                new PipelineNodeInputImpl("y", "Y", PropertyType.Vector1));
         addNodeInput(
-                new PipelineNodeInputImpl(false, "z", Predicates.equalTo(PropertyType.Vector1)));
+                new PipelineNodeInputImpl("z", "Z", PropertyType.Vector1));
         addNodeInput(
-                new PipelineNodeInputImpl(false, "w", Predicates.equalTo(PropertyType.Vector1)));
+                new PipelineNodeInputImpl("w", "W", PropertyType.Vector1));
         addNodeOutput(
-                new PipelineNodeOutputImpl("v2", PropertyType.Vector2));
+                new PipelineNodeOutputImpl("v2", "Vector2", PropertyType.Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("v3", PropertyType.Vector3));
+                new PipelineNodeOutputImpl("v3", "Vector3", PropertyType.Vector3));
         addNodeOutput(
-                new PipelineNodeOutputImpl("color", PropertyType.Color));
+                new PipelineNodeOutputImpl("color", "Color", PropertyType.Color));
     }
 }

@@ -5,24 +5,31 @@ import java.util.Map;
 
 public class PipelineNodeConfigurationImpl implements PipelineNodeConfiguration {
     private String type;
+    private String name;
     private Map<String, PipelineNodeInput> nodeInputs = new LinkedHashMap<>();
     private Map<String, PipelineNodeOutput> nodeOutputs = new LinkedHashMap<>();
 
-    public PipelineNodeConfigurationImpl(String type) {
+    public PipelineNodeConfigurationImpl(String type, String name) {
         this.type = type;
+        this.name = name;
     }
 
     public void addNodeInput(PipelineNodeInput input) {
-        nodeInputs.put(input.getName(), input);
+        nodeInputs.put(input.getFieldId(), input);
     }
 
     public void addNodeOutput(PipelineNodeOutput output) {
-        nodeOutputs.put(output.getName(), output);
+        nodeOutputs.put(output.getFieldId(), output);
     }
 
     @Override
     public String getType() {
         return type;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override

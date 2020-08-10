@@ -2,20 +2,20 @@
   "pipeline": {
     "objects": [
       {
-        "x": 430.0,
-        "y": 225.0,
-        "id": "7bd6a2015adf4fdd9a1f75ed60398ced",
-        "type": "UIRenderer"
+        "data": {
+          "name": "Stage",
+          "type": "Stage"
+        },
+        "x": 190.0,
+        "y": 199.0,
+        "id": "58c3a27bddb24a3984e43402f5cd8117",
+        "type": "Property"
       },
       {
-        "data": {
-          "name": "Lights",
-          "type": "Lights"
-        },
-        "x": 163.0,
-        "y": 360.0,
-        "id": "156f06b0d5124e8b830124909d68790d",
-        "type": "Property"
+        "x": 430.0,
+        "y": 513.0,
+        "id": "78f632288a564ce6a0bcde6f9dc1940f",
+        "type": "PipelineStart"
       },
       {
         "x": 430.0,
@@ -35,22 +35,12 @@
       },
       {
         "data": {
-          "name": "Camera",
-          "type": "Camera"
+          "name": "Lights",
+          "type": "Lights"
         },
-        "x": 183.0,
-        "y": 302.0,
-        "id": "696850a1c41f4b37927e7f1dbc4b4949",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Stage",
-          "type": "Stage"
-        },
-        "x": 190.0,
-        "y": 199.0,
-        "id": "58c3a27bddb24a3984e43402f5cd8117",
+        "x": 180.0,
+        "y": 301.0,
+        "id": "156f06b0d5124e8b830124909d68790d",
         "type": "Property"
       },
       {
@@ -61,9 +51,19 @@
       },
       {
         "x": 430.0,
-        "y": 513.0,
-        "id": "78f632288a564ce6a0bcde6f9dc1940f",
-        "type": "PipelineStart"
+        "y": 225.0,
+        "id": "7bd6a2015adf4fdd9a1f75ed60398ced",
+        "type": "UIRenderer"
+      },
+      {
+        "data": {
+          "name": "Camera",
+          "type": "Camera"
+        },
+        "x": 181.0,
+        "y": 360.0,
+        "id": "696850a1c41f4b37927e7f1dbc4b4949",
+        "type": "Property"
       }
     ],
     "connections": [

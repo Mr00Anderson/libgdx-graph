@@ -6,8 +6,8 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
 public class ValueBooleanPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public ValueBooleanPipelineNodeConfiguration() {
-        super("ValueBoolean");
+        super("ValueBoolean", "Boolean value");
         addNodeOutput(
-                new PipelineNodeOutputImpl("value", PropertyType.Boolean));
+                new PipelineNodeOutputImpl("value", "Value", PropertyType.Boolean));
     }
 }

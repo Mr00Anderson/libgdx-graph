@@ -10,7 +10,7 @@ import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import org.json.simple.JSONObject;
 
-import java.util.Map;
+import java.util.Set;
 
 public class UIPipelineLoaderCallback implements PipelineLoaderCallback<PipelineDesignTab> {
     private Skin skin;
@@ -65,9 +65,9 @@ public class UIPipelineLoaderCallback implements PipelineLoaderCallback<Pipeline
     }
 
     private static GraphBoxProducer findProducerByType(String type) {
-        for (Map<String, GraphBoxProducer> producers : UIPipelineConfiguration.graphBoxProducers.values()) {
-            for (GraphBoxProducer producer : producers.values()) {
-                if (producer.supportsType(type))
+        for (Set<GraphBoxProducer> producers : UIPipelineConfiguration.graphBoxProducers.values()) {
+            for (GraphBoxProducer producer : producers) {
+                if (producer.getType().equals(type))
                     return producer;
             }
         }

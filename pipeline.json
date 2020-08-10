@@ -2,16 +2,66 @@
   "pipeline": {
     "objects": [
       {
+        "data": {
+          "name": "Lights",
+          "type": "Lights"
+        },
+        "x": 461.0,
+        "y": 481.0,
+        "id": "ecda6fb411974804a6cba93be186590a",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "name": "Stage",
+          "type": "Stage"
+        },
+        "x": 464.0,
+        "y": 99.0,
+        "id": "cff4d91ba45f499fb5fb55d43e6008f2",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "name": "Gamma Correction",
+          "type": "Vector1"
+        },
+        "x": 462.0,
+        "y": 166.0,
+        "id": "fa8e19ccd38a4affa2bd0286c21f64f6",
+        "type": "Property"
+      },
+      {
         "x": 701.0,
         "y": 112.0,
         "id": "7d2427e384c2498b88779e75f733c0ff",
         "type": "UIRenderer"
       },
       {
-        "x": 694.0,
-        "y": 203.0,
-        "id": "2b6d517c28934ef19d4838d2d8110f1e",
-        "type": "GammaCorrection"
+        "data": {
+          "name": "Min Brightness",
+          "type": "Vector1"
+        },
+        "x": 462.0,
+        "y": 288.0,
+        "id": "6ccc442cdddd47d7b9c9a6842fdcc836",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "name": "Bloom Strength",
+          "type": "Vector1"
+        },
+        "x": 462.0,
+        "y": 231.0,
+        "id": "209cf4ce86cb4ccf9d99043ce7e1c119",
+        "type": "Property"
+      },
+      {
+        "x": 701.0,
+        "y": 25.0,
+        "id": "end",
+        "type": "PipelineEnd"
       },
       {
         "data": {
@@ -24,13 +74,25 @@
         "type": "Property"
       },
       {
+        "x": 254.0,
+        "y": 623.0,
+        "id": "94a897fe882d4d70a12614a5b0d77f12",
+        "type": "ScreenSize"
+      },
+      {
+        "x": 694.0,
+        "y": 203.0,
+        "id": "2b6d517c28934ef19d4838d2d8110f1e",
+        "type": "GammaCorrection"
+      },
+      {
         "data": {
-          "name": "Gamma Correction",
-          "type": "Vector1"
+          "name": "Background Color",
+          "type": "Color"
         },
-        "x": 462.0,
-        "y": 166.0,
-        "id": "fa8e19ccd38a4affa2bd0286c21f64f6",
+        "x": 460.0,
+        "y": 692.0,
+        "id": "4ab6e3102e7944d7934007e130d634ec",
         "type": "Property"
       },
       {
@@ -45,48 +107,6 @@
       },
       {
         "data": {
-          "name": "Min Brightness",
-          "type": "Vector1"
-        },
-        "x": 462.0,
-        "y": 288.0,
-        "id": "6ccc442cdddd47d7b9c9a6842fdcc836",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Stage",
-          "type": "Stage"
-        },
-        "x": 464.0,
-        "y": 99.0,
-        "id": "cff4d91ba45f499fb5fb55d43e6008f2",
-        "type": "Property"
-      },
-      {
-        "x": 700.0,
-        "y": 669.0,
-        "id": "79c4964a2afd4e158e7660c3f5502680",
-        "type": "PipelineStart"
-      },
-      {
-        "x": 254.0,
-        "y": 623.0,
-        "id": "94a897fe882d4d70a12614a5b0d77f12",
-        "type": "ScreenSize"
-      },
-      {
-        "data": {
-          "name": "Camera",
-          "type": "Camera"
-        },
-        "x": 462.0,
-        "y": 479.0,
-        "id": "fb241e4a93d44418ab8ffbefd898f5f3",
-        "type": "Property"
-      },
-      {
-        "data": {
           "name": "Models",
           "type": "Models"
         },
@@ -94,32 +114,6 @@
         "y": 601.0,
         "id": "2e50b00d93b6447aa997528949860bce",
         "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Bloom Strength",
-          "type": "Vector1"
-        },
-        "x": 462.0,
-        "y": 231.0,
-        "id": "209cf4ce86cb4ccf9d99043ce7e1c119",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Background Color",
-          "type": "Color"
-        },
-        "x": 460.0,
-        "y": 692.0,
-        "id": "4ab6e3102e7944d7934007e130d634ec",
-        "type": "Property"
-      },
-      {
-        "x": 701.0,
-        "y": 25.0,
-        "id": "end",
-        "type": "PipelineEnd"
       },
       {
         "x": 698.0,
@@ -134,20 +128,26 @@
         "type": "GaussianBlur"
       },
       {
-        "data": {
-          "name": "Lights",
-          "type": "Lights"
-        },
-        "x": 462.0,
-        "y": 541.0,
-        "id": "ecda6fb411974804a6cba93be186590a",
-        "type": "Property"
-      },
-      {
         "x": 700.0,
         "y": 294.0,
         "id": "a6a8d16f2f484d25874dd60aede9713a",
         "type": "Bloom"
+      },
+      {
+        "x": 700.0,
+        "y": 669.0,
+        "id": "79c4964a2afd4e158e7660c3f5502680",
+        "type": "PipelineStart"
+      },
+      {
+        "data": {
+          "name": "Camera",
+          "type": "Camera"
+        },
+        "x": 461.0,
+        "y": 543.0,
+        "id": "fb241e4a93d44418ab8ffbefd898f5f3",
+        "type": "Property"
       }
     ],
     "connections": [

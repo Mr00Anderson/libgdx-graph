@@ -6,12 +6,12 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
 public class ScreenSizePipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public ScreenSizePipelineNodeConfiguration() {
-        super("ScreenSize");
+        super("ScreenSize", "Screen size");
         addNodeOutput(
-                new PipelineNodeOutputImpl("size", PropertyType.Vector2));
+                new PipelineNodeOutputImpl("size", "Size", PropertyType.Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("width", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("width", "Width", PropertyType.Vector1));
         addNodeOutput(
-                new PipelineNodeOutputImpl("height", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("height", "Height", PropertyType.Vector1));
     }
 }

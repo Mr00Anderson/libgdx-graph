@@ -40,14 +40,9 @@ public class GraphBoxImpl implements GraphBox {
         return type;
     }
 
-    public void addTopConnector(String id) {
+    public void addTopConnector(String id, Predicate<PropertyType> propertyTypePredicate) {
         inputConnectors.put(id, new GraphBoxInputConnectorImpl(id, GraphBoxInputConnector.Side.Top,
-                new Predicate<PropertyType>() {
-                    @Override
-                    public boolean apply(@Nullable PropertyType propertyType) {
-                        return propertyType == PropertyType.RenderPipeline;
-                    }
-                }, new Supplier<Float>() {
+                propertyTypePredicate, new Supplier<Float>() {
             @Override
             public Float get() {
                 return table.getWidth() / 2f;
@@ -55,19 +50,19 @@ public class GraphBoxImpl implements GraphBox {
         }));
     }
 
-    public void addBottomConnector(String id) {
+    public void addBottomConnector(String id, Predicate<PropertyType> possiblePropertyTypes) {
         outputConnectors.put(id, new GraphBoxOutputConnectorImpl(id, GraphBoxOutputConnector.Side.Bottom,
-                PropertyType.RenderPipeline, new Supplier<Float>() {
+                possiblePropertyTypes, new Supplier<Float>() {
             @Override
             public Float get() {
                 return table.getWidth() / 2f;
             }
-        }));
+        }, false));
     }
 
     public void addTwoSideGraphPart(Skin skin,
                                     String inputId, String inputText, Predicate<PropertyType> inputType,
-                                    String outputId, String outputText, PropertyType outputType) {
+                                    String outputId, String outputText, Predicate<PropertyType> outputType) {
         Table table = new Table();
         table.add(new Label(inputText, skin)).grow();
         Label outputLabel = new Label(outputText, skin);
@@ -95,7 +90,7 @@ public class GraphBoxImpl implements GraphBox {
             Skin skin,
             String id,
             String text,
-            PropertyType type) {
+            Predicate<PropertyType> type) {
         Table table = new Table();
         Label outputLabel = new Label(text, skin);
         outputLabel.setAlignment(Align.right);
@@ -127,11 +122,16 @@ public class GraphBoxImpl implements GraphBox {
                         }
                     }));
         }
-        GraphBoxOutputConnector outputConnector = graphBoxPart.getOutputConnector();
+        final GraphBoxOutputConnector outputConnector = graphBoxPart.getOutputConnector();
         if (outputConnector != null) {
             String id = outputConnector.getId();
             outputConnectors.put(id + ":" + id,
-                    new GraphBoxOutputConnectorImpl(id, outputConnector.getSide(), outputConnector.getPropertyType(),
+                    new GraphBoxOutputConnectorImpl(id, outputConnector.getSide(), new Predicate<PropertyType>() {
+                        @Override
+                        public boolean apply(@Nullable PropertyType propertyType) {
+                            return outputConnector.produces(propertyType);
+                        }
+                    },
                             new Supplier<Float>() {
                                 @Override
                                 public Float get() {

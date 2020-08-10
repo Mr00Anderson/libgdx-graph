@@ -4,18 +4,17 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.google.common.base.Predicates;
+
+import java.util.Arrays;
 
 public class UIRendererPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public UIRendererPipelineNodeConfiguration() {
-        super("UIRenderer");
+        super("UIRenderer", "UI renderer");
         addNodeInput(
-                new PipelineNodeInputImpl(true, "input",
-                        Predicates.equalTo(PropertyType.RenderPipeline)));
+                new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.RenderPipeline), true, true));
         addNodeInput(
-                new PipelineNodeInputImpl(false, "stage",
-                        Predicates.equalTo(PropertyType.Stage)));
+                new PipelineNodeInputImpl("stage", "Stage", Arrays.asList(PropertyType.Stage), true, false));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", PropertyType.RenderPipeline));
+                new PipelineNodeOutputImpl("output", "Output", Arrays.asList(PropertyType.RenderPipeline), true));
     }
 }

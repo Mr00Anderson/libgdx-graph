@@ -9,14 +9,18 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 
 public class GraphContainer extends WidgetGroup {
     private static final float CONNECTOR_LENGTH = 10;
@@ -106,7 +110,7 @@ public class GraphContainer extends WidgetGroup {
                 } else {
                     GraphBoxInputConnector inputConnector = drawingFrom.isInput() ? drawingFrom.getInputConnector() : nodeInfo.getInputConnector();
                     GraphBoxOutputConnector outputConnector = drawingFrom.isInput() ? nodeInfo.getOutputConnector() : drawingFrom.getOutputConnector();
-                    if (!inputConnector.accepts(outputConnector.getPropertyType())) {
+                    if (!connectorsMatch(inputConnector, outputConnector)) {
                         // Either input-input, output-output, or different property type
                         drawingFrom = null;
                     } else {
@@ -114,7 +118,7 @@ public class GraphContainer extends WidgetGroup {
                         for (GraphConnection oldConnection : findNodeConnections(inputConnector.getId())) {
                             removeConnection(oldConnection);
                         }
-                        if (!outputConnector.getPropertyType().supportsMultiple()) {
+                        if (!outputConnector.supportsMultiple()) {
                             for (GraphConnection oldConnection : findNodeConnections(outputConnector.getId())) {
                                 removeConnection(oldConnection);
                             }
@@ -130,7 +134,7 @@ public class GraphContainer extends WidgetGroup {
         } else {
             NodeInfo clickedNode = getNodeInfo(key);
             if (clickedNode.isInput()
-                    || !clickedNode.getOutputConnector().getPropertyType().supportsMultiple()) {
+                    || !clickedNode.getOutputConnector().supportsMultiple()) {
                 String id = clickedNode.isInput() ? clickedNode.getInputConnector().getId() : clickedNode.getOutputConnector().getId();
                 List<GraphConnection> nodeConnections = findNodeConnections(id);
                 if (nodeConnections.size() > 0) {
@@ -147,6 +151,14 @@ public class GraphContainer extends WidgetGroup {
                 drawingFrom = clickedNode;
             }
         }
+    }
+
+    private boolean connectorsMatch(GraphBoxInputConnector inputConnector, GraphBoxOutputConnector outputConnector) {
+        for (PropertyType value : PropertyType.values()) {
+            if (inputConnector.accepts(value) && outputConnector.produces(value))
+                return true;
+        }
+        return false;
     }
 
     private List<GraphConnection> findNodeConnections(String id) {

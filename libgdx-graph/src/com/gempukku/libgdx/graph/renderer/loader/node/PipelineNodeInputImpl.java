@@ -1,17 +1,38 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
 import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.google.common.base.Predicate;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class PipelineNodeInputImpl implements PipelineNodeInput {
-    private boolean required;
+    private String id;
     private String name;
-    private Predicate<PropertyType> acceptedTypes;
+    private boolean required;
+    private boolean mainConnection;
 
-    public PipelineNodeInputImpl(boolean required, String name, Predicate<PropertyType> acceptedTypes) {
-        this.required = required;
+    private InputPropertyType inputPropertyType;
+
+    public PipelineNodeInputImpl(String id, String name, PropertyType acceptedType) {
+        this(id, name, Arrays.asList(acceptedType), false, false);
+    }
+
+    public PipelineNodeInputImpl(String id, String name, List<PropertyType> acceptedTypes) {
+        this(id, name, acceptedTypes, false, false);
+    }
+
+    public PipelineNodeInputImpl(String id, String name, final List<PropertyType> acceptedTypes, boolean required, boolean mainConnection) {
+        this.id = id;
         this.name = name;
-        this.acceptedTypes = acceptedTypes;
+        this.required = required;
+        this.mainConnection = mainConnection;
+
+        inputPropertyType = new InputPropertyType() {
+            @Override
+            public List<PropertyType> getAcceptedPropertyTypes() {
+                return acceptedTypes;
+            }
+        };
     }
 
     @Override
@@ -20,12 +41,22 @@ public class PipelineNodeInputImpl implements PipelineNodeInput {
     }
 
     @Override
-    public String getName() {
+    public boolean isMainConnection() {
+        return mainConnection;
+    }
+
+    @Override
+    public String getFieldId() {
+        return id;
+    }
+
+    @Override
+    public String getFieldName() {
         return name;
     }
 
     @Override
-    public Predicate<PropertyType> getAcceptedTypes() {
-        return acceptedTypes;
+    public InputPropertyType getPropertyType() {
+        return inputPropertyType;
     }
 }

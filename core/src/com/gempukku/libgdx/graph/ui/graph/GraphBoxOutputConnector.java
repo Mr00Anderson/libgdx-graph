@@ -11,7 +11,9 @@ public interface GraphBoxOutputConnector {
 
     Side getSide();
 
-    PropertyType getPropertyType();
+    boolean produces(PropertyType propertyType);
+
+    boolean supportsMultiple();
 
     float getOffset();
 }

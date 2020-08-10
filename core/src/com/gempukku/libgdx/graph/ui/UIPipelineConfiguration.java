@@ -1,5 +1,16 @@
 package com.gempukku.libgdx.graph.ui;
 
+import com.gempukku.libgdx.graph.renderer.config.part.MergePipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.part.SplitPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.postprocessor.BloomPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.postprocessor.GammaCorrectionPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.postprocessor.GaussianBlurPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.provided.ScreenSizePipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.provided.TimePipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.rendering.DefaultRendererPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.rendering.EndPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.rendering.StartPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.rendering.UIRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyCameraBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyColorBoxProducer;
@@ -10,18 +21,8 @@ import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector1BoxProducer
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducerImpl;
 import com.gempukku.libgdx.graph.ui.producer.PropertyGraphBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.part.MergeBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.part.SplitBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.postprocessor.BloomPostProcessorBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.postprocessor.GammaCorrectionPostProcessorBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.postprocessor.GaussianBlurPostProcessorBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.provided.ScreenSizeBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.provided.TimeBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.rendering.DefaultRendererBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.rendering.EndGraphBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.rendering.StartGraphBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.rendering.UIRendererBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueBooleanBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector1BoxProducer;
@@ -30,49 +31,55 @@ import com.gempukku.libgdx.graph.ui.producer.value.ValueVector3BoxProducer;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class UIPipelineConfiguration {
     public static Set<GraphBoxProducer> notAddableProducers = new HashSet<>();
-    public static Map<String, Map<String, GraphBoxProducer>> graphBoxProducers = new LinkedHashMap<>();
+    public static Map<String, Set<GraphBoxProducer>> graphBoxProducers = new LinkedHashMap<>();
     public static Map<String, PropertyBoxProducer> propertyProducers = new LinkedHashMap<>();
 
     static {
-        Map<String, GraphBoxProducer> valueProducers = new LinkedHashMap<>();
-        valueProducers.put("Color", new ValueColorBoxProducer());
-        valueProducers.put("Vector1", new ValueVector1BoxProducer());
-        valueProducers.put("Vector2", new ValueVector2BoxProducer());
-        valueProducers.put("Vector3", new ValueVector3BoxProducer());
-        valueProducers.put("Boolean", new ValueBooleanBoxProducer());
+        Set<GraphBoxProducer> valueProducers = new LinkedHashSet<>();
+        valueProducers.add(new ValueColorBoxProducer());
+        valueProducers.add(new ValueVector1BoxProducer());
+        valueProducers.add(new ValueVector2BoxProducer());
+        valueProducers.add(new ValueVector3BoxProducer());
+        valueProducers.add(new ValueBooleanBoxProducer());
         PropertyGraphBoxProducer propertyProducer = new PropertyGraphBoxProducer();
         notAddableProducers.add(propertyProducer);
-        valueProducers.put("Property", propertyProducer);
+        valueProducers.add(propertyProducer);
         graphBoxProducers.put("Value", valueProducers);
 
-        Map<String, GraphBoxProducer> providedProducers = new LinkedHashMap<>();
-        providedProducers.put("Time", new TimeBoxProducer());
-        providedProducers.put("Screen Size", new ScreenSizeBoxProducer());
+        Set<GraphBoxProducer> providedProducers = new LinkedHashSet<>();
+        providedProducers.add(new GraphBoxProducerImpl(new TimePipelineNodeConfiguration()));
+        providedProducers.add(new GraphBoxProducerImpl(new ScreenSizePipelineNodeConfiguration()));
         graphBoxProducers.put("Provided", providedProducers);
 
-        Map<String, GraphBoxProducer> mathProducers = new LinkedHashMap<>();
-        mathProducers.put("Split", new SplitBoxProducer());
-        mathProducers.put("Merge", new MergeBoxProducer());
+        Set<GraphBoxProducer> mathProducers = new LinkedHashSet<>();
+        mathProducers.add(new GraphBoxProducerImpl(new SplitPipelineNodeConfiguration()));
+        mathProducers.add(new GraphBoxProducerImpl(new MergePipelineNodeConfiguration()));
         graphBoxProducers.put("Math", mathProducers);
 
-        Map<String, GraphBoxProducer> renderingProducers = new LinkedHashMap<>();
-        renderingProducers.put("Start", new StartGraphBoxProducer());
-        EndGraphBoxProducer endProducer = new EndGraphBoxProducer();
+        Set<GraphBoxProducer> renderingProducers = new LinkedHashSet<>();
+        renderingProducers.add(new GraphBoxProducerImpl(new StartPipelineNodeConfiguration()));
+        GraphBoxProducer endProducer = new GraphBoxProducerImpl(new EndPipelineNodeConfiguration()) {
+            @Override
+            public boolean isCloseable() {
+                return false;
+            }
+        };
         notAddableProducers.add(endProducer);
-        renderingProducers.put("End", endProducer);
-        renderingProducers.put("Default renderer", new DefaultRendererBoxProducer());
-        renderingProducers.put("UI renderer", new UIRendererBoxProducer());
+        renderingProducers.add(endProducer);
+        renderingProducers.add(new GraphBoxProducerImpl(new DefaultRendererPipelineNodeConfiguration()));
+        renderingProducers.add(new GraphBoxProducerImpl(new UIRendererPipelineNodeConfiguration()));
         graphBoxProducers.put("Rendering", renderingProducers);
 
-        Map<String, GraphBoxProducer> postProcessorProducers = new LinkedHashMap<>();
-        postProcessorProducers.put("Bloom", new BloomPostProcessorBoxProducer());
-        postProcessorProducers.put("GaussianBlur", new GaussianBlurPostProcessorBoxProducer());
-        postProcessorProducers.put("GammaCorrection", new GammaCorrectionPostProcessorBoxProducer());
+        Set<GraphBoxProducer> postProcessorProducers = new LinkedHashSet<>();
+        postProcessorProducers.add(new GraphBoxProducerImpl(new BloomPipelineNodeConfiguration()));
+        postProcessorProducers.add(new GraphBoxProducerImpl(new GaussianBlurPipelineNodeConfiguration()));
+        postProcessorProducers.add(new GraphBoxProducerImpl(new GammaCorrectionPipelineNodeConfiguration()));
         graphBoxProducers.put("Post Processor", postProcessorProducers);
 
         propertyProducers.put("Vector1", new PropertyVector1BoxProducer());

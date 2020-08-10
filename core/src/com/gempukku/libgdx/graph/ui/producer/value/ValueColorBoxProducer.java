@@ -13,8 +13,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.WhitePixel;
-import com.gempukku.libgdx.graph.ui.graph.*;
+import com.gempukku.libgdx.graph.ui.graph.GraphBox;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
+import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.google.common.base.Predicates;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import org.json.simple.JSONObject;
@@ -31,9 +36,10 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("ValueColor");
+    public String getType() {
+        return "ValueColor";
     }
+
 
     @Override
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
@@ -100,7 +106,7 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
                         object.put("color", image.getColor().toString());
                     }
                 });
-        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, PropertyType.Color);
+        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, Predicates.equalTo(PropertyType.Color));
         return colorPart;
     }
 }

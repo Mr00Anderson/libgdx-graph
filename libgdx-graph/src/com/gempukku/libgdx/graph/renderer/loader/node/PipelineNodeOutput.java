@@ -3,7 +3,17 @@ package com.gempukku.libgdx.graph.renderer.loader.node;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 
 public interface PipelineNodeOutput {
-    String getName();
+    boolean isMainConnection();
 
-    PropertyType getType();
+    String getFieldName();
+
+    String getFieldId();
+
+    OutputPropertyType getPropertyType();
+
+    interface OutputPropertyType {
+        boolean mayProduce(PropertyType propertyType);
+
+        PropertyType determinePropertyType();
+    }
 }

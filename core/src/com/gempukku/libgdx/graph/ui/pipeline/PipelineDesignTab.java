@@ -37,6 +37,7 @@ import org.json.simple.JSONObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class PipelineDesignTab extends AwareTab {
@@ -100,9 +101,9 @@ public class PipelineDesignTab extends AwareTab {
             public PopupMenu createPopupMenu(final float popupX, final float popupY) {
                 PopupMenu popupMenu = new PopupMenu();
 
-                for (Map.Entry<String, Map<String, GraphBoxProducer>> producersEntry : UIPipelineConfiguration.graphBoxProducers.entrySet()) {
+                for (Map.Entry<String, Set<GraphBoxProducer>> producersEntry : UIPipelineConfiguration.graphBoxProducers.entrySet()) {
                     String menuName = producersEntry.getKey();
-                    Map<String, GraphBoxProducer> producer = producersEntry.getValue();
+                    Set<GraphBoxProducer> producer = producersEntry.getValue();
                     createSubMenu(popupX, popupY, popupMenu, menuName, producer);
                 }
 
@@ -132,20 +133,19 @@ public class PipelineDesignTab extends AwareTab {
         };
     }
 
-    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName, Map<String, GraphBoxProducer> producerMap) {
+    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName, Set<GraphBoxProducer> producers) {
         MenuItem valuesMenuItem = new MenuItem(menuName);
         PopupMenu valuesMenu = new PopupMenu();
-        for (Map.Entry<String, GraphBoxProducer> valueEntry : producerMap.entrySet()) {
-            final String name = valueEntry.getKey();
-            final GraphBoxProducer value = valueEntry.getValue();
-            if (!UIPipelineConfiguration.notAddableProducers.contains(value)) {
+        for (final GraphBoxProducer producer : producers) {
+            final String name = producer.getTitle();
+            if (!UIPipelineConfiguration.notAddableProducers.contains(producer)) {
                 MenuItem valueMenuItem = new MenuItem(name);
                 valueMenuItem.addListener(
                         new ClickListener(Input.Buttons.LEFT) {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
                                 String id = UUID.randomUUID().toString().replace("-", "");
-                                GraphBox graphBox = value.createDefault(skin, id);
+                                GraphBox graphBox = producer.createDefault(skin, id);
                                 graphContainer.addGraphBox(graphBox, name, true, popupX, popupY);
                             }
                         });

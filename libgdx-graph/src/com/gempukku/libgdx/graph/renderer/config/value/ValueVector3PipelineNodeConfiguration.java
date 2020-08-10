@@ -6,8 +6,8 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
 public class ValueVector3PipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public ValueVector3PipelineNodeConfiguration() {
-        super("ValueVector3");
+        super("ValueVector3", "Vector3 value");
         addNodeOutput(
-                new PipelineNodeOutputImpl("value", PropertyType.Vector3));
+                new PipelineNodeOutputImpl("value", "Value", PropertyType.Vector3));
     }
 }

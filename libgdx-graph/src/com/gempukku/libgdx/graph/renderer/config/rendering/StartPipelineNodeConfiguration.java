@@ -4,16 +4,17 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
-import com.google.common.base.Predicates;
+
+import java.util.Arrays;
 
 public class StartPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public StartPipelineNodeConfiguration() {
-        super("StartPipeline");
+        super("PipelineStart", "Pipeline start");
         addNodeInput(
-                new PipelineNodeInputImpl(false, "background", Predicates.equalTo(PropertyType.Color)));
+                new PipelineNodeInputImpl("background", "Background color", PropertyType.Color));
         addNodeInput(
-                new PipelineNodeInputImpl(false, "size", Predicates.equalTo(PropertyType.Vector2)));
+                new PipelineNodeInputImpl("size", "Size", PropertyType.Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", PropertyType.RenderPipeline));
+                new PipelineNodeOutputImpl("output", "Output", Arrays.asList(PropertyType.RenderPipeline), true));
     }
 }

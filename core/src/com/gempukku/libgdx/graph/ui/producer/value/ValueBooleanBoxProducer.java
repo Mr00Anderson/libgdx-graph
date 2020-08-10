@@ -12,6 +12,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
 public class ValueBooleanBoxProducer implements GraphBoxProducer {
@@ -26,9 +27,10 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
     }
 
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("ValueBool");
+    public String getType() {
+        return "ValueBool";
     }
+
 
     @Override
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
@@ -69,7 +71,7 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
                         object.put("value", checkBox.isChecked());
                     }
                 });
-        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, PropertyType.Boolean);
+        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, Predicates.equalTo(PropertyType.Boolean));
         return colorPart;
     }
 }
