@@ -45,7 +45,7 @@ public class PropertyVector2BoxProducer implements PropertyBoxProducer {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v1Input.fire(new GraphChangedEvent());
+                        v1Input.fire(new GraphChangedEvent(false));
                     }
                 });
         final VisValidatableTextField v2Input = new VisValidatableTextField(new Validators.FloatValidator()) {
@@ -59,7 +59,7 @@ public class PropertyVector2BoxProducer implements PropertyBoxProducer {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v2Input.fire(new GraphChangedEvent());
+                        v2Input.fire(new GraphChangedEvent(false));
                     }
                 });
 

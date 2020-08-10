@@ -97,7 +97,7 @@ public class GraphContainer extends WidgetGroup {
 
     private void removeConnection(GraphConnectionImpl connection) {
         graphConnectionImpls.remove(connection);
-        fire(new GraphChangedEvent());
+        fire(new GraphChangedEvent(true));
         invalidate();
     }
 
@@ -184,7 +184,7 @@ public class GraphContainer extends WidgetGroup {
             @Override
             protected void positionChanged() {
                 recreateClickableShapes();
-                fire(new GraphChangedEvent());
+                fire(new GraphChangedEvent(false));
             }
 
             @Override
@@ -202,7 +202,7 @@ public class GraphContainer extends WidgetGroup {
         addActor(window);
         window.setSize(Math.max(150, window.getPrefWidth()), window.getPrefHeight());
         graphBoxWindowMap.put(graphBox, window);
-        fire(new GraphChangedEvent());
+        fire(new GraphChangedEvent(true));
     }
 
     private void removeGraphBox(GraphBox graphBox) {
@@ -216,7 +216,7 @@ public class GraphContainer extends WidgetGroup {
 
         graphBoxWindowMap.remove(graphBox);
         graphBoxes.remove(graphBox);
-        fire(new GraphChangedEvent());
+        fire(new GraphChangedEvent(true));
     }
 
     public void addGraphConnection(String fromNode, String fromField, String toNode, String toField) {
@@ -225,7 +225,7 @@ public class GraphContainer extends WidgetGroup {
         if (nodeFrom == null || nodeTo == null)
             throw new IllegalArgumentException("Can't find node");
         graphConnectionImpls.add(new GraphConnectionImpl(fromNode, fromField, toNode, toField));
-        fire(new GraphChangedEvent());
+        fire(new GraphChangedEvent(true));
         invalidate();
     }
 
@@ -329,12 +329,14 @@ public class GraphContainer extends WidgetGroup {
             GraphBox graphBox = graphBoxWindowEntry.getKey();
             Window window = graphBoxWindowEntry.getValue();
             for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
-                calculateConnector(from, to, window, connector);
-                from.add(x, y);
-                to.add(x, y);
+                if (!connector.getPipelineNodeInput().isRequired()) {
+                    calculateConnector(from, to, window, connector);
+                    from.add(x, y);
+                    to.add(x, y);
 
-                shapeRenderer.line(from, to);
-                shapeRenderer.circle(from.x, from.y, CONNECTOR_RADIUS);
+                    shapeRenderer.line(from, to);
+                    shapeRenderer.circle(from.x, from.y, CONNECTOR_RADIUS);
+                }
             }
 
             for (GraphBoxOutputConnector connector : graphBox.getGraphBoxOutputConnectors()) {
@@ -369,6 +371,23 @@ public class GraphContainer extends WidgetGroup {
             }
         }
 
+        shapeRenderer.end();
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (Map.Entry<GraphBox, Window> graphBoxWindowEntry : graphBoxWindowMap.entrySet()) {
+            GraphBox graphBox = graphBoxWindowEntry.getKey();
+            Window window = graphBoxWindowEntry.getValue();
+            for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
+                if (connector.getPipelineNodeInput().isRequired()) {
+                    calculateConnector(from, to, window, connector);
+                    from.add(x, y);
+                    to.add(x, y);
+
+                    shapeRenderer.line(from, to);
+                    shapeRenderer.circle(from.x, from.y, CONNECTOR_RADIUS);
+                }
+            }
+        }
         shapeRenderer.end();
     }
 

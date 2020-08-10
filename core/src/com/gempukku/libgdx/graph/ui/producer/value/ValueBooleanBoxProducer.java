@@ -58,7 +58,7 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        checkBox.fire(new GraphChangedEvent());
+                        checkBox.fire(new GraphChangedEvent(false));
                     }
                 });
         checkBox.setChecked(v);

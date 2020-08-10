@@ -77,7 +77,8 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
                     @Override
                     protected boolean graphChanged(GraphChangedEvent event) {
                         setDirty(true);
-                        updatePipelineValidation();
+                        if (event.isStructural())
+                            updatePipelineValidation();
                         event.stop();
                         return true;
                     }
@@ -116,18 +117,17 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
     }
 
     private void updatePipelineValidation() {
-        GraphBox end = graphContainer.getGraphBoxById("end");
         GraphValidator.ValidationResult<GraphBox, GraphConnectionImpl> validationResult = GraphValidator.validateGraph(this, "end");
-        System.out.println("Validation result:");
-        for (GraphBox errorNode : validationResult.getErrorNodes()) {
-            System.out.println("Error node: " + errorNode.getId());
-        }
-        for (GraphBox warningNode : validationResult.getWarningNodes()) {
-            System.out.println("Warning node:" + warningNode.getId());
-        }
-        for (GraphConnectionImpl errorConnection : validationResult.getErrorConnections()) {
-            System.out.println("Error connection: " + errorConnection.getNodeFrom() + "->" + errorConnection.getNodeTo());
-        }
+//        System.out.println("Validation result:");
+//        for (GraphBox errorNode : validationResult.getErrorNodes()) {
+//            System.out.println("Error node: " + errorNode.getId());
+//        }
+//        for (GraphBox warningNode : validationResult.getWarningNodes()) {
+//            System.out.println("Warning node:" + warningNode.getId());
+//        }
+//        for (GraphConnectionImpl errorConnection : validationResult.getErrorConnections()) {
+//            System.out.println("Error connection: " + errorConnection.getNodeFrom() + "->" + errorConnection.getNodeTo());
+//        }
     }
 
     private PopupMenuProducer createPopupMenuProducer() {
@@ -262,7 +262,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
         table.row();
         pipelineProperties.addActor(table);
 
-        contentTable.fire(new GraphChangedEvent());
+        contentTable.fire(new GraphChangedEvent(true));
     }
 
     private void removePropertyBox(PropertyBox propertyBox) {
@@ -270,7 +270,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
         propertyBoxes.remove(propertyBox);
         pipelineProperties.removeActor(actor.getParent());
 
-        contentTable.fire(new GraphChangedEvent());
+        contentTable.fire(new GraphChangedEvent(true));
     }
 
     @Override

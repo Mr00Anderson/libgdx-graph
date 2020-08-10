@@ -64,7 +64,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
             @Override
             public void finished(Color newColor) {
                 image.setColor(newColor);
-                image.fire(new GraphChangedEvent());
+                image.fire(new GraphChangedEvent(false));
             }
         });
         picker.setColor(color);

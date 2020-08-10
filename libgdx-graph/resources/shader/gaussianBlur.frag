@@ -5,7 +5,7 @@ precision mediump float;
 uniform sampler2D u_sourceTexture;
 uniform vec2 u_pixelSize;
 uniform int u_blurRadius;
-uniform float u_kernel[17];
+uniform float u_kernel[65];
 uniform int u_vertical;
 
 varying vec2 v_position;

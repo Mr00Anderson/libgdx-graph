@@ -66,7 +66,7 @@ public class ValueVector2BoxProducer implements GraphBoxProducer {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v1Input.fire(new GraphChangedEvent());
+                        v1Input.fire(new GraphChangedEvent(false));
                     }
                 });
 
@@ -81,7 +81,7 @@ public class ValueVector2BoxProducer implements GraphBoxProducer {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v2Input.fire(new GraphChangedEvent());
+                        v2Input.fire(new GraphChangedEvent(false));
                     }
                 });
 

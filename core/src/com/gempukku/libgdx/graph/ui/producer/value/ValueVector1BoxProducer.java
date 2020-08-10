@@ -64,7 +64,7 @@ public class ValueVector1BoxProducer implements GraphBoxProducer {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v1Input.fire(new GraphChangedEvent());
+                        v1Input.fire(new GraphChangedEvent(false));
                     }
                 });
 

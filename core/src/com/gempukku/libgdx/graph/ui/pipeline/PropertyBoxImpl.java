@@ -34,7 +34,7 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        fire(new GraphChangedEvent());
+                        fire(new GraphChangedEvent(true));
                     }
                 });
         headerTable.row();
