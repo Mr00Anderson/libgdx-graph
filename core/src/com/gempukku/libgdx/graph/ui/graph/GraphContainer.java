@@ -15,11 +15,8 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GraphContainer extends WidgetGroup {
     private static final float CONNECTOR_LENGTH = 10;
@@ -215,7 +212,6 @@ public class GraphContainer extends WidgetGroup {
     @Override
     public void layout() {
         super.layout();
-        System.out.println("Layout");
         recreateClickableShapes();
     }
 

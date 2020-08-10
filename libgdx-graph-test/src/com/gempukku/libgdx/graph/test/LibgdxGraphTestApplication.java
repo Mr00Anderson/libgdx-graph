@@ -157,7 +157,6 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         long currentTime = System.currentTimeMillis();
         if (lastProcessedInput + 200 < currentTime) {
             if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-                System.out.println("Reloading...");
                 lastProcessedInput = currentTime;
                 pipelineRenderer.dispose();
                 pipelineRenderer = loadPipelineRenderer();
