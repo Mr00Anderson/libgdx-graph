@@ -1,17 +1,13 @@
 package com.gempukku.libgdx.graph.ui.producer;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
-import javax.annotation.Nullable;
 import java.util.Iterator;
 
 public class GraphBoxProducerImpl implements GraphBoxProducer {
@@ -52,7 +48,7 @@ public class GraphBoxProducerImpl implements GraphBoxProducer {
             while (inputIterator.hasNext()) {
                 input = inputIterator.next();
                 if (input.isMainConnection()) {
-                    start.addTopConnector(id + ":" + input.getFieldId(), Predicates.in(input.getPropertyType().getAcceptedPropertyTypes()));
+                    start.addTopConnector(input);
                     input = null;
                 } else {
                     break;
@@ -61,14 +57,7 @@ public class GraphBoxProducerImpl implements GraphBoxProducer {
             while (outputIterator.hasNext()) {
                 output = outputIterator.next();
                 if (output.isMainConnection()) {
-                    final PipelineNodeOutput finalOutput = output;
-                    start.addBottomConnector(id + ":" + output.getFieldId(),
-                            new Predicate<PropertyType>() {
-                                @Override
-                                public boolean apply(@Nullable PropertyType propertyType) {
-                                    return finalOutput.getPropertyType().mayProduce(propertyType);
-                                }
-                            });
+                    start.addBottomConnector(output);
                     output = null;
                 } else {
                     break;
@@ -76,27 +65,11 @@ public class GraphBoxProducerImpl implements GraphBoxProducer {
             }
 
             if (input != null && output != null) {
-                final PipelineNodeOutput finalOutput1 = output;
-                start.addTwoSideGraphPart(skin,
-                        id + ":" + input.getFieldId(), input.getFieldName(), Predicates.in(input.getPropertyType().getAcceptedPropertyTypes()),
-                        id + ":" + output.getFieldId(), output.getFieldName(),
-                        new Predicate<PropertyType>() {
-                            @Override
-                            public boolean apply(@Nullable PropertyType propertyType) {
-                                return finalOutput1.getPropertyType().mayProduce(propertyType);
-                            }
-                        });
+                start.addTwoSideGraphPart(skin, input, output);
             } else if (input != null) {
-                start.addInputGraphPart(skin, id + ":" + input.getFieldId(), input.getFieldName(), Predicates.in(input.getPropertyType().getAcceptedPropertyTypes()));
+                start.addInputGraphPart(skin, input);
             } else if (output != null) {
-                final PipelineNodeOutput finalOutput2 = output;
-                start.addOutputGraphPart(skin, id + ":" + output.getFieldId(), output.getFieldName(),
-                        new Predicate<PropertyType>() {
-                            @Override
-                            public boolean apply(@Nullable PropertyType propertyType) {
-                                return finalOutput2.getPropertyType().mayProduce(propertyType);
-                            }
-                        });
+                start.addOutputGraphPart(skin, output);
             }
         }
 

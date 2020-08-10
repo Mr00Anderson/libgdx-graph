@@ -38,7 +38,7 @@ public class UIPipelineLoaderCallback implements PipelineLoaderCallback<Pipeline
 
     @Override
     public void addPipelineVertex(String fromNode, String fromProperty, String toNode, String toProperty) {
-        graphContainer.addGraphConnection(fromNode + ":" + fromProperty, toNode + ":" + toProperty);
+        graphContainer.addGraphConnection(fromNode, fromProperty, toNode, toProperty);
     }
 
     @Override

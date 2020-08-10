@@ -11,6 +11,8 @@ public interface PipelineNodeOutput {
 
     OutputPropertyType getPropertyType();
 
+    boolean supportsMultiple();
+
     interface OutputPropertyType {
         boolean mayProduce(PropertyType propertyType);
 

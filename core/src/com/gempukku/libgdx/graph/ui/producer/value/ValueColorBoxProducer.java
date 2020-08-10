@@ -19,7 +19,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
-import com.google.common.base.Predicates;
+import com.gempukku.libgdx.graph.ui.producer.ValuePipelineNodeOutput;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import org.json.simple.JSONObject;
@@ -106,7 +106,7 @@ public class ValueColorBoxProducer implements GraphBoxProducer {
                         object.put("color", image.getColor().toString());
                     }
                 });
-        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, Predicates.equalTo(PropertyType.Color));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, new ValuePipelineNodeOutput(null, PropertyType.Color));
         return colorPart;
     }
 }

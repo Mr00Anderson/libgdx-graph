@@ -12,7 +12,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
-import com.google.common.base.Predicates;
+import com.gempukku.libgdx.graph.ui.producer.ValuePipelineNodeOutput;
 import org.json.simple.JSONObject;
 
 public class ValueBooleanBoxProducer implements GraphBoxProducer {
@@ -71,7 +71,7 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
                         object.put("value", checkBox.isChecked());
                     }
                 });
-        colorPart.setOutputConnector(id, GraphBoxOutputConnector.Side.Right, Predicates.equalTo(PropertyType.Boolean));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, new ValuePipelineNodeOutput(null, PropertyType.Boolean));
         return colorPart;
     }
 }

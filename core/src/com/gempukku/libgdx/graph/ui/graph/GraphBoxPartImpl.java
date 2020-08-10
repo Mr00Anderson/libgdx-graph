@@ -1,8 +1,8 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.google.common.base.Predicate;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 import org.json.simple.JSONObject;
 
 public class GraphBoxPartImpl implements GraphBoxPart {
@@ -16,12 +16,12 @@ public class GraphBoxPartImpl implements GraphBoxPart {
         this.callback = callback;
     }
 
-    public void setInputConnector(String id, GraphBoxInputConnector.Side side, Predicate<PropertyType> propertyPredicate) {
-        inputConnector = new GraphBoxInputConnectorImpl(id, side, propertyPredicate, null);
+    public void setInputConnector(GraphBoxInputConnector.Side side, PipelineNodeInput pipelineNodeInput) {
+        inputConnector = new GraphBoxInputConnectorImpl(side, null, pipelineNodeInput);
     }
 
-    public void setOutputConnector(String id, GraphBoxOutputConnector.Side side, Predicate<PropertyType> propertyPredicate) {
-        outputConnector = new GraphBoxOutputConnectorImpl(id, side, propertyPredicate, null);
+    public void setOutputConnector(GraphBoxOutputConnector.Side side, PipelineNodeOutput pipelineNodeOutput) {
+        outputConnector = new GraphBoxOutputConnectorImpl(side, null, pipelineNodeOutput);
     }
 
     @Override

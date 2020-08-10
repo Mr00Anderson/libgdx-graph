@@ -1,25 +1,17 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.google.common.base.Predicate;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 import com.google.common.base.Supplier;
 
 public class GraphBoxInputConnectorImpl implements GraphBoxInputConnector {
-    private String id;
     private Side side;
-    private Predicate<PropertyType> propertyPredicate;
     private Supplier<Float> offsetSupplier;
+    private PipelineNodeInput pipelineNodeInput;
 
-    public GraphBoxInputConnectorImpl(String id, Side side, Predicate<PropertyType> propertyPredicate, Supplier<Float> offsetSupplier) {
-        this.id = id;
+    public GraphBoxInputConnectorImpl(Side side, Supplier<Float> offsetSupplier, PipelineNodeInput pipelineNodeInput) {
         this.side = side;
-        this.propertyPredicate = propertyPredicate;
         this.offsetSupplier = offsetSupplier;
-    }
-
-    @Override
-    public String getId() {
-        return id;
+        this.pipelineNodeInput = pipelineNodeInput;
     }
 
     @Override
@@ -28,12 +20,12 @@ public class GraphBoxInputConnectorImpl implements GraphBoxInputConnector {
     }
 
     @Override
-    public boolean accepts(PropertyType propertyType) {
-        return propertyPredicate.apply(propertyType);
+    public float getOffset() {
+        return offsetSupplier.get();
     }
 
     @Override
-    public float getOffset() {
-        return offsetSupplier.get();
+    public PipelineNodeInput getPipelineNodeInput() {
+        return pipelineNodeInput;
     }
 }

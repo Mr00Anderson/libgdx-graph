@@ -56,4 +56,9 @@ public class PipelineNodeOutputImpl implements PipelineNodeOutput {
     public OutputPropertyType getPropertyType() {
         return outputPropertyType;
     }
+
+    @Override
+    public boolean supportsMultiple() {
+        return !mainConnection;
+    }
 }

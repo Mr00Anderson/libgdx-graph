@@ -1,17 +1,15 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 
 public interface GraphBoxInputConnector {
     enum Side {
         Left, Top;
     }
 
-    String getId();
-
     Side getSide();
 
-    boolean accepts(PropertyType propertyType);
-
     float getOffset();
+
+    PipelineNodeInput getPipelineNodeInput();
 }

@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
-import com.google.common.base.Predicates;
 import org.json.simple.JSONObject;
 
 public class PropertyGraphBoxProducer implements GraphBoxProducer {
@@ -36,7 +35,7 @@ public class PropertyGraphBoxProducer implements GraphBoxProducer {
                 return result;
             }
         };
-        result.addOutputGraphPart(skin, id + ":value", name, Predicates.equalTo(propertyType));
+        result.addOutputGraphPart(skin, new ValuePipelineNodeOutput(name, propertyType));
 
         return result;
     }
