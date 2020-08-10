@@ -22,7 +22,8 @@ public class PipelineLoader {
                 String id = (String) object.get("id");
                 float x = ((Number) object.get("x")).floatValue();
                 float y = ((Number) object.get("y")).floatValue();
-                pipelineLoaderCallback.addPipelineNode(id, type, x, y, (JSONObject) object.get("data"));
+                JSONObject data = (JSONObject) object.get("data");
+                pipelineLoaderCallback.addPipelineNode(id, type, x, y, data);
             }
             for (JSONObject connection : (List<JSONObject>) pipeline.get("connections")) {
                 String fromNode = (String) connection.get("fromNode");
