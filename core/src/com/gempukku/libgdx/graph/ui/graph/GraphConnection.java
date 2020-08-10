@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-public class GraphConnection {
+public class GraphConnection implements com.gempukku.libgdx.graph.data.GraphConnection {
     private NodeInfo from;
     private NodeInfo to;
 
@@ -15,5 +15,10 @@ public class GraphConnection {
 
     public NodeInfo getTo() {
         return to;
+    }
+
+    @Override
+    public String getNodeFrom() {
+        return from.getGraphBox().getId();
     }
 }

@@ -209,6 +209,7 @@ public class GraphContainer extends WidgetGroup {
 
         graphBoxWindowMap.remove(graphBox);
         graphBoxes.remove(graphBox);
+        fire(new GraphChangedEvent());
     }
 
     public void addGraphConnection(String from, String to) {
