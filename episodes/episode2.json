@@ -1,0 +1,132 @@
+{
+  "pipeline": {
+    "objects": [
+      {
+        "x": 430.0,
+        "y": 225.0,
+        "id": "7bd6a2015adf4fdd9a1f75ed60398ced",
+        "type": "UIRenderer"
+      },
+      {
+        "data": {
+          "name": "Lights",
+          "type": "Lights"
+        },
+        "x": 163.0,
+        "y": 360.0,
+        "id": "156f06b0d5124e8b830124909d68790d",
+        "type": "Property"
+      },
+      {
+        "x": 430.0,
+        "y": 342.0,
+        "id": "b9617921c4bb48a087ca2f410fde8ff3",
+        "type": "DefaultRenderer"
+      },
+      {
+        "data": {
+          "name": "Models",
+          "type": "Models"
+        },
+        "x": 181.0,
+        "y": 417.0,
+        "id": "d80569a4b56d4935abccd7f8954096ab",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "name": "Camera",
+          "type": "Camera"
+        },
+        "x": 183.0,
+        "y": 302.0,
+        "id": "696850a1c41f4b37927e7f1dbc4b4949",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "name": "Stage",
+          "type": "Stage"
+        },
+        "x": 190.0,
+        "y": 199.0,
+        "id": "58c3a27bddb24a3984e43402f5cd8117",
+        "type": "Property"
+      },
+      {
+        "x": 430.0,
+        "y": 127.0,
+        "id": "end",
+        "type": "PipelineEnd"
+      },
+      {
+        "x": 430.0,
+        "y": 513.0,
+        "id": "78f632288a564ce6a0bcde6f9dc1940f",
+        "type": "PipelineStart"
+      }
+    ],
+    "connections": [
+      {
+        "fromNode": "78f632288a564ce6a0bcde6f9dc1940f",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "b9617921c4bb48a087ca2f410fde8ff3"
+      },
+      {
+        "fromNode": "696850a1c41f4b37927e7f1dbc4b4949",
+        "toField": "camera",
+        "fromField": "value",
+        "toNode": "b9617921c4bb48a087ca2f410fde8ff3"
+      },
+      {
+        "fromNode": "156f06b0d5124e8b830124909d68790d",
+        "toField": "lights",
+        "fromField": "value",
+        "toNode": "b9617921c4bb48a087ca2f410fde8ff3"
+      },
+      {
+        "fromNode": "d80569a4b56d4935abccd7f8954096ab",
+        "toField": "models",
+        "fromField": "value",
+        "toNode": "b9617921c4bb48a087ca2f410fde8ff3"
+      },
+      {
+        "fromNode": "b9617921c4bb48a087ca2f410fde8ff3",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "7bd6a2015adf4fdd9a1f75ed60398ced"
+      },
+      {
+        "fromNode": "7bd6a2015adf4fdd9a1f75ed60398ced",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "end"
+      },
+      {
+        "fromNode": "58c3a27bddb24a3984e43402f5cd8117",
+        "toField": "stage",
+        "fromField": "value",
+        "toNode": "7bd6a2015adf4fdd9a1f75ed60398ced"
+      }
+    ],
+    "properties": [
+      {
+        "name": "Models",
+        "type": "Models"
+      },
+      {
+        "name": "Lights",
+        "type": "Lights"
+      },
+      {
+        "name": "Camera",
+        "type": "Camera"
+      },
+      {
+        "name": "Stage",
+        "type": "Stage"
+      }
+    ]
+  }
+}

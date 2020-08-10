@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.PipelineLoader;
 import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
@@ -45,26 +46,39 @@ public class Episode2LibgdxGraphTestApplication extends ApplicationAdapter {
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         constructStage();
 
+        models = createModels();
+        environment = createEnvironment();
+        camera = createCamera();
+
+        pipelineRenderer = loadPipelineRenderer();
+
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    private Camera createCamera() {
+        Camera camera = new PerspectiveCamera();
+        camera.position.set(5f, 5f, 5f);
+        camera.lookAt(0, 0, 0);
+        camera.update();
+        return camera;
+    }
+
+    private Environment createEnvironment() {
+        Environment environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2f, 0.2f, 0.2f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        return environment;
+    }
+
+    private PipelineRendererModels createModels() {
         ModelBuilder modelBuilder = new ModelBuilder();
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 new Material(TextureAttribute.createDiffuse(WhitePixel.texture)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
-        models = new PipelineRendererModels();
+        PipelineRendererModels models = new PipelineRendererModels();
         models.addModelInstance(new ModelInstance(sphereModel));
-
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2f, 0.2f, 0.2f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-        camera = new PerspectiveCamera();
-        camera.position.set(5f, 5f, 5f);
-        camera.lookAt(0, 0, 0);
-        camera.update();
-
-        pipelineRenderer = loadPipelineRenderer();
-
-        Gdx.input.setInputProcessor(stage);
+        return models;
     }
 
     private void constructStage() {
@@ -72,8 +86,11 @@ public class Episode2LibgdxGraphTestApplication extends ApplicationAdapter {
 
         Label label = new Label("This is example label", skin);
         label.setBounds(0, 0, 200, 20);
+        TextButton textButton = new TextButton("Test", skin);
+        textButton.setBounds(0, 20, 200, 20);
 
         stage.addActor(label);
+        stage.addActor(textButton);
     }
 
     @Override
@@ -112,7 +129,7 @@ public class Episode2LibgdxGraphTestApplication extends ApplicationAdapter {
 
     private PipelineRenderer loadPipelineRenderer() {
         try {
-            InputStream stream = Gdx.files.local("episodes/episode1.json").read();
+            InputStream stream = Gdx.files.local("episodes/episode2.json").read();
             try {
                 PipelineRenderer pipelineRenderer = PipelineLoader.loadPipeline(stream, new RendererLoaderCallback());
                 setupPipeline(pipelineRenderer);
