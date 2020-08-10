@@ -3,6 +3,7 @@ package com.gempukku.libgdx.graph.test.episodes;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.gempukku.libgdx.graph.PipelineLoader;
 import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
 import com.gempukku.libgdx.graph.renderer.RenderOutputs;
@@ -61,6 +62,6 @@ public class Episode1LibgdxGraphTestApplication extends ApplicationAdapter {
     }
 
     private void setupPipeline(PipelineRenderer pipelineRenderer) {
-
+        pipelineRenderer.setPipelineProperty("Background Color", Color.ORANGE);
     }
 }
