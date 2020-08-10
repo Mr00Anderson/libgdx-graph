@@ -4,7 +4,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
@@ -38,6 +40,13 @@ public class PropertyVector1BoxProducer implements PropertyBoxProducer {
             }
         };
         v1Input.setText(String.valueOf(v1));
+        v1Input.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        v1Input.fire(new GraphChangedEvent());
+                    }
+                });
 
         final Table table = new Table();
         table.add(new Label("X ", skin));

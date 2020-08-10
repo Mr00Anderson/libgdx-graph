@@ -67,7 +67,7 @@ public class PipelineDesignTab extends AwareTab {
         leftTable.add(buttons).growX().row();
 
         graphContainer = new GraphContainer(createPopupMenuProducer());
-        graphContainer.addListener(
+        contentTable.addListener(
                 new GraphChangedListener() {
                     @Override
                     protected boolean graphChanged(GraphChangedEvent event) {
@@ -213,9 +213,7 @@ public class PipelineDesignTab extends AwareTab {
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        propertyBoxes.remove(propertyBox);
-                        pipelineProperties.removeActor(table);
-                        pipelineProperties.removeActor(actor);
+                        removePropertyBox(propertyBox);
                     }
                 });
         table.add(removeButton);
@@ -223,6 +221,16 @@ public class PipelineDesignTab extends AwareTab {
         table.add(actor).colspan(2).growX();
         table.row();
         pipelineProperties.addActor(table);
+
+        contentTable.fire(new GraphChangedEvent());
+    }
+
+    private void removePropertyBox(PropertyBox propertyBox) {
+        Actor actor = propertyBox.getActor();
+        propertyBoxes.remove(propertyBox);
+        pipelineProperties.removeActor(actor.getParent());
+
+        contentTable.fire(new GraphChangedEvent());
     }
 
     @Override

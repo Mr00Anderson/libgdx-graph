@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.WhitePixel;
+import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
@@ -63,6 +64,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
             @Override
             public void finished(Color newColor) {
                 image.setColor(newColor);
+                image.fire(new GraphChangedEvent());
             }
         });
         picker.setColor(color);
@@ -71,7 +73,6 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        System.out.println(image.getWidth() + " " + image.getHeight());
                         //displaying picker with fade in animation
                         image.getStage().addActor(picker.fadeIn());
                     }

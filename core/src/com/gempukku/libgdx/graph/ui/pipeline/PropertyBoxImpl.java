@@ -5,9 +5,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import org.json.simple.JSONObject;
 
 public class PropertyBoxImpl extends Table implements PropertyBox {
@@ -27,6 +29,13 @@ public class PropertyBoxImpl extends Table implements PropertyBox {
         Table headerTable = new Table(skin);
         headerTable.add(new Label("Name: ", skin));
         headerTable.add(textField).growX();
+        textField.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        fire(new GraphChangedEvent());
+                    }
+                });
         headerTable.row();
         add(headerTable).growX().row();
         if (propertyDefaultBox != null)
