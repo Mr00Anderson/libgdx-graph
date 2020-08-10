@@ -33,6 +33,11 @@ public class PipelineRendererImpl implements PipelineRenderer, PipelineRendering
     }
 
     @Override
+    public boolean hasPipelineProperty(String property) {
+        return pipelinePropertyMap.containsKey(property);
+    }
+
+    @Override
     public void unsetPipelineProperty(String property) {
         WritablePipelineProperty propertyValue = pipelinePropertyMap.get(property);
         if (propertyValue == null)
