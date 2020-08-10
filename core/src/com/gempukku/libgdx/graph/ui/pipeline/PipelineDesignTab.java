@@ -106,20 +106,25 @@ public class PipelineDesignTab extends AwareTab {
                     createSubMenu(popupX, popupY, popupMenu, menuName, producer);
                 }
 
-                popupMenu.addSeparator();
-                for (final PropertyProducer propertyProducer : propertyBoxes) {
-                    final String name = propertyProducer.getName();
-                    MenuItem valueMenuItem = new MenuItem(name);
-                    valueMenuItem.addListener(
-                            new ClickListener(Input.Buttons.LEFT) {
-                                @Override
-                                public void clicked(InputEvent event, float x, float y) {
-                                    String id = UUID.randomUUID().toString().replace("-", "");
-                                    GraphBox graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
-                                    graphContainer.addGraphBox(graphBox, name, true, popupX, popupY);
-                                }
-                            });
-                    popupMenu.addItem(valueMenuItem);
+                if (!propertyBoxes.isEmpty()) {
+                    MenuItem propertyMenuItem = new MenuItem("Property");
+                    PopupMenu propertyMenu = new PopupMenu();
+                    for (final PropertyProducer propertyProducer : propertyBoxes) {
+                        final String name = propertyProducer.getName();
+                        MenuItem valueMenuItem = new MenuItem(name);
+                        valueMenuItem.addListener(
+                                new ClickListener(Input.Buttons.LEFT) {
+                                    @Override
+                                    public void clicked(InputEvent event, float x, float y) {
+                                        String id = UUID.randomUUID().toString().replace("-", "");
+                                        GraphBox graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
+                                        graphContainer.addGraphBox(graphBox, "Property", true, popupX, popupY);
+                                    }
+                                });
+                        propertyMenu.addItem(valueMenuItem);
+                    }
+                    propertyMenuItem.setSubMenu(propertyMenu);
+                    popupMenu.addItem(propertyMenuItem);
                 }
 
                 return popupMenu;
