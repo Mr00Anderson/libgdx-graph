@@ -104,10 +104,10 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
     @Override
     public Iterable<String> getAllGraphNodes() {
         return Iterables.transform(graphContainer.getGraphBoxes(),
-                new Function<Map.Entry<GraphBox, Window>, String>() {
+                new Function<GraphBox, String>() {
                     @Override
-                    public String apply(@Nullable Map.Entry<GraphBox, Window> graphBoxWindowEntry) {
-                        return graphBoxWindowEntry.getKey().getId();
+                    public String apply(@Nullable GraphBox graphBox) {
+                        return graphBox.getId();
                     }
                 });
     }
@@ -302,9 +302,8 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
         JSONObject pipeline = new JSONObject();
 
         JSONArray objects = new JSONArray();
-        for (Map.Entry<GraphBox, Window> graphBoxWindow : graphContainer.getGraphBoxes()) {
-            GraphBox graphBox = graphBoxWindow.getKey();
-            Window window = graphBoxWindow.getValue();
+        for (GraphBox graphBox : graphContainer.getGraphBoxes()) {
+            Window window = graphContainer.getBoxWindow(graphBox.getId());
             JSONObject object = new JSONObject();
             object.put("id", graphBox.getId());
             object.put("type", graphBox.getType());
