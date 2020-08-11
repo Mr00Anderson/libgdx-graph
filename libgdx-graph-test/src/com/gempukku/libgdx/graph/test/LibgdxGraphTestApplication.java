@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -51,7 +52,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
         ModelBuilder modelBuilder = new ModelBuilder();
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
-                new Material(TextureAttribute.createDiffuse(WhitePixel.texture)),
+                new Material(TextureAttribute.createDiffuse(WhitePixel.texture), ColorAttribute.createDiffuse(new Color(0.5f, 0.5f, 0.5f, 1f))),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
         models = new PipelineRendererModels();
@@ -74,7 +75,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private void constructStage() {
         stage = new Stage(new ScreenViewport());
 
-        final Slider bloomRadius = new Slider(0, 50, 1, false, skin);
+        final Slider bloomRadius = new Slider(0, 64, 1, false, skin);
         bloomRadius.addListener(
                 new ChangeListener() {
                     @Override
@@ -92,7 +93,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                     }
                 });
 
-        final Slider bloomStrength = new Slider(0, 1, 0.01f, false, skin);
+        final Slider bloomStrength = new Slider(0, 5, 0.01f, false, skin);
         bloomStrength.addListener(
                 new ChangeListener() {
                     @Override

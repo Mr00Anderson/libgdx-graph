@@ -21,9 +21,6 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
-    public static final int MAX_BLUR_RADIUS = 64;
-    private static final float[][] kernelCache = new float[1 + MAX_BLUR_RADIUS][];
-
     public GaussianBlurPipelineNodeProducer() {
         super(new GaussianBlurPipelineNodeConfiguration());
     }
@@ -64,13 +61,13 @@ public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
 
-                int blurRadius = Math.min(MAX_BLUR_RADIUS, MathUtils.round(finalBlurRadius.apply(pipelineRenderingContext)));
+                int blurRadius = MathUtils.round(finalBlurRadius.apply(pipelineRenderingContext));
                 if (blurRadius > 0) {
-                    float[] kernel = getKernel(blurRadius);
+                    float[] kernel = GaussianBlurKernel.getKernel(blurRadius);
                     FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
 
                     shaderProgram.bind();
-                    shaderProgram.setUniformf("u_sourceTexture", 0);
+                    shaderProgram.setUniformi("u_sourceTexture", 0);
                     shaderProgram.setUniformi("u_blurRadius", blurRadius);
                     shaderProgram.setUniformf("u_pixelSize", 1f / currentBuffer.getWidth(), 1f / currentBuffer.getHeight());
                     shaderProgram.setUniform1fv("u_kernel", kernel, 0, kernel.length);
@@ -79,9 +76,12 @@ public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
                     indexBufferObject.bind();
 
                     shaderProgram.setUniformi("u_vertical", 1);
-                    executeBlur(renderPipeline, indexBufferObject);
+                    FrameBuffer tempBuffer = executeBlur(renderPipeline, currentBuffer, indexBufferObject);
+                    renderPipeline.returnFrameBuffer(currentBuffer);
                     shaderProgram.setUniformi("u_vertical", 0);
-                    executeBlur(renderPipeline, indexBufferObject);
+                    FrameBuffer finalBuffer = executeBlur(renderPipeline, tempBuffer, indexBufferObject);
+                    renderPipeline.returnFrameBuffer(tempBuffer);
+                    renderPipeline.setCurrentBuffer(finalBuffer);
 
                     indexBufferObject.unbind();
                     vertexBufferObject.unbind(shaderProgram);
@@ -101,30 +101,18 @@ public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
         };
     }
 
-    private void executeBlur(RenderPipeline renderPipeline, IndexBufferObject indexBufferObject) {
-        FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
-        int textureHandle = currentBuffer.getColorBufferTexture().getTextureObjectHandle();
+    private FrameBuffer executeBlur(RenderPipeline renderPipeline, FrameBuffer sourceBuffer, IndexBufferObject indexBufferObject) {
 
-        FrameBuffer frameBuffer = renderPipeline.getNewFrameBuffer(currentBuffer);
-        frameBuffer.begin();
+        FrameBuffer resultBuffer = renderPipeline.getNewFrameBuffer(sourceBuffer);
+        resultBuffer.begin();
 
         Gdx.gl.glActiveTexture(GL20.GL_TEXTURE0);
-        Gdx.gl.glBindTexture(GL20.GL_TEXTURE_2D, textureHandle);
+        Gdx.gl.glBindTexture(GL20.GL_TEXTURE_2D, sourceBuffer.getColorBufferTexture().getTextureObjectHandle());
 
         Gdx.gl20.glDrawElements(Gdx.gl20.GL_TRIANGLES, indexBufferObject.getNumIndices(), GL20.GL_UNSIGNED_SHORT, 0);
 
-        frameBuffer.end();
+        resultBuffer.end();
 
-        renderPipeline.returnFrameBuffer(currentBuffer);
-        renderPipeline.setCurrentBuffer(frameBuffer);
-    }
-
-    private static float[] getKernel(int blurRadius) {
-        if (kernelCache[blurRadius] == null) {
-            float[] kernel = GaussianBlurKernel.create1DBlurKernel(blurRadius);
-            kernelCache[blurRadius] = new float[1 + MAX_BLUR_RADIUS];
-            System.arraycopy(kernel, 0, kernelCache[blurRadius], 0, kernel.length);
-        }
-        return kernelCache[blurRadius];
+        return resultBuffer;
     }
 }
