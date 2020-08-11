@@ -13,7 +13,11 @@ public interface GraphBox extends GraphNode {
 
     String getType();
 
+    GraphBoxInputConnector getInput(String fieldId);
+
     Iterable<GraphBoxInputConnector> getGraphBoxInputConnectors();
+
+    GraphBoxOutputConnector getOutput(String fieldId);
 
     Iterable<GraphBoxOutputConnector> getGraphBoxOutputConnectors();
 }

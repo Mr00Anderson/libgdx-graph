@@ -25,7 +25,27 @@ public class GraphBoxInputConnectorImpl implements GraphBoxInputConnector {
     }
 
     @Override
-    public PipelineNodeInput getPipelineNodeInput() {
-        return pipelineNodeInput;
+    public boolean isRequired() {
+        return pipelineNodeInput.isRequired();
+    }
+
+    @Override
+    public boolean isMainConnection() {
+        return pipelineNodeInput.isMainConnection();
+    }
+
+    @Override
+    public String getFieldName() {
+        return pipelineNodeInput.getFieldName();
+    }
+
+    @Override
+    public String getFieldId() {
+        return pipelineNodeInput.getFieldId();
+    }
+
+    @Override
+    public InputPropertyType getPropertyType() {
+        return pipelineNodeInput.getPropertyType();
     }
 }

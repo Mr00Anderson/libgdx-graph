@@ -5,34 +5,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
-import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.ValuePipelineNodeOutput;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
-public class ValueVector2BoxProducer implements GraphBoxProducer {
-    @Override
-    public boolean isCloseable() {
-        return true;
+public class ValueVector2BoxProducer extends ValueGraphBoxProducer {
+    public ValueVector2BoxProducer(PipelineNodeConfiguration configuration) {
+        super(configuration);
     }
-
-    @Override
-    public String getTitle() {
-        return "Vector2";
-    }
-
-    @Override
-    public String getType() {
-        return "ValueVector2";
-    }
-
 
     @Override
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
@@ -48,7 +34,7 @@ public class ValueVector2BoxProducer implements GraphBoxProducer {
     }
 
     private GraphBox createGraphBox(Skin skin, String id, float v1, float v2) {
-        GraphBoxImpl end = new GraphBoxImpl(id, "ValueVector2", skin);
+        GraphBoxImpl end = new GraphBoxImpl(id, configuration, skin);
         end.addGraphBoxPart(createValuePart(skin, v1, v2));
 
         return end;
@@ -99,7 +85,7 @@ public class ValueVector2BoxProducer implements GraphBoxProducer {
                         object.put("v2", Float.parseFloat(v2Input.getText()));
                     }
                 });
-        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, new ValuePipelineNodeOutput(null, PropertyType.Vector2));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutput("value"));
         return colorPart;
     }
 }

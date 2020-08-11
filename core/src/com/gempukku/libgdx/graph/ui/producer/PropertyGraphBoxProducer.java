@@ -2,6 +2,7 @@ package com.gempukku.libgdx.graph.ui.producer;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.config.PropertyPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import org.json.simple.JSONObject;
@@ -26,7 +27,7 @@ public class PropertyGraphBoxProducer implements GraphBoxProducer {
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         final String name = (String) data.get("name");
         final PropertyType propertyType = PropertyType.valueOf((String) data.get("type"));
-        GraphBoxImpl result = new GraphBoxImpl(id, "Property", skin) {
+        GraphBoxImpl result = new GraphBoxImpl(id, new PropertyPipelineNodeConfiguration("Property", name, propertyType), skin) {
             @Override
             public JSONObject serializeData() {
                 JSONObject result = new JSONObject();

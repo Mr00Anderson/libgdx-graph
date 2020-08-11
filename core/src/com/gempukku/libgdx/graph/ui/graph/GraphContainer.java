@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
@@ -30,12 +32,12 @@ public class GraphContainer extends WidgetGroup {
     private Map<String, Window> boxWindows = new HashMap<>();
     private List<GraphConnectionImpl> graphConnectionImpls = new LinkedList<>();
 
-    private Map<String, Shape> connectionNodeMap = new HashMap<>();
+    private Map<NodeConnector, Shape> connectionNodeMap = new HashMap<>();
     private Map<GraphConnectionImpl, Shape> connections = new HashMap<>();
 
     private ShapeRenderer shapeRenderer;
 
-    private NodeInfo drawingFrom;
+    private NodeConnector drawingFromConnector;
 
     public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
@@ -63,7 +65,7 @@ public class GraphContainer extends WidgetGroup {
         if (containedInWindow(x, y))
             return;
 
-        for (Map.Entry<String, Shape> nodeEntry : connectionNodeMap.entrySet()) {
+        for (Map.Entry<NodeConnector, Shape> nodeEntry : connectionNodeMap.entrySet()) {
             if (nodeEntry.getValue().contains(x, y)) {
                 processNodeClick(nodeEntry.getKey());
                 return;
@@ -78,7 +80,7 @@ public class GraphContainer extends WidgetGroup {
             }
         }
 
-        drawingFrom = null;
+        drawingFromConnector = null;
     }
 
     private boolean containedInWindow(float x, float y) {
@@ -101,74 +103,78 @@ public class GraphContainer extends WidgetGroup {
         invalidate();
     }
 
-    private void processNodeClick(String key) {
-        String[] split = key.split(":", 2);
-        if (drawingFrom != null) {
-            NodeInfo nodeInfo = getNodeInfo(split[0], split[1]);
-            if (!drawingFrom.equals(nodeInfo)) {
-                if (drawingFrom.isInput() == nodeInfo.isInput()) {
-                    drawingFrom = null;
+    private void processNodeClick(NodeConnector clickedNodeConnector) {
+        GraphBox clickedNode = getGraphBoxById(clickedNodeConnector.getNodeId());
+        if (drawingFromConnector != null) {
+            if (!drawingFromConnector.equals(clickedNodeConnector)) {
+                GraphBox drawingFromNode = getGraphBoxById(drawingFromConnector.getNodeId());
+
+                boolean drawingFromIsInput = drawingFromNode.isInputField(drawingFromConnector.getFieldId());
+                if (drawingFromIsInput == clickedNode.isInputField(clickedNodeConnector.getFieldId())) {
+                    drawingFromConnector = null;
                 } else {
-                    NodeInfo nodeFrom = drawingFrom.isInput() ? nodeInfo : drawingFrom;
-                    NodeInfo nodeTo = drawingFrom.isInput() ? drawingFrom : nodeInfo;
-                    if (!connectorsMatch(nodeTo.getInputConnector(), nodeFrom.getOutputConnector())) {
+                    NodeConnector connectorFrom = drawingFromIsInput ? drawingFromConnector : clickedNodeConnector;
+                    NodeConnector connectorTo = drawingFromIsInput ? clickedNodeConnector : drawingFromConnector;
+
+                    PipelineNodeOutput output = getGraphBoxById(connectorFrom.getNodeId()).getOutput(connectorFrom.getFieldId());
+                    PipelineNodeInput input = getGraphBoxById(connectorTo.getNodeId()).getInput(connectorTo.getFieldId());
+
+                    if (!connectorsMatch(input, output)) {
                         // Either input-input, output-output, or different property type
-                        drawingFrom = null;
+                        drawingFromConnector = null;
                     } else {
                         // Remove conflicting connections if needed
-                        for (GraphConnectionImpl oldConnection : findNodeConnections(nodeTo.getGraphBox().getId(), nodeTo.getInputConnector().getPipelineNodeInput().getFieldId())) {
+                        for (GraphConnectionImpl oldConnection : findNodeConnections(connectorTo)) {
                             removeConnection(oldConnection);
                         }
-                        if (!nodeFrom.getOutputConnector().getPipelineNodeOutput().supportsMultiple()) {
-                            for (GraphConnectionImpl oldConnection : findNodeConnections(nodeFrom.getGraphBox().getId(), nodeFrom.getOutputConnector().getPipelineNodeOutput().getFieldId())) {
+                        if (!output.supportsMultiple()) {
+                            for (GraphConnectionImpl oldConnection : findNodeConnections(connectorFrom)) {
                                 removeConnection(oldConnection);
                             }
                         }
-                        addGraphConnection(
-                                nodeFrom.getGraphBox().getId(), nodeFrom.getOutputConnector().getPipelineNodeOutput().getFieldId(),
-                                nodeTo.getGraphBox().getId(), nodeTo.getInputConnector().getPipelineNodeInput().getFieldId());
-                        drawingFrom = null;
+                        addGraphConnection(connectorFrom.getNodeId(), connectorFrom.getFieldId(),
+                                connectorTo.getNodeId(), connectorTo.getFieldId());
+                        drawingFromConnector = null;
                     }
                 }
             } else {
                 // Same node, that started at
-                drawingFrom = null;
+                drawingFromConnector = null;
             }
         } else {
-            NodeInfo clickedNode = getNodeInfo(split[0], split[1]);
-            if (clickedNode.isInput()
-                    || !clickedNode.getOutputConnector().getPipelineNodeOutput().supportsMultiple()) {
-                String nodeId = clickedNode.getGraphBox().getId();
-                String fieldId = clickedNode.isInput()
-                        ? clickedNode.getInputConnector().getPipelineNodeInput().getFieldId() : clickedNode.getOutputConnector().getPipelineNodeOutput().getFieldId();
-                List<GraphConnectionImpl> nodeConnections = findNodeConnections(nodeId, fieldId);
+            if (clickedNode.isInputField(clickedNodeConnector.getFieldId())
+                    || !clickedNode.getOutput(clickedNodeConnector.getFieldId()).supportsMultiple()) {
+                List<GraphConnectionImpl> nodeConnections = findNodeConnections(clickedNodeConnector);
                 if (nodeConnections.size() > 0) {
                     GraphConnectionImpl oldConnection = nodeConnections.get(0);
                     removeConnection(oldConnection);
-                    NodeInfo oldNode = getNodeInfo(oldConnection.getNodeFrom(), oldConnection.getFieldFrom());
-                    if (oldNode.equals(clickedNode))
-                        drawingFrom = getNodeInfo(oldConnection.getNodeTo(), oldConnection.getFieldTo());
+                    NodeConnector oldNode = getNodeInfo(oldConnection.getNodeFrom(), oldConnection.getFieldFrom());
+                    if (oldNode.equals(clickedNodeConnector))
+                        drawingFromConnector = getNodeInfo(oldConnection.getNodeTo(), oldConnection.getFieldTo());
                     else
-                        drawingFrom = oldNode;
+                        drawingFromConnector = oldNode;
                 } else {
-                    drawingFrom = clickedNode;
+                    drawingFromConnector = clickedNodeConnector;
                 }
             } else {
-                drawingFrom = clickedNode;
+                drawingFromConnector = clickedNodeConnector;
             }
         }
     }
 
-    private boolean connectorsMatch(GraphBoxInputConnector inputConnector, GraphBoxOutputConnector outputConnector) {
+    private boolean connectorsMatch(PipelineNodeInput input, PipelineNodeOutput output) {
         for (PropertyType value : PropertyType.values()) {
-            if (inputConnector.getPipelineNodeInput().getPropertyType().getAcceptedPropertyTypes().contains(value)
-                    && outputConnector.getPipelineNodeOutput().getPropertyType().mayProduce(value))
+            if (input.getPropertyType().getAcceptedPropertyTypes().contains(value)
+                    && output.getPropertyType().mayProduce(value))
                 return true;
         }
         return false;
     }
 
-    private List<GraphConnectionImpl> findNodeConnections(String nodeId, String fieldId) {
+    private List<GraphConnectionImpl> findNodeConnections(NodeConnector nodeConnector) {
+        String nodeId = nodeConnector.getNodeId();
+        String fieldId = nodeConnector.getFieldId();
+
         List<GraphConnectionImpl> result = new LinkedList<>();
         for (GraphConnectionImpl graphConnectionImpl : graphConnectionImpls) {
             if ((graphConnectionImpl.getNodeFrom().equals(nodeId) && graphConnectionImpl.getFieldFrom().equals(fieldId))
@@ -220,8 +226,8 @@ public class GraphContainer extends WidgetGroup {
     }
 
     public void addGraphConnection(String fromNode, String fromField, String toNode, String toField) {
-        NodeInfo nodeFrom = getNodeInfo(fromNode, fromField);
-        NodeInfo nodeTo = getNodeInfo(toNode, toField);
+        NodeConnector nodeFrom = getNodeInfo(fromNode, fromField);
+        NodeConnector nodeTo = getNodeInfo(toNode, toField);
         if (nodeFrom == null || nodeTo == null)
             throw new IllegalArgumentException("Can't find node");
         graphConnectionImpls.add(new GraphConnectionImpl(fromNode, fromField, toNode, toField));
@@ -259,7 +265,7 @@ public class GraphContainer extends WidgetGroup {
                         from.x - CONNECTOR_RADIUS, from.y - CONNECTOR_RADIUS,
                         CONNECTOR_RADIUS * 2, CONNECTOR_RADIUS * 2);
 
-                connectionNodeMap.put(nodeId + ":" + connector.getPipelineNodeInput().getFieldId(), rectangle);
+                connectionNodeMap.put(new NodeConnector(nodeId, connector.getFieldId()), rectangle);
             }
             for (GraphBoxOutputConnector connector : graphBox.getGraphBoxOutputConnectors()) {
                 switch (connector.getSide()) {
@@ -274,17 +280,21 @@ public class GraphContainer extends WidgetGroup {
                         from.x - CONNECTOR_RADIUS, from.y - CONNECTOR_RADIUS,
                         CONNECTOR_RADIUS * 2, CONNECTOR_RADIUS * 2);
 
-                connectionNodeMap.put(nodeId + ":" + connector.getPipelineNodeOutput().getFieldId(), rectangle);
+                connectionNodeMap.put(new NodeConnector(nodeId, connector.getFieldId()), rectangle);
             }
         }
 
         BasicStroke basicStroke = new BasicStroke(7);
         Vector2 to = new Vector2();
         for (GraphConnectionImpl graphConnectionImpl : graphConnectionImpls) {
-            NodeInfo fromNode = getNodeInfo(graphConnectionImpl.getNodeFrom(), graphConnectionImpl.getFieldFrom());
-            calculateConnection(from, boxWindows.get(fromNode.getGraphBox().getId()), fromNode.getOutputConnector());
-            NodeInfo toNode = getNodeInfo(graphConnectionImpl.getNodeTo(), graphConnectionImpl.getFieldTo());
-            calculateConnection(to, boxWindows.get(toNode.getGraphBox().getId()), toNode.getInputConnector());
+            NodeConnector fromNode = getNodeInfo(graphConnectionImpl.getNodeFrom(), graphConnectionImpl.getFieldFrom());
+            Window fromWindow = boxWindows.get(fromNode.getNodeId());
+            GraphBoxOutputConnector output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
+            calculateConnection(from, fromWindow, output);
+            NodeConnector toNode = getNodeInfo(graphConnectionImpl.getNodeTo(), graphConnectionImpl.getFieldTo());
+            Window toWindow = boxWindows.get(toNode.getNodeId());
+            GraphBoxInputConnector input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
+            calculateConnection(to, toWindow, input);
 
             Shape shape = basicStroke.createStrokedShape(new Line2D.Float(from.x, from.y, to.x, to.y));
 
@@ -292,16 +302,10 @@ public class GraphContainer extends WidgetGroup {
         }
     }
 
-    private NodeInfo getNodeInfo(String nodeId, String fieldId) {
+    private NodeConnector getNodeInfo(String nodeId, String fieldId) {
         GraphBox graphBox = graphBoxes.get(nodeId);
-        for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
-            if (connector.getPipelineNodeInput().getFieldId().equals(fieldId))
-                return new NodeInfo(graphBox, connector);
-        }
-        for (GraphBoxOutputConnector connector : graphBox.getGraphBoxOutputConnectors()) {
-            if (connector.getPipelineNodeOutput().getFieldId().equals(fieldId))
-                return new NodeInfo(graphBox, connector);
-        }
+        if (graphBox.getInput(fieldId) != null || graphBox.getOutput(fieldId) != null)
+            return new NodeConnector(nodeId, fieldId);
         return null;
     }
 
@@ -328,7 +332,7 @@ public class GraphContainer extends WidgetGroup {
             Window window = windowEntry.getValue();
             GraphBox graphBox = graphBoxes.get(nodeId);
             for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
-                if (!connector.getPipelineNodeInput().isRequired()) {
+                if (!connector.isRequired()) {
                     calculateConnector(from, to, window, connector);
                     from.add(x, y);
                     to.add(x, y);
@@ -349,10 +353,14 @@ public class GraphContainer extends WidgetGroup {
         }
 
         for (GraphConnectionImpl graphConnectionImpl : graphConnectionImpls) {
-            NodeInfo fromNode = getNodeInfo(graphConnectionImpl.getNodeFrom(), graphConnectionImpl.getFieldFrom());
-            calculateConnection(from, boxWindows.get(fromNode.getGraphBox().getId()), fromNode.getOutputConnector());
-            NodeInfo toNode = getNodeInfo(graphConnectionImpl.getNodeTo(), graphConnectionImpl.getFieldTo());
-            calculateConnection(to, boxWindows.get(toNode.getGraphBox().getId()), toNode.getInputConnector());
+            NodeConnector fromNode = getNodeInfo(graphConnectionImpl.getNodeFrom(), graphConnectionImpl.getFieldFrom());
+            Window fromWindow = boxWindows.get(fromNode.getNodeId());
+            GraphBoxOutputConnector output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
+            calculateConnection(from, fromWindow, output);
+            NodeConnector toNode = getNodeInfo(graphConnectionImpl.getNodeTo(), graphConnectionImpl.getFieldTo());
+            Window toWindow = boxWindows.get(toNode.getNodeId());
+            GraphBoxInputConnector input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
+            calculateConnection(to, toWindow, input);
 
             from.add(x, y);
             to.add(x, y);
@@ -360,12 +368,16 @@ public class GraphContainer extends WidgetGroup {
             shapeRenderer.line(from, to);
         }
 
-        if (drawingFrom != null) {
-            if (drawingFrom.isInput()) {
-                calculateConnection(from, boxWindows.get(drawingFrom.getGraphBox().getId()), drawingFrom.getInputConnector());
+        if (drawingFromConnector != null) {
+            GraphBox drawingFromNode = getGraphBoxById(drawingFromConnector.getNodeId());
+            Window fromWindow = getBoxWindow(drawingFromConnector.getNodeId());
+            if (drawingFromNode.isInputField(drawingFromConnector.getFieldId())) {
+                GraphBoxInputConnector input = drawingFromNode.getInput(drawingFromConnector.getFieldId());
+                calculateConnection(from, fromWindow, input);
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             } else {
-                calculateConnection(from, boxWindows.get(drawingFrom.getGraphBox().getId()), drawingFrom.getOutputConnector());
+                GraphBoxOutputConnector output = drawingFromNode.getOutput(drawingFromConnector.getFieldId());
+                calculateConnection(from, fromWindow, output);
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             }
         }
@@ -378,7 +390,7 @@ public class GraphContainer extends WidgetGroup {
             Window window = windowEntry.getValue();
             GraphBox graphBox = graphBoxes.get(nodeId);
             for (GraphBoxInputConnector connector : graphBox.getGraphBoxInputConnectors()) {
-                if (connector.getPipelineNodeInput().isRequired()) {
+                if (connector.isRequired()) {
                     calculateConnector(from, to, window, connector);
                     from.add(x, y);
                     to.add(x, y);

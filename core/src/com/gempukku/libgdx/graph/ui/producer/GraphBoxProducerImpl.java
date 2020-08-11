@@ -39,7 +39,7 @@ public class GraphBoxProducerImpl implements GraphBoxProducer {
 
     @Override
     public GraphBox createDefault(Skin skin, String id) {
-        GraphBoxImpl start = new GraphBoxImpl(id, configuration.getType(), skin);
+        GraphBoxImpl start = new GraphBoxImpl(id, configuration, skin);
         Iterator<PipelineNodeInput> inputIterator = configuration.getNodeInputs().iterator();
         Iterator<PipelineNodeOutput> outputIterator = configuration.getNodeOutputs().iterator();
         while (inputIterator.hasNext() || outputIterator.hasNext()) {

@@ -5,32 +5,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPartImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
-import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.ValuePipelineNodeOutput;
 import org.json.simple.JSONObject;
 
-public class ValueBooleanBoxProducer implements GraphBoxProducer {
-    @Override
-    public boolean isCloseable() {
-        return true;
+public class ValueBooleanBoxProducer extends ValueGraphBoxProducer {
+    public ValueBooleanBoxProducer(PipelineNodeConfiguration configuration) {
+        super(configuration);
     }
-
-    @Override
-    public String getTitle() {
-        return "Boolean";
-    }
-
-    @Override
-    public String getType() {
-        return "ValueBool";
-    }
-
 
     @Override
     public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
@@ -45,7 +31,7 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
     }
 
     private GraphBox createGraphBox(Skin skin, String id, boolean v) {
-        GraphBoxImpl end = new GraphBoxImpl(id, "ValueBool", skin);
+        GraphBoxImpl end = new GraphBoxImpl(id, configuration, skin);
         end.addGraphBoxPart(createValuePart(skin, v));
 
         return end;
@@ -68,10 +54,10 @@ public class ValueBooleanBoxProducer implements GraphBoxProducer {
                 new GraphBoxPartImpl.Callback() {
                     @Override
                     public void serialize(JSONObject object) {
-                        object.put("value", checkBox.isChecked());
+                        object.put("v", checkBox.isChecked());
                     }
                 });
-        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, new ValuePipelineNodeOutput(null, PropertyType.Boolean));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutput("value"));
         return colorPart;
     }
 }

@@ -2,7 +2,7 @@ package com.gempukku.libgdx.graph.ui.graph;
 
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 
-public interface GraphBoxOutputConnector {
+public interface GraphBoxOutputConnector extends PipelineNodeOutput {
     enum Side {
         Right, Bottom;
     }
@@ -10,6 +10,4 @@ public interface GraphBoxOutputConnector {
     Side getSide();
 
     float getOffset();
-
-    PipelineNodeOutput getPipelineNodeOutput();
 }

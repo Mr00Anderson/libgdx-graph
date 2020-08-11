@@ -8,11 +8,6 @@ public abstract class PipelineNodeProducerImpl implements PipelineNodeProducer {
     }
 
     @Override
-    public final boolean supportsType(String type) {
-        return type.equals(configuration.getType());
-    }
-
-    @Override
     public final PipelineNodeConfiguration getConfiguration() {
         return configuration;
     }

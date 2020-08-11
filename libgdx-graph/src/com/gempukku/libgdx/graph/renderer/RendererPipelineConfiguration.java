@@ -38,28 +38,28 @@ public class RendererPipelineConfiguration {
     public static List<PipelinePropertyProducer> pipelinePropertyProducers = new LinkedList<>();
 
     static {
-        pipelineNodeProducers.put("PipelineStart", new StartPipelineNodeProducer());
-        pipelineNodeProducers.put("PipelineEnd", new EndPipelineNodeProducer());
-        pipelineNodeProducers.put("UIRenderer", new UIRendererPipelineNodeProducer());
-        pipelineNodeProducers.put("DefaultRenderer", new DefaultRendererPipelineNodeProducer());
+        addNodeProducer(new StartPipelineNodeProducer());
+        addNodeProducer(new EndPipelineNodeProducer());
+        addNodeProducer(new UIRendererPipelineNodeProducer());
+        addNodeProducer(new DefaultRendererPipelineNodeProducer());
 
-        pipelineNodeProducers.put("ValueVector1", new ValueVector1PipelineNodeProducer());
-        pipelineNodeProducers.put("ValueVector2", new ValueVector2PipelineNodeProducer());
-        pipelineNodeProducers.put("ValueVector3", new ValueVector3PipelineNodeProducer());
-        pipelineNodeProducers.put("ValueColor", new ValueColorPipelineNodeProducer());
-        pipelineNodeProducers.put("ValueBoolean", new ValueBooleanPipelineNodeProducer());
+        addNodeProducer(new ValueVector1PipelineNodeProducer());
+        addNodeProducer(new ValueVector2PipelineNodeProducer());
+        addNodeProducer(new ValueVector3PipelineNodeProducer());
+        addNodeProducer(new ValueColorPipelineNodeProducer());
+        addNodeProducer(new ValueBooleanPipelineNodeProducer());
 
-        pipelineNodeProducers.put("ScreenSize", new ScreenSizePipelineNodeProducer());
-        pipelineNodeProducers.put("Time", new TimePipelineNodeProducer());
+        addNodeProducer(new ScreenSizePipelineNodeProducer());
+        addNodeProducer(new TimePipelineNodeProducer());
 
-        pipelineNodeProducers.put("Merge", new MergePipelineNodeProducer());
-        pipelineNodeProducers.put("Split", new SplitPipelineNodeProducer());
+        addNodeProducer(new MergePipelineNodeProducer());
+        addNodeProducer(new SplitPipelineNodeProducer());
 
-        pipelineNodeProducers.put("Property", new PropertyPipelineNodeProducer());
+        addNodeProducer(new PropertyPipelineNodeProducer());
 
-        pipelineNodeProducers.put("Bloom", new BloomPipelineNodeProducer());
-        pipelineNodeProducers.put("GaussianBlur", new GaussianBlurPipelineNodeProducer());
-        pipelineNodeProducers.put("GammaCorrection", new GammaCorrectionPipelineNodeProducer());
+        addNodeProducer(new BloomPipelineNodeProducer());
+        addNodeProducer(new GaussianBlurPipelineNodeProducer());
+        addNodeProducer(new GammaCorrectionPipelineNodeProducer());
 
         pipelinePropertyProducers.add(new Vector1PipelinePropertyProducer());
         pipelinePropertyProducers.add(new Vector2PipelinePropertyProducer());
@@ -69,6 +69,10 @@ public class RendererPipelineConfiguration {
         pipelinePropertyProducers.add(new ModelsPipelinePropertyProducer());
         pipelinePropertyProducers.add(new LightsPipelinePropertyProducer());
         pipelinePropertyProducers.add(new CameraPipelinePropertyProducer());
+    }
+
+    private static void addNodeProducer(PipelineNodeProducer producer) {
+        pipelineNodeProducers.put(producer.getConfiguration().getType(), producer);
     }
 
     private RendererPipelineConfiguration() {

@@ -25,7 +25,27 @@ public class GraphBoxOutputConnectorImpl implements GraphBoxOutputConnector {
     }
 
     @Override
-    public PipelineNodeOutput getPipelineNodeOutput() {
-        return pipelineNodeOutput;
+    public boolean isMainConnection() {
+        return pipelineNodeOutput.isMainConnection();
+    }
+
+    @Override
+    public String getFieldName() {
+        return pipelineNodeOutput.getFieldName();
+    }
+
+    @Override
+    public String getFieldId() {
+        return pipelineNodeOutput.getFieldId();
+    }
+
+    @Override
+    public OutputPropertyType getPropertyType() {
+        return pipelineNodeOutput.getPropertyType();
+    }
+
+    @Override
+    public boolean supportsMultiple() {
+        return pipelineNodeOutput.supportsMultiple();
     }
 }

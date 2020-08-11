@@ -11,6 +11,11 @@ import com.gempukku.libgdx.graph.renderer.config.rendering.DefaultRendererPipeli
 import com.gempukku.libgdx.graph.renderer.config.rendering.EndPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.StartPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.UIRendererPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueBooleanPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueColorPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueVector1PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueVector2PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueVector3PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyCameraBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyColorBoxProducer;
@@ -42,11 +47,11 @@ public class UIPipelineConfiguration {
 
     static {
         Set<GraphBoxProducer> valueProducers = new LinkedHashSet<>();
-        valueProducers.add(new ValueColorBoxProducer());
-        valueProducers.add(new ValueVector1BoxProducer());
-        valueProducers.add(new ValueVector2BoxProducer());
-        valueProducers.add(new ValueVector3BoxProducer());
-        valueProducers.add(new ValueBooleanBoxProducer());
+        valueProducers.add(new ValueColorBoxProducer(new ValueColorPipelineNodeConfiguration()));
+        valueProducers.add(new ValueVector1BoxProducer(new ValueVector1PipelineNodeConfiguration()));
+        valueProducers.add(new ValueVector2BoxProducer(new ValueVector2PipelineNodeConfiguration()));
+        valueProducers.add(new ValueVector3BoxProducer(new ValueVector3PipelineNodeConfiguration()));
+        valueProducers.add(new ValueBooleanBoxProducer(new ValueBooleanPipelineNodeConfiguration()));
         PropertyGraphBoxProducer propertyProducer = new PropertyGraphBoxProducer();
         notAddableProducers.add(propertyProducer);
         valueProducers.add(propertyProducer);
