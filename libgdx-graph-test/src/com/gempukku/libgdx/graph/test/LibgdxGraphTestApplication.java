@@ -93,7 +93,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                     }
                 });
 
-        final Slider bloomStrength = new Slider(0, 5, 0.01f, false, skin);
+        final Slider bloomStrength = new Slider(0, 10, 0.01f, false, skin);
         bloomStrength.addListener(
                 new ChangeListener() {
                     @Override
