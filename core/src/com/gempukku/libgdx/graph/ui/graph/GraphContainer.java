@@ -6,16 +6,19 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.data.NodeConnector;
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
+import com.gempukku.libgdx.graph.ui.preview.NavigableCanvas;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
@@ -29,9 +32,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphContainer extends WidgetGroup {
+public class GraphContainer extends WidgetGroup implements NavigableCanvas {
+    private static final float CANVAS_GAP = 50f;
     private static final float CONNECTOR_LENGTH = 10;
     private static final float CONNECTOR_RADIUS = 5;
+
+    private float canvasX;
+    private float canvasY;
+    private float canvasWidth;
+    private float canvasHeight;
+    private boolean navigating;
 
     private Map<String, GraphBox> graphBoxes = new HashMap<>();
     private Map<String, VisWindow> boxWindows = new HashMap<>();
@@ -66,6 +76,84 @@ public class GraphContainer extends WidgetGroup {
                         processLeftClick(x, y);
                     }
                 });
+    }
+
+    @Override
+    public void getCanvasPosition(Vector2 result) {
+        result.set(canvasX, canvasY);
+    }
+
+    @Override
+    public void getCanvasSize(Vector2 result) {
+        result.set(canvasWidth, canvasHeight);
+    }
+
+    @Override
+    public void getVisibleSize(Vector2 result) {
+        result.set(getWidth(), getHeight());
+    }
+
+    @Override
+    public void navigateTo(float x, float y) {
+        navigating = true;
+        float difX = x - canvasX;
+        float difY = y - canvasY;
+        for (Actor element : getElements()) {
+            element.moveBy(-difX, -difY);
+        }
+        canvasX = x;
+        canvasY = y;
+        navigating = false;
+    }
+
+    @Override
+    public Array<Actor> getElements() {
+        return getChildren();
+    }
+
+    private void updateCanvas(boolean adjustPosition) {
+        if (!navigating) {
+            float minX = Float.MAX_VALUE;
+            float minY = Float.MAX_VALUE;
+            float maxX = Float.MIN_VALUE;
+            float maxY = Float.MIN_VALUE;
+
+            Array<Actor> children = getElements();
+            if (children.size == 0) {
+                minX = 0;
+                minY = 0;
+                maxX = 0;
+                maxY = 0;
+            } else {
+                for (Actor child : children) {
+                    float childX = child.getX();
+                    float childY = child.getY();
+                    float childWidth = child.getWidth();
+                    float childHeight = child.getHeight();
+                    minX = Math.min(minX, childX);
+                    minY = Math.min(minY, childY);
+                    maxX = Math.max(maxX, childX + childWidth);
+                    maxY = Math.max(maxY, childY + childHeight);
+                }
+            }
+
+            minX -= CANVAS_GAP;
+            minY -= CANVAS_GAP;
+            maxX += CANVAS_GAP;
+            maxY += CANVAS_GAP;
+
+            canvasWidth = maxX - minX;
+            canvasHeight = maxY - minY;
+
+            if (adjustPosition) {
+                canvasX = -minX;
+                canvasY = -minY;
+            }
+        }
+    }
+
+    public void adjustCanvas() {
+        updateCanvas(true);
     }
 
     public void setValidationResult(GraphValidator.ValidationResult<GraphBox, GraphConnection> validationResult) {
@@ -211,6 +299,7 @@ public class GraphContainer extends WidgetGroup {
             @Override
             protected void positionChanged() {
                 recreateClickableShapes();
+                updateCanvas(true);
                 fire(new GraphChangedEvent(false));
             }
 
@@ -220,7 +309,7 @@ public class GraphContainer extends WidgetGroup {
                 super.close();
             }
         };
-        window.setKeepWithinParent(true);
+        window.setKeepWithinStage(false);
         if (closeable) {
             window.addCloseButton();
         }
@@ -260,6 +349,7 @@ public class GraphContainer extends WidgetGroup {
     public void layout() {
         super.layout();
         recreateClickableShapes();
+        updateCanvas(false);
     }
 
     private void recreateClickableShapes() {

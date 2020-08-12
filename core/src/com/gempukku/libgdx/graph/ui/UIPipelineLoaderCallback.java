@@ -52,6 +52,7 @@ public class UIPipelineLoaderCallback implements PipelineLoaderCallback<Pipeline
 
     @Override
     public PipelineDesignTab end() {
+        graphContainer.adjustCanvas();
         return pipelineDesignTab;
     }
 

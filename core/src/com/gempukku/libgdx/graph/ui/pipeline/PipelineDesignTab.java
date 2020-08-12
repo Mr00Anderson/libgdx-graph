@@ -2,6 +2,7 @@ package com.gempukku.libgdx.graph.ui.pipeline;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -27,6 +28,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
 import com.gempukku.libgdx.graph.ui.graph.PopupMenuProducer;
 import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
+import com.gempukku.libgdx.graph.ui.preview.PreviewWidget;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -61,16 +63,6 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
 
         pipelineProperties = createPropertiesUI(skin);
 
-        Table leftTable = new Table();
-
-        ScrollPane propertiesScroll = new ScrollPane(pipelineProperties, skin);
-        propertiesScroll.setFadeScrollBars(false);
-
-        leftTable.add(propertiesScroll).grow().row();
-        HorizontalGroup buttons = new HorizontalGroup();
-        buttons.align(Align.left);
-        leftTable.add(buttons).growX().row();
-
         graphContainer = new GraphContainer(createPopupMenuProducer());
         contentTable.addListener(
                 new GraphChangedListener() {
@@ -83,6 +75,19 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
                         return true;
                     }
                 });
+
+
+        Table leftTable = new Table();
+
+        ScrollPane propertiesScroll = new ScrollPane(pipelineProperties, skin);
+        propertiesScroll.setFadeScrollBars(false);
+
+        leftTable.add(propertiesScroll).grow().row();
+        PreviewWidget previewWidget = new PreviewWidget(graphContainer);
+        leftTable.add(previewWidget).growX().height(200).row();
+        HorizontalGroup buttons = new HorizontalGroup();
+        buttons.align(Align.left);
+        leftTable.add(buttons).growX().row();
 
         SplitPane splitPane = new SplitPane(leftTable, graphContainer, false, skin);
 
@@ -293,13 +298,15 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
         JSONObject pipeline = new JSONObject();
 
         JSONArray objects = new JSONArray();
+        Vector2 tmp = new Vector2();
+        graphContainer.getCanvasPosition(tmp);
         for (GraphBox graphBox : graphContainer.getGraphBoxes()) {
             Window window = graphContainer.getBoxWindow(graphBox.getId());
             JSONObject object = new JSONObject();
             object.put("id", graphBox.getId());
             object.put("type", graphBox.getType());
-            object.put("x", window.getX());
-            object.put("y", window.getY());
+            object.put("x", tmp.x + window.getX());
+            object.put("y", tmp.y + window.getY());
 
             JSONObject data = graphBox.serializeData();
             if (data != null)
