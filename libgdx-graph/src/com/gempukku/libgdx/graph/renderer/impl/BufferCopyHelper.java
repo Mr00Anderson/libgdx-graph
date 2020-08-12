@@ -12,6 +12,10 @@ public class BufferCopyHelper {
     }
 
     public void copy(FrameBuffer from, FrameBuffer to) {
+        copy(from, to, 0, 0, getBufferWidth(to), getBufferHeight(to));
+    }
+
+    public void copy(FrameBuffer from, FrameBuffer to, float x, float y, float width, float height) {
         if (to != null) {
             to.begin();
         }
@@ -21,9 +25,8 @@ public class BufferCopyHelper {
         int bufferHeight = getBufferHeight(to);
 
         batch.getProjectionMatrix().setToOrtho2D(0, 0, bufferWidth, bufferHeight);
-
         batch.begin();
-        batch.draw(from.getColorBufferTexture(), 0, bufferHeight, bufferWidth, -bufferHeight);
+        batch.draw(from.getColorBufferTexture(), x, y + height, width, -height);
         batch.end();
 
         if (to != null) {

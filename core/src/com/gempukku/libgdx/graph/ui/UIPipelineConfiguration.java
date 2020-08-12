@@ -9,6 +9,7 @@ import com.gempukku.libgdx.graph.renderer.config.provided.RenderSizePipelineNode
 import com.gempukku.libgdx.graph.renderer.config.provided.TimePipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.DefaultRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.EndPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.rendering.PipelineRendererNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.StartPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.UIRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.value.ValueBooleanPipelineNodeConfiguration;
@@ -79,6 +80,7 @@ public class UIPipelineConfiguration {
         renderingProducers.add(endProducer);
         renderingProducers.add(new GraphBoxProducerImpl(new DefaultRendererPipelineNodeConfiguration()));
         renderingProducers.add(new GraphBoxProducerImpl(new UIRendererPipelineNodeConfiguration()));
+        renderingProducers.add(new GraphBoxProducerImpl(new PipelineRendererNodeConfiguration()));
         graphBoxProducers.put("Rendering", renderingProducers);
 
         Set<GraphBoxProducer> postProcessorProducers = new LinkedHashSet<>();

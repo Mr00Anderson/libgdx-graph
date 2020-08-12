@@ -80,7 +80,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        pipelineRenderer.setPipelineProperty("Bloom Radius", bloomRadius.getValue());
+                        setPropertyIfDefined("Bloom Radius", bloomRadius.getValue());
                     }
                 });
 
@@ -89,7 +89,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        pipelineRenderer.setPipelineProperty("Min Brightness", minimalBrightness.getValue());
+                        setPropertyIfDefined("Min Brightness", minimalBrightness.getValue());
                     }
                 });
 
@@ -98,7 +98,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        pipelineRenderer.setPipelineProperty("Bloom Strength", bloomStrength.getValue());
+                        setPropertyIfDefined("Bloom Strength", bloomStrength.getValue());
                     }
                 });
 
@@ -107,7 +107,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        pipelineRenderer.setPipelineProperty("Blur Radius", blurRadius.getValue());
+                        setPropertyIfDefined("Blur Radius", blurRadius.getValue());
                     }
                 });
 
@@ -117,7 +117,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        pipelineRenderer.setPipelineProperty("Gamma Correction", gammaCorrection.getValue());
+                        setPropertyIfDefined("Gamma Correction", gammaCorrection.getValue());
                     }
                 });
 
@@ -138,6 +138,11 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         tbl.align(Align.topLeft);
 
         stage.addActor(tbl);
+    }
+
+    private void setPropertyIfDefined(String propertyName, float value) {
+        if (pipelineRenderer.hasPipelineProperty(propertyName))
+            pipelineRenderer.setPipelineProperty(propertyName, value);
     }
 
     @Override
@@ -176,7 +181,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     private PipelineRenderer loadPipelineRenderer() {
         try {
-            InputStream stream = Gdx.files.local("pipeline.json").read();
+            InputStream stream = Gdx.files.local("test.json").read();
             try {
                 PipelineRenderer pipelineRenderer = PipelineLoader.loadPipeline(stream, new RendererLoaderCallback());
                 setupPipeline(pipelineRenderer);

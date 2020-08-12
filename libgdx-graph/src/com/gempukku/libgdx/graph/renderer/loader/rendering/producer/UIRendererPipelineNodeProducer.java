@@ -11,7 +11,6 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
 import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class UIRendererPipelineNodeProducer extends PipelineNodeProducerImpl {
@@ -21,21 +20,13 @@ public class UIRendererPipelineNodeProducer extends PipelineNodeProducerImpl {
 
     @Override
     public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        Function<PipelineRenderingContext, Stage> stageInput = (Function<PipelineRenderingContext, Stage>) inputFunctions.get("stage");
+        final Function<PipelineRenderingContext, Stage> stageInput = (Function<PipelineRenderingContext, Stage>) inputFunctions.get("stage");
         final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
-        if (stageInput == null)
-            stageInput = new Function<PipelineRenderingContext, Stage>() {
-                @Override
-                public Stage apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return null;
-                }
-            };
-        final Function<PipelineRenderingContext, Stage> finalStageInput = stageInput;
         return new OncePerFrameJobPipelineNode(getConfiguration()) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
-                Stage stage = finalStageInput.apply(pipelineRenderingContext);
+                Stage stage = stageInput.apply(pipelineRenderingContext);
                 if (stage != null) {
                     FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
                     int width = currentBuffer.getWidth();
