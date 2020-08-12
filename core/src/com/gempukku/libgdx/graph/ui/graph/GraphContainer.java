@@ -346,8 +346,7 @@ public class GraphContainer extends WidgetGroup {
         Vector2 from = new Vector2();
         Vector2 to = new Vector2();
 
-        shapeRenderer.begin();
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
 
         for (Map.Entry<String, VisWindow> windowEntry : boxWindows.entrySet()) {
