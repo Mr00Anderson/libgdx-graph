@@ -6,6 +6,7 @@ import com.gempukku.libgdx.graph.renderer.impl.WritablePipelineProperty;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.node.EndPipelineNode;
 import com.gempukku.libgdx.graph.renderer.property.PipelinePropertyProducer;
@@ -79,7 +80,9 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
                 throw new IllegalStateException("Required input not provided");
             if (vertexInfo != null) {
                 PipelineNode vertexNode = populatePipelineNodes(vertexInfo.fromNode, pipelineNodeMap);
-                inputSuppliers.put(inputName, vertexNode.getOutputSupplier(vertexInfo.fromField));
+                PipelineNodeOutput outputInfo = vertexNode.getConfiguration().getNodeOutput(vertexInfo.fromField);
+                PropertyType propertyType = outputInfo.getPropertyType().determinePropertyType(nodeInput.getPropertyType().getAcceptedPropertyTypes());
+                inputSuppliers.put(inputName, vertexNode.getOutputSupplier(vertexInfo.fromField, propertyType));
             }
         }
         pipelineNode = nodeProducer.createNode(nodeInfo.data, inputSuppliers);

@@ -1,15 +1,24 @@
 package com.gempukku.libgdx.graph.renderer.loader.rendering.node;
 
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
+import com.gempukku.libgdx.graph.renderer.config.rendering.EndPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.google.common.base.Function;
 
 public class EndPipelineNode implements PipelineNode {
+    private PipelineNodeConfiguration configuration = new EndPipelineNodeConfiguration();
     private Function<PipelineRenderingContext, RenderPipeline> renderPipeline;
 
     public EndPipelineNode(Function<PipelineRenderingContext, RenderPipeline> renderPipeline) {
         this.renderPipeline = renderPipeline;
+    }
+
+    @Override
+    public PipelineNodeConfiguration getConfiguration() {
+        return configuration;
     }
 
     @Override
@@ -22,7 +31,7 @@ public class EndPipelineNode implements PipelineNode {
     }
 
     @Override
-    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name) {
+    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name, PropertyType propertyType) {
         return null;
     }
 

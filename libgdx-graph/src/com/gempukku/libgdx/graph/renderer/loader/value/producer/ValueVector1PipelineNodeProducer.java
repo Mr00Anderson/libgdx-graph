@@ -17,6 +17,6 @@ public class ValueVector1PipelineNodeProducer extends PipelineNodeProducerImpl {
 
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers) {
-        return new ValuePipelineNode("value", ((Number) data.get("v1")).floatValue());
+        return new ValuePipelineNode(getConfiguration(), "value", ((Number) data.get("v1")).floatValue());
     }
 }

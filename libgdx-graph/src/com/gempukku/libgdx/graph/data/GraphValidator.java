@@ -5,6 +5,7 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GraphValidator {
@@ -38,8 +39,8 @@ public class GraphValidator {
             PipelineNodeOutput output = remoteNode.getOutput(incomingConnection.getFieldFrom());
 
             // Validate the actual output is accepted by the input
-            PropertyType outputPropertyType = output.getPropertyType().determinePropertyType();
-            if (!input.getPropertyType().getAcceptedPropertyTypes().contains(outputPropertyType)) {
+            List<PropertyType> acceptedPropertyTypes = input.getPropertyType().getAcceptedPropertyTypes();
+            if (!outputAcceptsPropertyType(output, acceptedPropertyTypes)) {
                 result.addErrorConnection(incomingConnection);
             }
 
@@ -51,6 +52,14 @@ public class GraphValidator {
             if (input.isRequired() && !validatedFields.contains(input.getFieldId()))
                 result.addErrorConnector(new NodeConnector(nodeId, input.getFieldId()));
         }
+    }
+
+    private static boolean outputAcceptsPropertyType(PipelineNodeOutput output, List<PropertyType> acceptedPropertyTypes) {
+        for (PropertyType acceptedPropertyType : acceptedPropertyTypes) {
+            if (output.getPropertyType().mayProduce(acceptedPropertyType))
+                return true;
+        }
+        return false;
     }
 
     // This function is a variation of DFSUtil() in

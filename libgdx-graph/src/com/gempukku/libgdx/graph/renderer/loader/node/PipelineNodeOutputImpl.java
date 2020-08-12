@@ -2,6 +2,8 @@ package com.gempukku.libgdx.graph.renderer.loader.node;
 
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 
+import java.util.List;
+
 public class PipelineNodeOutputImpl implements PipelineNodeOutput {
     private String id;
     private String name;
@@ -24,7 +26,7 @@ public class PipelineNodeOutputImpl implements PipelineNodeOutput {
             }
 
             @Override
-            public PropertyType determinePropertyType() {
+            public PropertyType determinePropertyType(List<PropertyType> propertyTypes) {
                 return propertyType;
             }
         };

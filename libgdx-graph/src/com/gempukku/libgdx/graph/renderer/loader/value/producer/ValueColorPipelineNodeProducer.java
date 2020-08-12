@@ -18,6 +18,6 @@ public class ValueColorPipelineNodeProducer extends PipelineNodeProducerImpl {
 
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers) {
-        return new ValuePipelineNode("value", Color.valueOf((String) data.get("color")));
+        return new ValuePipelineNode(getConfiguration(), "value", Color.valueOf((String) data.get("color")));
     }
 }

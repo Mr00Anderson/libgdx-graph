@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.google.common.base.Function;
 
@@ -17,7 +18,12 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     }
 
     @Override
-    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name) {
+    public PipelineNodeConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    @Override
+    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name, PropertyType propertyType) {
         PipelineNodeOutput nodeOutput = configuration.getNodeOutput(name);
         if (nodeOutput == null)
             throw new IllegalArgumentException("This node does not have an output of: " + name);
