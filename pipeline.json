@@ -70,12 +70,6 @@
         "type": "GammaCorrection"
       },
       {
-        "x": 254.0,
-        "y": 623.0,
-        "id": "94a897fe882d4d70a12614a5b0d77f12",
-        "type": "ScreenSize"
-      },
-      {
         "data": {
           "name": "Lights",
           "type": "Lights"
@@ -180,12 +174,6 @@
         "toField": "camera",
         "fromField": "value",
         "toNode": "42130262552043d1ba8ac6029e4333c6"
-      },
-      {
-        "fromNode": "94a897fe882d4d70a12614a5b0d77f12",
-        "toField": "size",
-        "fromField": "size",
-        "toNode": "79c4964a2afd4e158e7660c3f5502680"
       },
       {
         "fromNode": "ff909af41c324ff49a914753bb3073cb",

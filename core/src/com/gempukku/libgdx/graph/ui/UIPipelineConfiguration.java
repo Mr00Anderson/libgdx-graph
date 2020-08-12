@@ -5,7 +5,7 @@ import com.gempukku.libgdx.graph.renderer.config.part.SplitPipelineNodeConfigura
 import com.gempukku.libgdx.graph.renderer.config.postprocessor.BloomPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.postprocessor.GammaCorrectionPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.postprocessor.GaussianBlurPipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.config.provided.ScreenSizePipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.provided.RenderSizePipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.provided.TimePipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.DefaultRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.rendering.EndPipelineNodeConfiguration;
@@ -59,7 +59,7 @@ public class UIPipelineConfiguration {
 
         Set<GraphBoxProducer> providedProducers = new LinkedHashSet<>();
         providedProducers.add(new GraphBoxProducerImpl(new TimePipelineNodeConfiguration()));
-        providedProducers.add(new GraphBoxProducerImpl(new ScreenSizePipelineNodeConfiguration()));
+        providedProducers.add(new GraphBoxProducerImpl(new RenderSizePipelineNodeConfiguration()));
         graphBoxProducers.put("Provided", providedProducers);
 
         Set<GraphBoxProducer> mathProducers = new LinkedHashSet<>();

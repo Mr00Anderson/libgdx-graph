@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.renderer.loader.postprocessor.BloomPipelineNode
 import com.gempukku.libgdx.graph.renderer.loader.postprocessor.GammaCorrectionPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.postprocessor.GaussianBlurPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.property.PropertyPipelineNodeProducer;
-import com.gempukku.libgdx.graph.renderer.loader.provided.ScreenSizePipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.provided.RenderSizePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.provided.TimePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.DefaultRendererPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.EndPipelineNodeProducer;
@@ -49,7 +49,7 @@ public class RendererPipelineConfiguration {
         addNodeProducer(new ValueColorPipelineNodeProducer());
         addNodeProducer(new ValueBooleanPipelineNodeProducer());
 
-        addNodeProducer(new ScreenSizePipelineNodeProducer());
+        addNodeProducer(new RenderSizePipelineNodeProducer());
         addNodeProducer(new TimePipelineNodeProducer());
 
         addNodeProducer(new MergePipelineNodeProducer());

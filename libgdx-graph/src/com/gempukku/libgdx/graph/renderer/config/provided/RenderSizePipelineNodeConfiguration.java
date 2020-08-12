@@ -4,9 +4,9 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-public class ScreenSizePipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
-    public ScreenSizePipelineNodeConfiguration() {
-        super("ScreenSize", "Screen size");
+public class RenderSizePipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
+    public RenderSizePipelineNodeConfiguration() {
+        super("RenderSize", "Render size");
         addNodeOutput(
                 new PipelineNodeOutputImpl("size", "Size", PropertyType.Vector2));
         addNodeOutput(

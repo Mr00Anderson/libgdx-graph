@@ -11,7 +11,7 @@ import com.gempukku.libgdx.graph.renderer.loader.rendering.node.EndPipelineNode;
 
 import java.util.Map;
 
-public class PipelineRendererImpl implements PipelineRenderer, PipelineRenderingContext {
+public class PipelineRendererImpl implements PipelineRenderer {
     private Iterable<PipelineNode> nodes;
     private Map<String, WritablePipelineProperty> pipelinePropertyMap;
     private EndPipelineNode endNode;
@@ -56,17 +56,29 @@ public class PipelineRendererImpl implements PipelineRenderer, PipelineRendering
     }
 
     @Override
-    public PipelinePropertySource getPipelinePropertySource() {
-        return this;
-    }
-
-    @Override
-    public void render(float delta, RenderOutput renderOutput) {
+    public void render(float delta, final RenderOutput renderOutput) {
         for (PipelineNode node : nodes) {
             node.startFrame(delta);
         }
 
-        RenderPipeline renderPipeline = endNode.executePipeline(this);
+        PipelineRenderingContext context = new PipelineRenderingContext() {
+            @Override
+            public int getRenderWidth() {
+                return renderOutput.getRenderWidth();
+            }
+
+            @Override
+            public int getRenderHeight() {
+                return renderOutput.getRenderHeight();
+            }
+
+            @Override
+            public PipelinePropertySource getPipelinePropertySource() {
+                return PipelineRendererImpl.this;
+            }
+        };
+
+        RenderPipeline renderPipeline = endNode.executePipeline(context);
         renderOutput.output(renderPipeline);
 
         for (PipelineNode node : nodes) {
