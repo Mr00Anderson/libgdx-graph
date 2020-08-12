@@ -78,6 +78,10 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
                 });
     }
 
+    public void centerCanvas() {
+        navigateTo((canvasWidth - getWidth()) / 2f, (canvasHeight - getHeight()) / 2f);
+    }
+
     @Override
     public void getCanvasPosition(Vector2 result) {
         result.set(canvasX, canvasY);

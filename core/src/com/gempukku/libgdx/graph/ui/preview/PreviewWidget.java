@@ -23,7 +23,7 @@ public class PreviewWidget extends Widget {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         navigateCanvasTo(x, y);
-                        event.cancel();
+                        event.stop();
                     }
                 });
     }

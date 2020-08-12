@@ -141,8 +141,12 @@ public class GraphValidator {
             return errorConnectors;
         }
 
-        public boolean hasNoErrors() {
-            return errorNodes.isEmpty() && errorConnections.isEmpty() && errorConnectors.isEmpty();
+        public boolean hasErrors() {
+            return !errorNodes.isEmpty() || !errorConnections.isEmpty() || !errorConnectors.isEmpty();
+        }
+
+        public boolean hasWarnings() {
+            return !warningNodes.isEmpty();
         }
     }
 }

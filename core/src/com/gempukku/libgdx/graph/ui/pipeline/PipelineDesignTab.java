@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.ui.pipeline;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
@@ -53,6 +55,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
     private final GraphContainer graphContainer;
 
     private Table contentTable;
+    private Label validationLabel;
     private Skin skin;
 
     public PipelineDesignTab(Skin skin) {
@@ -86,6 +89,19 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
         PreviewWidget previewWidget = new PreviewWidget(graphContainer);
         leftTable.add(previewWidget).growX().height(200).row();
         HorizontalGroup buttons = new HorizontalGroup();
+        TextButton center = new TextButton("Center", skin);
+        center.addListener(
+                new ClickListener(Input.Buttons.LEFT) {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        graphContainer.centerCanvas();
+                        event.stop();
+                    }
+                });
+        buttons.addActor(center);
+        validationLabel = new Label("Invalid", skin);
+        validationLabel.setColor(Color.RED);
+        buttons.addActor(validationLabel);
         buttons.align(Align.left);
         leftTable.add(buttons).growX().row();
 
@@ -124,6 +140,16 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
     private void updatePipelineValidation() {
         GraphValidator.ValidationResult<GraphBox, GraphConnection> validationResult = GraphValidator.validateGraph(this, "end");
         graphContainer.setValidationResult(validationResult);
+        if (validationResult.hasErrors()) {
+            validationLabel.setColor(Color.RED);
+            validationLabel.setText("Invalid");
+        } else if (validationResult.hasWarnings()) {
+            validationLabel.setColor(Color.YELLOW);
+            validationLabel.setText("Acceptable");
+        } else {
+            validationLabel.setColor(Color.GREEN);
+            validationLabel.setText("OK");
+        }
     }
 
     private PopupMenuProducer createPopupMenuProducer() {
