@@ -5,8 +5,6 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationI
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-import java.util.Arrays;
-
 public class StartPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public StartPipelineNodeConfiguration() {
         super("PipelineStart", "Pipeline start");
@@ -15,6 +13,6 @@ public class StartPipelineNodeConfiguration extends PipelineNodeConfigurationImp
         addNodeInput(
                 new PipelineNodeInputImpl("size", "Size", PropertyType.Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", Arrays.asList(PropertyType.RenderPipeline), true));
+                new PipelineNodeOutputImpl("output", "Output", PropertyType.RenderPipeline, true));
     }
 }

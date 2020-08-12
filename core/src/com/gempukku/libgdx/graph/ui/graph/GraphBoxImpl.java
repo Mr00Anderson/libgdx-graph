@@ -144,12 +144,12 @@ public class GraphBoxImpl implements GraphBox {
     }
 
     @Override
-    public Iterable<GraphBoxInputConnector> getGraphBoxInputConnectors() {
+    public Iterable<GraphBoxInputConnector> getInputs() {
         return inputConnectors.values();
     }
 
     @Override
-    public Iterable<GraphBoxOutputConnector> getGraphBoxOutputConnectors() {
+    public Iterable<GraphBoxOutputConnector> getOutputs() {
         return outputConnectors.values();
     }
 

@@ -2,9 +2,6 @@ package com.gempukku.libgdx.graph.renderer.loader.node;
 
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class PipelineNodeOutputImpl implements PipelineNodeOutput {
     private String id;
     private String name;
@@ -12,27 +9,23 @@ public class PipelineNodeOutputImpl implements PipelineNodeOutput {
     private OutputPropertyType outputPropertyType;
 
     public PipelineNodeOutputImpl(String id, String name, PropertyType producedType) {
-        this(id, name, Arrays.asList(producedType), false);
+        this(id, name, producedType, false);
     }
 
-    public PipelineNodeOutputImpl(String id, String name, List<PropertyType> possibleProducedTypes) {
-        this(id, name, possibleProducedTypes, false);
-    }
-
-    public PipelineNodeOutputImpl(String id, String name, final List<PropertyType> possibleProducedTypes, boolean mainConnection) {
+    public PipelineNodeOutputImpl(String id, String name, final PropertyType propertyType, boolean mainConnection) {
         this.id = id;
         this.name = name;
         this.mainConnection = mainConnection;
 
         outputPropertyType = new OutputPropertyType() {
             @Override
-            public boolean mayProduce(PropertyType propertyType) {
-                return possibleProducedTypes.contains(propertyType);
+            public boolean mayProduce(PropertyType propertyTypeCompare) {
+                return propertyType == propertyTypeCompare;
             }
 
             @Override
             public PropertyType determinePropertyType() {
-                throw new UnsupportedOperationException("To be implemented");
+                return propertyType;
             }
         };
     }

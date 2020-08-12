@@ -17,13 +17,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.libgdx.graph.data.Graph;
+import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.ui.AwareTab;
 import com.gempukku.libgdx.graph.ui.UIPipelineConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
-import com.gempukku.libgdx.graph.ui.graph.GraphConnectionImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
 import com.gempukku.libgdx.graph.ui.graph.PopupMenuProducer;
 import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, GraphConnectionImpl> {
+public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, GraphConnection> {
     private List<PropertyBox> propertyBoxes = new LinkedList<>();
 
     private final VerticalGroup pipelineProperties;
@@ -97,7 +97,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
     }
 
     @Override
-    public Iterable<? extends GraphConnectionImpl> getIncomingConnections(String nodeId) {
+    public Iterable<? extends GraphConnection> getIncomingConnections(String nodeId) {
         return graphContainer.getIncomingConnections(getNodeById(nodeId));
     }
 
@@ -117,17 +117,8 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
     }
 
     private void updatePipelineValidation() {
-        GraphValidator.ValidationResult<GraphBox, GraphConnectionImpl> validationResult = GraphValidator.validateGraph(this, "end");
-//        System.out.println("Validation result:");
-//        for (GraphBox errorNode : validationResult.getErrorNodes()) {
-//            System.out.println("Error node: " + errorNode.getId());
-//        }
-//        for (GraphBox warningNode : validationResult.getWarningNodes()) {
-//            System.out.println("Warning node:" + warningNode.getId());
-//        }
-//        for (GraphConnectionImpl errorConnection : validationResult.getErrorConnections()) {
-//            System.out.println("Error connection: " + errorConnection.getNodeFrom() + "->" + errorConnection.getNodeTo());
-//        }
+        GraphValidator.ValidationResult<GraphBox, GraphConnection> validationResult = GraphValidator.validateGraph(this, "end");
+        graphContainer.setValidationResult(validationResult);
     }
 
     private PopupMenuProducer createPopupMenuProducer() {
@@ -319,7 +310,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox, Graph
         pipeline.put("objects", objects);
 
         JSONArray connections = new JSONArray();
-        for (GraphConnectionImpl connection : graphContainer.getConnections()) {
+        for (GraphConnection connection : graphContainer.getConnections()) {
             JSONObject conn = new JSONObject();
             conn.put("fromNode", connection.getNodeFrom());
             conn.put("fromField", connection.getFieldFrom());

@@ -15,6 +15,6 @@ public class GaussianBlurPipelineNodeConfiguration extends PipelineNodeConfigura
         addNodeInput(
                 new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.RenderPipeline), true, true));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", Arrays.asList(PropertyType.RenderPipeline), true));
+                new PipelineNodeOutputImpl("output", "Output", PropertyType.RenderPipeline, true));
     }
 }

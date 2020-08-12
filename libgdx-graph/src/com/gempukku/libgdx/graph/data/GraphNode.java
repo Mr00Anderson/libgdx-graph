@@ -9,4 +9,8 @@ public interface GraphNode {
     PipelineNodeInput getInput(String fieldId);
 
     PipelineNodeOutput getOutput(String fieldId);
+
+    Iterable<? extends PipelineNodeInput> getInputs();
+
+    Iterable<? extends PipelineNodeOutput> getOutputs();
 }

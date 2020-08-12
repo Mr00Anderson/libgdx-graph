@@ -1,5 +1,9 @@
 package com.gempukku.libgdx.graph.data;
 
+import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
+import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,8 +23,34 @@ public class GraphValidator {
         boolean cyclic = isCyclic(result, graph, nodeEnd);
         if (!cyclic) {
             // Do other Validation
+            validateNode(result, graph, nodeEnd);
         }
         return result;
+    }
+
+    private static <T extends GraphNode, U extends GraphConnection> void validateNode(ValidationResult<T, U> result, Graph<T, U> graph, String nodeId) {
+        T thisNode = graph.getNodeById(nodeId);
+        Set<String> validatedFields = new HashSet<>();
+        for (U incomingConnection : graph.getIncomingConnections(nodeId)) {
+            String fieldTo = incomingConnection.getFieldTo();
+            PipelineNodeInput input = thisNode.getInput(fieldTo);
+            T remoteNode = graph.getNodeById(incomingConnection.getNodeFrom());
+            PipelineNodeOutput output = remoteNode.getOutput(incomingConnection.getFieldFrom());
+
+            // Validate the actual output is accepted by the input
+            PropertyType outputPropertyType = output.getPropertyType().determinePropertyType();
+            if (!input.getPropertyType().getAcceptedPropertyTypes().contains(outputPropertyType)) {
+                result.addErrorConnection(incomingConnection);
+            }
+
+            validatedFields.add(fieldTo);
+            validateNode(result, graph, incomingConnection.getNodeFrom());
+        }
+
+        for (PipelineNodeInput input : thisNode.getInputs()) {
+            if (input.isRequired() && !validatedFields.contains(input.getFieldId()))
+                result.addErrorConnector(new NodeConnector(nodeId, input.getFieldId()));
+        }
     }
 
     // This function is a variation of DFSUtil() in
@@ -30,6 +60,7 @@ public class GraphValidator {
         // Mark the current node as visited and
         // part of recursion stack
         if (recStack.contains(nodeId)) {
+            validationResult.addErrorNode(graph.getNodeById(nodeId));
             return true;
         }
 
@@ -46,7 +77,6 @@ public class GraphValidator {
 
         for (String connectedNode : connectedNodes) {
             if (isCyclicUtil(validationResult, graph, connectedNode, visited, recStack)) {
-                validationResult.addErrorNode(graph.getNodeById(connectedNode));
                 return true;
             }
         }
@@ -77,6 +107,7 @@ public class GraphValidator {
         private Set<T> errorNodes = new HashSet<>();
         private Set<T> warningNodes = new HashSet<>();
         private Set<U> errorConnections = new HashSet<>();
+        private Set<NodeConnector> errorConnectors = new HashSet<>();
 
         public void addErrorNode(T node) {
             errorNodes.add(node);
@@ -90,6 +121,10 @@ public class GraphValidator {
             errorConnections.add(connection);
         }
 
+        public void addErrorConnector(NodeConnector nodeConnector) {
+            errorConnectors.add(nodeConnector);
+        }
+
         public Set<T> getErrorNodes() {
             return errorNodes;
         }
@@ -100,6 +135,14 @@ public class GraphValidator {
 
         public Set<U> getErrorConnections() {
             return errorConnections;
+        }
+
+        public Set<NodeConnector> getErrorConnectors() {
+            return errorConnectors;
+        }
+
+        public boolean hasNoErrors() {
+            return errorNodes.isEmpty() && errorConnections.isEmpty() && errorConnectors.isEmpty();
         }
     }
 }

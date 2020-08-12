@@ -29,7 +29,6 @@ public enum PropertyType {
                 return value instanceof Environment;
             case Camera:
                 return value instanceof com.badlogic.gdx.graphics.Camera;
-
         }
         return false;
     }

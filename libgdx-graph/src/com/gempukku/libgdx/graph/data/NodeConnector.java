@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui.graph;
+package com.gempukku.libgdx.graph.data;
 
 public class NodeConnector {
     private final String nodeId;

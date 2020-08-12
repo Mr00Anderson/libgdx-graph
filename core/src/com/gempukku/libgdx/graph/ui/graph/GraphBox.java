@@ -15,9 +15,9 @@ public interface GraphBox extends GraphNode {
 
     GraphBoxInputConnector getInput(String fieldId);
 
-    Iterable<GraphBoxInputConnector> getGraphBoxInputConnectors();
+    Iterable<GraphBoxInputConnector> getInputs();
 
     GraphBoxOutputConnector getOutput(String fieldId);
 
-    Iterable<GraphBoxOutputConnector> getGraphBoxOutputConnectors();
+    Iterable<GraphBoxOutputConnector> getOutputs();
 }
