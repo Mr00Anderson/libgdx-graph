@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -99,6 +100,9 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
 
     @Override
     public void navigateTo(float x, float y) {
+        x = MathUtils.round(x);
+        y = MathUtils.round(y);
+
         navigating = true;
         float difX = x - canvasX;
         float difY = y - canvasY;
