@@ -47,6 +47,7 @@ public class GraphContainer extends WidgetGroup {
 
     public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
 
         addListener(
                 new ClickListener(Input.Buttons.RIGHT) {
@@ -345,7 +346,8 @@ public class GraphContainer extends WidgetGroup {
         Vector2 from = new Vector2();
         Vector2 to = new Vector2();
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.begin();
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.WHITE);
 
         for (Map.Entry<String, VisWindow> windowEntry : boxWindows.entrySet()) {
@@ -407,9 +409,8 @@ public class GraphContainer extends WidgetGroup {
             }
         }
 
-        shapeRenderer.end();
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Map.Entry<String, VisWindow> windowEntry : boxWindows.entrySet()) {
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
