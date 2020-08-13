@@ -11,12 +11,12 @@ public class SplitPipelineNodeConfiguration extends PipelineNodeConfigurationImp
         addNodeInput(
                 new PipelineNodeInputImpl("input", "Input", true, PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("x", "X", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("x", "X", PropertyType.Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("y", "Y", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("y", "Y", PropertyType.Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("z", "Z", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("z", "Z", PropertyType.Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("w", "W", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("w", "W", PropertyType.Float));
     }
 }

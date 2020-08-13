@@ -8,7 +8,6 @@ import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
@@ -19,11 +18,11 @@ public class SplitPipelineNodeProducer extends PipelineNodeProducerImpl {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        return new OncePerFrameJobPipelineNode(configuration) {
+    public PipelineNode createNode(JSONObject data, final Map<String, PipelineNode.FieldOutput<?>> inputFields) {
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                Object input = inputFunctions.get("input").apply(pipelineRenderingContext);
+                Object input = inputFields.get("input").getValue(pipelineRenderingContext);
                 float x = 0f;
                 float y = 0f;
                 float z = 0f;

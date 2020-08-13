@@ -15,8 +15,8 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
-public class ValueVector1BoxProducer extends ValueGraphBoxProducer {
-    public ValueVector1BoxProducer(PipelineNodeConfiguration configuration) {
+public class ValueFloatBoxProducer extends ValueGraphBoxProducer {
+    public ValueFloatBoxProducer(PipelineNodeConfiguration configuration) {
         super(configuration);
     }
 

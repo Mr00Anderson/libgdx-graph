@@ -4,14 +4,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.gempukku.libgdx.graph.renderer.config.part.MergePipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.loader.FloatFieldOutput;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class MergePipelineNodeProducer extends PipelineNodeProducerImpl {
@@ -20,51 +19,31 @@ public class MergePipelineNodeProducer extends PipelineNodeProducerImpl {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        Function<PipelineRenderingContext, Float> x = (Function<PipelineRenderingContext, Float>) inputFunctions.get("x");
-        Function<PipelineRenderingContext, Float> y = (Function<PipelineRenderingContext, Float>) inputFunctions.get("y");
-        Function<PipelineRenderingContext, Float> z = (Function<PipelineRenderingContext, Float>) inputFunctions.get("z");
-        Function<PipelineRenderingContext, Float> w = (Function<PipelineRenderingContext, Float>) inputFunctions.get("w");
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
+        PipelineNode.FieldOutput<Float> x = (PipelineNode.FieldOutput<Float>) inputFields.get("x");
+        PipelineNode.FieldOutput<Float> y = (PipelineNode.FieldOutput<Float>) inputFields.get("y");
+        PipelineNode.FieldOutput<Float> z = (PipelineNode.FieldOutput<Float>) inputFields.get("z");
+        PipelineNode.FieldOutput<Float> w = (PipelineNode.FieldOutput<Float>) inputFields.get("w");
         if (x == null)
-            x = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0f;
-                }
-            };
+            x = new FloatFieldOutput(0f);
         if (y == null)
-            y = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0f;
-                }
-            };
+            y = new FloatFieldOutput(0f);
         if (z == null)
-            z = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0f;
-                }
-            };
+            z = new FloatFieldOutput(0f);
         if (w == null)
-            w = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0f;
-                }
-            };
-        final Function<PipelineRenderingContext, Float> finalX = x;
-        final Function<PipelineRenderingContext, Float> finalY = y;
-        final Function<PipelineRenderingContext, Float> finalZ = z;
-        final Function<PipelineRenderingContext, Float> finalW = w;
+            w = new FloatFieldOutput(0f);
+        final PipelineNode.FieldOutput<Float> finalX = x;
+        final PipelineNode.FieldOutput<Float> finalY = y;
+        final PipelineNode.FieldOutput<Float> finalZ = z;
+        final PipelineNode.FieldOutput<Float> finalW = w;
 
-        return new OncePerFrameJobPipelineNode(configuration) {
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                float xValue = finalX.apply(pipelineRenderingContext);
-                float yValue = finalY.apply(pipelineRenderingContext);
-                float zValue = finalZ.apply(pipelineRenderingContext);
-                float wValue = finalW.apply(pipelineRenderingContext);
+                float xValue = finalX.getValue(pipelineRenderingContext);
+                float yValue = finalY.getValue(pipelineRenderingContext);
+                float zValue = finalZ.getValue(pipelineRenderingContext);
+                float wValue = finalW.getValue(pipelineRenderingContext);
 
                 OutputValue<Vector2> v2 = outputValues.get("v2");
                 if (v2 != null)

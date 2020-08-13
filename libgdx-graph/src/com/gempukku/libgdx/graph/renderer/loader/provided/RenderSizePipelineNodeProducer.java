@@ -6,7 +6,6 @@ import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
@@ -17,8 +16,8 @@ public class RenderSizePipelineNodeProducer extends PipelineNodeProducerImpl {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        return new OncePerFrameJobPipelineNode(configuration) {
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 int width = pipelineRenderingContext.getRenderWidth();

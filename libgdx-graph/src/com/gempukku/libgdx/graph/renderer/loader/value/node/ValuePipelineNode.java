@@ -4,47 +4,38 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
-import com.google.common.base.Function;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ValuePipelineNode implements PipelineNode {
     private PipelineNodeConfiguration configuration;
     private String propertyName;
-    private Function<PipelineRenderingContext, Object> value;
+    private Object value;
 
     public ValuePipelineNode(PipelineNodeConfiguration configuration, String propertyName, final Object value) {
         this.configuration = configuration;
         this.propertyName = propertyName;
-        this.value = new Function<PipelineRenderingContext, Object>() {
+        this.value = value;
+    }
+
+    @Override
+    public FieldOutput<?> getFieldOutput(final String name) {
+        if (!name.equals(propertyName))
+            throw new IllegalArgumentException();
+        return new FieldOutput<Object>() {
             @Override
-            public Object apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
+            public PropertyType getPropertyType() {
+                return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
+            }
+
+            @Override
+            public Object getValue(PipelineRenderingContext context) {
                 return value;
             }
         };
     }
 
     @Override
-    public PropertyType determinePropertyType(String name, List<PropertyType> acceptedPropertyTypes) {
-        List<PropertyType> producablePropertyTypes = configuration.getNodeOutput(name).getProducablePropertyTypes();
-        for (PropertyType acceptedPropertyType : acceptedPropertyTypes) {
-            if (producablePropertyTypes.contains(acceptedPropertyType))
-                return acceptedPropertyType;
-        }
-        return null;
-    }
-
-    @Override
     public void startFrame(float delta) {
 
-    }
-
-    @Override
-    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name, PropertyType propertyType) {
-        if (!name.equals(propertyName))
-            throw new IllegalArgumentException();
-        return value;
     }
 
     @Override

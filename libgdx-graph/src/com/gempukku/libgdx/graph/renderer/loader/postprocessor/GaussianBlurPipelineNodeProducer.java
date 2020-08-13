@@ -10,14 +10,13 @@ import com.badlogic.gdx.graphics.glutils.VertexBufferObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
 import com.gempukku.libgdx.graph.renderer.config.postprocessor.GaussianBlurPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.loader.FloatFieldOutput;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
@@ -26,7 +25,7 @@ public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
         final ShaderProgram shaderProgram = new ShaderProgram(
                 Gdx.files.internal("shader/viewToScreenCoords.vert"),
                 Gdx.files.internal("shader/gaussianBlur.frag"));
@@ -45,23 +44,18 @@ public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
         vertexBufferObject.setVertices(verticeData, 0, verticeData.length);
         indexBufferObject.setIndices(indices, 0, indices.length);
 
-        Function<PipelineRenderingContext, Float> blurRadius = (Function<PipelineRenderingContext, Float>) inputFunctions.get("blurRadius");
+        PipelineNode.FieldOutput<Float> blurRadius = (PipelineNode.FieldOutput<Float>) inputFields.get("blurRadius");
         if (blurRadius == null)
-            blurRadius = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0f;
-                }
-            };
-        final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
+            blurRadius = new FloatFieldOutput(0f);
+        final PipelineNode.FieldOutput<RenderPipeline> renderPipelineInput = (PipelineNode.FieldOutput<RenderPipeline>) inputFields.get("input");
 
-        final Function<PipelineRenderingContext, Float> finalBlurRadius = blurRadius;
-        return new OncePerFrameJobPipelineNode(configuration) {
+        final PipelineNode.FieldOutput<Float> finalBlurRadius = blurRadius;
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
+                RenderPipeline renderPipeline = renderPipelineInput.getValue(pipelineRenderingContext);
 
-                int blurRadius = MathUtils.round(finalBlurRadius.apply(pipelineRenderingContext));
+                int blurRadius = MathUtils.round(finalBlurRadius.getValue(pipelineRenderingContext));
                 if (blurRadius > 0) {
                     float[] kernel = GaussianBlurKernel.getKernel(blurRadius);
                     FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();

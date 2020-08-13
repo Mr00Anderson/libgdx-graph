@@ -8,7 +8,6 @@ import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
@@ -19,14 +18,14 @@ public class UIRendererPipelineNodeProducer extends PipelineNodeProducerImpl {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        final Function<PipelineRenderingContext, Stage> stageInput = (Function<PipelineRenderingContext, Stage>) inputFunctions.get("stage");
-        final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
-        return new OncePerFrameJobPipelineNode(configuration) {
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
+        final PipelineNode.FieldOutput<Stage> stageInput = (PipelineNode.FieldOutput<Stage>) inputFields.get("stage");
+        final PipelineNode.FieldOutput<RenderPipeline> renderPipelineInput = (PipelineNode.FieldOutput<RenderPipeline>) inputFields.get("input");
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
-                Stage stage = stageInput.apply(pipelineRenderingContext);
+                RenderPipeline renderPipeline = renderPipelineInput.getValue(pipelineRenderingContext);
+                Stage stage = stageInput.getValue(pipelineRenderingContext);
                 if (stage != null) {
                     FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
                     int width = currentBuffer.getWidth();

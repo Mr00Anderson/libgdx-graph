@@ -1,22 +1,23 @@
 package com.gempukku.libgdx.graph.renderer;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Environment;
 
 public enum PropertyType {
-    Vector1, Vector2, Vector3, Color, Boolean,
+    Float, Vector2, Vector3, Color, Boolean,
     Stage, Camera, Lights, Models,
     RenderPipeline;
 
     public boolean accepts(Object value) {
         switch (this) {
-            case Vector1:
+            case Float:
                 return value instanceof Float;
             case Vector2:
                 return value instanceof com.badlogic.gdx.math.Vector2;
             case Vector3:
                 return value instanceof com.badlogic.gdx.math.Vector3;
             case Color:
-                return value instanceof com.badlogic.gdx.graphics.Color;
+                return value instanceof Color;
             case Boolean:
                 return value instanceof Boolean;
             case RenderPipeline:
@@ -31,5 +32,9 @@ public enum PropertyType {
                 return value instanceof com.badlogic.gdx.graphics.Camera;
         }
         return false;
+    }
+
+    public Object convert(Object value) {
+        return value;
     }
 }

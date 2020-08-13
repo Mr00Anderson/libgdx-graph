@@ -4,15 +4,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.config.math.MultiplyPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
+
+import static com.gempukku.libgdx.graph.renderer.PropertyType.Float;
 
 public class MultiplyPipelineNodeProducer extends PipelineNodeProducerImpl {
     public MultiplyPipelineNodeProducer() {
@@ -20,14 +22,29 @@ public class MultiplyPipelineNodeProducer extends PipelineNodeProducerImpl {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        final Function<PipelineRenderingContext, ?> aFunction = inputFunctions.get("inputA");
-        final Function<PipelineRenderingContext, ?> bFunction = inputFunctions.get("inputB");
-        return new OncePerFrameJobPipelineNode(configuration) {
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
+        final PipelineNode.FieldOutput<?> aFunction = inputFields.get("inputA");
+        final PipelineNode.FieldOutput<?> bFunction = inputFields.get("inputB");
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
+            @Override
+            protected PropertyType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
+                FieldOutput<?> a = inputFields.get("inputA");
+                FieldOutput<?> b = inputFields.get("inputB");
+                PropertyType aType = a.getPropertyType();
+                PropertyType bType = b.getPropertyType();
+                if (aType == Float)
+                    return bType;
+                if (bType == Float)
+                    return aType;
+                if (aType != bType)
+                    throw new IllegalStateException("Invalid mix of input field types");
+                return aType;
+            }
+
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                Object aValue = aFunction.apply(pipelineRenderingContext);
-                Object bValue = bFunction.apply(pipelineRenderingContext);
+                Object aValue = aFunction.getValue(pipelineRenderingContext);
+                Object bValue = bFunction.getValue(pipelineRenderingContext);
 
                 Object result;
                 if (aValue instanceof Float && bValue instanceof Float) {

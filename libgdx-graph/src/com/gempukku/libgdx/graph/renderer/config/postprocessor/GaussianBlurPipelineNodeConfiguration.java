@@ -9,7 +9,7 @@ public class GaussianBlurPipelineNodeConfiguration extends PipelineNodeConfigura
     public GaussianBlurPipelineNodeConfiguration() {
         super("GaussianBlur", "Gaussian blur");
         addNodeInput(
-                new PipelineNodeInputImpl("blurRadius", "Radius", PropertyType.Vector1));
+                new PipelineNodeInputImpl("blurRadius", "Radius", PropertyType.Float));
         addNodeInput(
                 new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(

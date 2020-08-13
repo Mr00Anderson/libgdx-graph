@@ -9,11 +9,11 @@ public class BloomPipelineNodeConfiguration extends PipelineNodeConfigurationImp
     public BloomPipelineNodeConfiguration() {
         super("Bloom", "Bloom post-processor");
         addNodeInput(
-                new PipelineNodeInputImpl("bloomRadius", "Radius", PropertyType.Vector1));
+                new PipelineNodeInputImpl("bloomRadius", "Radius", PropertyType.Float));
         addNodeInput(
-                new PipelineNodeInputImpl("minimalBrightness", "Min Brightness", PropertyType.Vector1));
+                new PipelineNodeInputImpl("minimalBrightness", "Min Brightness", PropertyType.Float));
         addNodeInput(
-                new PipelineNodeInputImpl("bloomStrength", "Strength", PropertyType.Vector1));
+                new PipelineNodeInputImpl("bloomStrength", "Strength", PropertyType.Float));
         addNodeInput(
                 new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(

@@ -11,7 +11,6 @@ import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
@@ -22,20 +21,20 @@ public class DefaultRendererPipelineNodeProducer extends PipelineNodeProducerImp
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        final Function<PipelineRenderingContext, PipelineRendererModels> modelsInput = (Function<PipelineRenderingContext, PipelineRendererModels>) inputFunctions.get("models");
-        final Function<PipelineRenderingContext, Environment> lightsInput = (Function<PipelineRenderingContext, Environment>) inputFunctions.get("lights");
-        final Function<PipelineRenderingContext, Camera> cameraInput = (Function<PipelineRenderingContext, Camera>) inputFunctions.get("camera");
-        final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
+        final PipelineNode.FieldOutput<PipelineRendererModels> modelsInput = (PipelineNode.FieldOutput<PipelineRendererModels>) inputFields.get("models");
+        final PipelineNode.FieldOutput<Environment> lightsInput = (PipelineNode.FieldOutput<Environment>) inputFields.get("lights");
+        final PipelineNode.FieldOutput<Camera> cameraInput = (PipelineNode.FieldOutput<Camera>) inputFields.get("camera");
+        final PipelineNode.FieldOutput<RenderPipeline> renderPipelineInput = (PipelineNode.FieldOutput<RenderPipeline>) inputFields.get("input");
 
-        return new OncePerFrameJobPipelineNode(configuration) {
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             private ModelBatch modelBatch = new ModelBatch();
 
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
-                PipelineRendererModels models = modelsInput.apply(pipelineRenderingContext);
-                Camera camera = cameraInput.apply(pipelineRenderingContext);
+                RenderPipeline renderPipeline = renderPipelineInput.getValue(pipelineRenderingContext);
+                PipelineRendererModels models = modelsInput.getValue(pipelineRenderingContext);
+                Camera camera = cameraInput.getValue(pipelineRenderingContext);
                 FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
                 int width = currentBuffer.getWidth();
                 int height = currentBuffer.getHeight();
@@ -46,7 +45,7 @@ public class DefaultRendererPipelineNodeProducer extends PipelineNodeProducerImp
                     camera.viewportHeight = height;
                     camera.update();
                 }
-                Environment environment = lightsInput != null ? lightsInput.apply(pipelineRenderingContext) : null;
+                Environment environment = lightsInput != null ? lightsInput.getValue(pipelineRenderingContext) : null;
                 if (environment != null) {
                     currentBuffer.begin();
                     modelBatch.begin(camera);

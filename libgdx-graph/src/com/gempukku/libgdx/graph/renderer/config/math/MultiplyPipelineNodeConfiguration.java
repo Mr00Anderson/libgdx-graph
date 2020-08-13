@@ -10,12 +10,12 @@ public class MultiplyPipelineNodeConfiguration extends PipelineNodeConfiguration
         super("Multiply", "Multiply");
         addNodeInput(
                 new PipelineNodeInputImpl("inputA", "A", true,
-                        PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2, PropertyType.Vector1));
+                        PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2, PropertyType.Float));
         addNodeInput(
                 new PipelineNodeInputImpl("inputB", "B", true,
-                        PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2, PropertyType.Vector1));
+                        PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2, PropertyType.Float));
         addNodeOutput(
                 new PipelineNodeOutputImpl("output", "Result",
-                        PropertyType.Vector1, PropertyType.Vector2, PropertyType.Vector3, PropertyType.Color));
+                        PropertyType.Float, PropertyType.Vector2, PropertyType.Vector3, PropertyType.Color));
     }
 }

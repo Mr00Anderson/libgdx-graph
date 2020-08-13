@@ -9,7 +9,7 @@ public class GammaCorrectionPipelineNodeConfiguration extends PipelineNodeConfig
     public GammaCorrectionPipelineNodeConfiguration() {
         super("GammaCorrection", "Gamma correction");
         addNodeInput(
-                new PipelineNodeInputImpl("gamma", "Gamma", PropertyType.Vector1));
+                new PipelineNodeInputImpl("gamma", "Gamma", PropertyType.Float));
         addNodeInput(
                 new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(

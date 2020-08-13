@@ -10,14 +10,13 @@ import com.badlogic.gdx.graphics.glutils.VertexBufferObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
 import com.gempukku.libgdx.graph.renderer.config.postprocessor.BloomPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.loader.FloatFieldOutput;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class BloomPipelineNodeProducer extends PipelineNodeProducerImpl {
@@ -26,7 +25,7 @@ public class BloomPipelineNodeProducer extends PipelineNodeProducerImpl {
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
         final ShaderProgram brightnessFilterPassProgram = new ShaderProgram(
                 Gdx.files.internal("shader/viewToScreenCoords.vert"),
                 Gdx.files.internal("shader/brightnessFilter.frag"));
@@ -55,44 +54,29 @@ public class BloomPipelineNodeProducer extends PipelineNodeProducerImpl {
         vertexBufferObject.setVertices(verticeData, 0, verticeData.length);
         indexBufferObject.setIndices(indices, 0, indices.length);
 
-        Function<PipelineRenderingContext, Float> bloomRadius = (Function<PipelineRenderingContext, Float>) inputFunctions.get("bloomRadius");
-        Function<PipelineRenderingContext, Float> minimalBrightness = (Function<PipelineRenderingContext, Float>) inputFunctions.get("minimalBrightness");
-        Function<PipelineRenderingContext, Float> bloomStrength = (Function<PipelineRenderingContext, Float>) inputFunctions.get("bloomStrength");
+        PipelineNode.FieldOutput<Float> bloomRadius = (PipelineNode.FieldOutput<Float>) inputFields.get("bloomRadius");
+        PipelineNode.FieldOutput<Float> minimalBrightness = (PipelineNode.FieldOutput<Float>) inputFields.get("minimalBrightness");
+        PipelineNode.FieldOutput<Float> bloomStrength = (PipelineNode.FieldOutput<Float>) inputFields.get("bloomStrength");
         if (bloomRadius == null)
-            bloomRadius = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 1f;
-                }
-            };
+            bloomRadius = new FloatFieldOutput(1f);
         if (minimalBrightness == null)
-            minimalBrightness = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0.7f;
-                }
-            };
+            minimalBrightness = new FloatFieldOutput(0.7f);
         if (bloomStrength == null)
-            bloomStrength = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0f;
-                }
-            };
-        final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
+            bloomStrength = new FloatFieldOutput(0f);
+        final PipelineNode.FieldOutput<RenderPipeline> renderPipelineInput = (PipelineNode.FieldOutput<RenderPipeline>) inputFields.get("input");
 
-        final Function<PipelineRenderingContext, Float> finalBloomStrength = bloomStrength;
-        final Function<PipelineRenderingContext, Float> finalBloomRadius = bloomRadius;
-        final Function<PipelineRenderingContext, Float> finalMinimalBrightness = minimalBrightness;
-        return new OncePerFrameJobPipelineNode(configuration) {
+        final PipelineNode.FieldOutput<Float> finalBloomStrength = bloomStrength;
+        final PipelineNode.FieldOutput<Float> finalBloomRadius = bloomRadius;
+        final PipelineNode.FieldOutput<Float> finalMinimalBrightness = minimalBrightness;
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
+                RenderPipeline renderPipeline = renderPipelineInput.getValue(pipelineRenderingContext);
 
-                float bloomStrengthValue = finalBloomStrength.apply(pipelineRenderingContext);
-                int bloomRadiusValue = MathUtils.round(finalBloomRadius.apply(pipelineRenderingContext));
+                float bloomStrengthValue = finalBloomStrength.getValue(pipelineRenderingContext);
+                int bloomRadiusValue = MathUtils.round(finalBloomRadius.getValue(pipelineRenderingContext));
                 if (bloomStrengthValue > 0 && bloomRadiusValue > 0) {
-                    float minimalBrightnessValue = finalMinimalBrightness.apply(pipelineRenderingContext);
+                    float minimalBrightnessValue = finalMinimalBrightness.getValue(pipelineRenderingContext);
 
                     FrameBuffer originalBuffer = renderPipeline.getCurrentBuffer();
 

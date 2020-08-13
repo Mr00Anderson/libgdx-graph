@@ -10,8 +10,8 @@ public class RenderSizePipelineNodeConfiguration extends PipelineNodeConfigurati
         addNodeOutput(
                 new PipelineNodeOutputImpl("size", "Size", PropertyType.Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("width", "Width", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("width", "Width", PropertyType.Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("height", "Height", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("height", "Height", PropertyType.Float));
     }
 }

@@ -3,13 +3,11 @@ package com.gempukku.libgdx.graph.renderer;
 import com.gempukku.libgdx.graph.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.renderer.impl.PipelineRendererImpl;
 import com.gempukku.libgdx.graph.renderer.impl.WritablePipelineProperty;
-import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.node.EndPipelineNode;
 import com.gempukku.libgdx.graph.renderer.property.PipelinePropertyProducer;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -71,7 +69,7 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
         PipelineNodeProducer nodeProducer = RendererPipelineConfiguration.pipelineNodeProducers.get(nodeInfo.type);
         if (nodeProducer == null)
             throw new IllegalStateException("Unable to find node producer for type: " + nodeInfo.type);
-        Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers = new HashMap<>();
+        Map<String, PipelineNode.FieldOutput<?>> inputFields = new HashMap<>();
         for (PipelineNodeInput nodeInput : nodeProducer.getConfiguration(nodeInfo.data).getNodeInputs()) {
             String inputName = nodeInput.getFieldId();
             PipelineVertextInfo vertexInfo = findInputProducer(nodeId, inputName);
@@ -79,11 +77,14 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
                 throw new IllegalStateException("Required input not provided");
             if (vertexInfo != null) {
                 PipelineNode vertexNode = populatePipelineNodes(vertexInfo.fromNode, pipelineNodeMap);
-                PropertyType propertyType = vertexNode.determinePropertyType(vertexInfo.fromField, nodeInput.getAcceptedPropertyTypes());
-                inputSuppliers.put(inputName, vertexNode.getOutputSupplier(vertexInfo.fromField, propertyType));
+                PipelineNode.FieldOutput<?> fieldOutput = vertexNode.getFieldOutput(vertexInfo.fromField);
+                PropertyType propertyType = fieldOutput.getPropertyType();
+                if (!nodeInput.getAcceptedPropertyTypes().contains(propertyType))
+                    throw new IllegalStateException("Producer produces a field of value not compatible with consumer");
+                inputFields.put(inputName, fieldOutput);
             }
         }
-        pipelineNode = nodeProducer.createNode(nodeInfo.data, inputSuppliers);
+        pipelineNode = nodeProducer.createNode(nodeInfo.data, inputFields);
         pipelineNodeMap.put(nodeId, pipelineNode);
         return pipelineNode;
     }

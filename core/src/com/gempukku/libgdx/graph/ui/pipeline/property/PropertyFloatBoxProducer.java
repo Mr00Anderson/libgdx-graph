@@ -15,10 +15,10 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
-public class PropertyVector1BoxProducer implements PropertyBoxProducer {
+public class PropertyFloatBoxProducer implements PropertyBoxProducer {
     @Override
     public boolean supportsType(String type) {
-        return type.equals("Vector1");
+        return type.equals("Float");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class PropertyVector1BoxProducer implements PropertyBoxProducer {
 
     @Override
     public PropertyBox createDefaultPropertyBox(Skin skin) {
-        return createPropertyBoxDefault(skin, "New Vector1", (float) 0);
+        return createPropertyBoxDefault(skin, "New Float", (float) 0);
     }
 
     private PropertyBox createPropertyBoxDefault(Skin skin, String name, float v1) {
@@ -52,9 +52,9 @@ public class PropertyVector1BoxProducer implements PropertyBoxProducer {
         table.add(new Label("X ", skin));
         table.add(v1Input).grow();
 
-        return new PropertyBoxImpl(skin, "Vector1",
+        return new PropertyBoxImpl(skin, "Float",
                 name,
-                PropertyType.Vector1,
+                PropertyType.Float,
                 new PropertyDefaultBox() {
                     @Override
                     public Actor getActor() {

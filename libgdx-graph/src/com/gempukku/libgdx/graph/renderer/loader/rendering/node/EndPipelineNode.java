@@ -1,25 +1,21 @@
 package com.gempukku.libgdx.graph.renderer.loader.rendering.node;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
 import com.gempukku.libgdx.graph.renderer.config.rendering.EndPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
-import com.google.common.base.Function;
-
-import java.util.List;
 
 public class EndPipelineNode implements PipelineNode {
     private PipelineNodeConfiguration configuration = new EndPipelineNodeConfiguration();
-    private Function<PipelineRenderingContext, RenderPipeline> renderPipeline;
+    private PipelineNode.FieldOutput<RenderPipeline> renderPipeline;
 
-    public EndPipelineNode(Function<PipelineRenderingContext, RenderPipeline> renderPipeline) {
+    public EndPipelineNode(PipelineNode.FieldOutput<RenderPipeline> renderPipeline) {
         this.renderPipeline = renderPipeline;
     }
 
     @Override
-    public PropertyType determinePropertyType(String name, List<PropertyType> acceptedPropertyTypes) {
+    public FieldOutput<?> getFieldOutput(String name) {
         return null;
     }
 
@@ -33,16 +29,11 @@ public class EndPipelineNode implements PipelineNode {
     }
 
     @Override
-    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name, PropertyType propertyType) {
-        return null;
-    }
-
-    @Override
     public void dispose() {
 
     }
 
     public RenderPipeline executePipeline(PipelineRenderingContext pipelineRenderingContext) {
-        return renderPipeline.apply(pipelineRenderingContext);
+        return renderPipeline.getValue(pipelineRenderingContext);
     }
 }

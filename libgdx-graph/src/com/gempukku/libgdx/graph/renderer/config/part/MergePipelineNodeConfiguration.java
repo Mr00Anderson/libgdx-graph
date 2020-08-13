@@ -9,13 +9,13 @@ public class MergePipelineNodeConfiguration extends PipelineNodeConfigurationImp
     public MergePipelineNodeConfiguration() {
         super("Merge", "Merge");
         addNodeInput(
-                new PipelineNodeInputImpl("x", "X", PropertyType.Vector1));
+                new PipelineNodeInputImpl("x", "X", PropertyType.Float));
         addNodeInput(
-                new PipelineNodeInputImpl("y", "Y", PropertyType.Vector1));
+                new PipelineNodeInputImpl("y", "Y", PropertyType.Float));
         addNodeInput(
-                new PipelineNodeInputImpl("z", "Z", PropertyType.Vector1));
+                new PipelineNodeInputImpl("z", "Z", PropertyType.Float));
         addNodeInput(
-                new PipelineNodeInputImpl("w", "W", PropertyType.Vector1));
+                new PipelineNodeInputImpl("w", "W", PropertyType.Float));
         addNodeOutput(
                 new PipelineNodeOutputImpl("v2", "Vector2", PropertyType.Vector2));
         addNodeOutput(

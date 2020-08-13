@@ -8,12 +8,12 @@ public class TimePipelineNodeConfiguration extends PipelineNodeConfigurationImpl
     public TimePipelineNodeConfiguration() {
         super("Time", "Time");
         addNodeOutput(
-                new PipelineNodeOutputImpl("time", "Time", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("time", "Time", PropertyType.Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("sinTime", "sin(Time)", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("sinTime", "sin(Time)", PropertyType.Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("cosTime", "cos(Time)", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("cosTime", "cos(Time)", PropertyType.Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("deltaTime", "deltaTime", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("deltaTime", "deltaTime", PropertyType.Float));
     }
 }

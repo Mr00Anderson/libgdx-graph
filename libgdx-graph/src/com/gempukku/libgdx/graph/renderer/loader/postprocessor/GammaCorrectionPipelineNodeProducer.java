@@ -9,14 +9,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.VertexBufferObject;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
 import com.gempukku.libgdx.graph.renderer.config.postprocessor.GammaCorrectionPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.loader.FloatFieldOutput;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
-import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class GammaCorrectionPipelineNodeProducer extends PipelineNodeProducerImpl {
@@ -25,7 +24,7 @@ public class GammaCorrectionPipelineNodeProducer extends PipelineNodeProducerImp
     }
 
     @Override
-    public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
+    public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
         final ShaderProgram shaderProgram = new ShaderProgram(
                 Gdx.files.internal("shader/viewToScreenCoords.vert"),
                 Gdx.files.internal("shader/gamma.frag"));
@@ -44,23 +43,18 @@ public class GammaCorrectionPipelineNodeProducer extends PipelineNodeProducerImp
         vertexBufferObject.setVertices(verticeData, 0, verticeData.length);
         indexBufferObject.setIndices(indices, 0, indices.length);
 
-        Function<PipelineRenderingContext, Float> gamma = (Function<PipelineRenderingContext, Float>) inputFunctions.get("gamma");
+        PipelineNode.FieldOutput<Float> gamma = (PipelineNode.FieldOutput<Float>) inputFields.get("gamma");
         if (gamma == null)
-            gamma = new Function<PipelineRenderingContext, Float>() {
-                @Override
-                public Float apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
-                    return 0f;
-                }
-            };
-        final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
+            gamma = new FloatFieldOutput(0f);
+        final PipelineNode.FieldOutput<RenderPipeline> renderPipelineInput = (PipelineNode.FieldOutput<RenderPipeline>) inputFields.get("input");
 
-        final Function<PipelineRenderingContext, Float> finalGamma = gamma;
-        return new OncePerFrameJobPipelineNode(configuration) {
+        final PipelineNode.FieldOutput<Float> finalGamma = gamma;
+        return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
-                RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);
+                RenderPipeline renderPipeline = renderPipelineInput.getValue(pipelineRenderingContext);
 
-                float gamma = finalGamma.apply(pipelineRenderingContext);
+                float gamma = finalGamma.getValue(pipelineRenderingContext);
                 if (gamma != 1) {
                     FrameBuffer currentBuffer = renderPipeline.getCurrentBuffer();
 

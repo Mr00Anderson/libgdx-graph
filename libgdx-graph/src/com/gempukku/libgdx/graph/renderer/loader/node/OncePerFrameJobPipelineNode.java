@@ -2,44 +2,35 @@ package com.gempukku.libgdx.graph.renderer.loader.node;
 
 import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
-import com.google.common.base.Function;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     private boolean executedInFrame;
     private PipelineNodeConfiguration configuration;
-    private Map<String, WorkerFunction<Object>> workerFunctions = new HashMap<>();
+    private Map<String, FieldOutput<?>> inputFields;
+    private Map<String, WorkerFieldOutput<Object>> workerFieldOutputs = new HashMap<>();
 
-    public OncePerFrameJobPipelineNode(PipelineNodeConfiguration configuration) {
+    public OncePerFrameJobPipelineNode(PipelineNodeConfiguration configuration, Map<String, FieldOutput<?>> inputFields) {
         this.configuration = configuration;
+        this.inputFields = inputFields;
     }
 
     @Override
-    public PropertyType determinePropertyType(String name, List<PropertyType> acceptedPropertyTypes) {
-        List<PropertyType> producablePropertyTypes = configuration.getNodeOutput(name).getProducablePropertyTypes();
-        for (PropertyType acceptedPropertyType : acceptedPropertyTypes) {
-            if (producablePropertyTypes.contains(acceptedPropertyType))
-                return acceptedPropertyType;
+    public FieldOutput<?> getFieldOutput(String name) {
+        WorkerFieldOutput<Object> fieldOutput = workerFieldOutputs.get(name);
+        if (fieldOutput == null) {
+            PropertyType propertyType = determineOutputType(name, inputFields);
+            fieldOutput = new WorkerFieldOutput<>(propertyType);
+            workerFieldOutputs.put(name, fieldOutput);
         }
-        return null;
+
+        return fieldOutput;
     }
 
-    @Override
-    public Function<PipelineRenderingContext, ?> getOutputSupplier(String name, PropertyType propertyType) {
-        PipelineNodeOutput nodeOutput = configuration.getNodeOutput(name);
-        if (nodeOutput == null)
-            throw new IllegalArgumentException("This node does not have an output of: " + name);
-
-        WorkerFunction<Object> workerFunction = workerFunctions.get(name);
-        if (workerFunction == null) {
-            workerFunction = new WorkerFunction<>();
-            workerFunctions.put(name, workerFunction);
-        }
-        return workerFunction;
+    protected PropertyType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
+        return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
     }
 
     protected abstract void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues);
@@ -59,8 +50,13 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
 
     }
 
-    private class WorkerFunction<T> implements Function<PipelineRenderingContext, T>, OutputValue<T> {
+    private class WorkerFieldOutput<T> implements FieldOutput<T>, OutputValue<T> {
+        private PropertyType propertyType;
         private T value;
+
+        public WorkerFieldOutput(PropertyType propertyType) {
+            this.propertyType = propertyType;
+        }
 
         @Override
         public void setValue(T value) {
@@ -68,9 +64,14 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
         }
 
         @Override
-        public T apply(@Nullable PipelineRenderingContext pipelineRenderingContext) {
+        public PropertyType getPropertyType() {
+            return propertyType;
+        }
+
+        @Override
+        public T getValue(PipelineRenderingContext context) {
             if (!executedInFrame) {
-                executeJob(pipelineRenderingContext, workerFunctions);
+                executeJob(context, workerFieldOutputs);
             }
             return value;
         }

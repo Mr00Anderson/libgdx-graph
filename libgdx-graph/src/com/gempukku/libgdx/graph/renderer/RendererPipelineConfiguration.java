@@ -17,16 +17,16 @@ import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.StartPipelin
 import com.gempukku.libgdx.graph.renderer.loader.rendering.producer.UIRendererPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueBooleanPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueColorPipelineNodeProducer;
-import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector1PipelineNodeProducer;
+import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueFloatPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector2PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.value.producer.ValueVector3PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.property.CameraPipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.ColorPipelinePropertyProducer;
+import com.gempukku.libgdx.graph.renderer.property.FloatPipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.LightsPipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.ModelsPipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.PipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.StagePipelinePropertyProducer;
-import com.gempukku.libgdx.graph.renderer.property.Vector1PipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.Vector2PipelinePropertyProducer;
 import com.gempukku.libgdx.graph.renderer.property.Vector3PipelinePropertyProducer;
 
@@ -46,7 +46,7 @@ public class RendererPipelineConfiguration {
         addNodeProducer(new DefaultRendererPipelineNodeProducer());
         addNodeProducer(new PipelineRendererNodeProducer());
 
-        addNodeProducer(new ValueVector1PipelineNodeProducer());
+        addNodeProducer(new ValueFloatPipelineNodeProducer());
         addNodeProducer(new ValueVector2PipelineNodeProducer());
         addNodeProducer(new ValueVector3PipelineNodeProducer());
         addNodeProducer(new ValueColorPipelineNodeProducer());
@@ -65,7 +65,7 @@ public class RendererPipelineConfiguration {
         addNodeProducer(new GaussianBlurPipelineNodeProducer());
         addNodeProducer(new GammaCorrectionPipelineNodeProducer());
 
-        pipelinePropertyProducers.add(new Vector1PipelinePropertyProducer());
+        pipelinePropertyProducers.add(new FloatPipelinePropertyProducer());
         pipelinePropertyProducers.add(new Vector2PipelinePropertyProducer());
         pipelinePropertyProducers.add(new Vector3PipelinePropertyProducer());
         pipelinePropertyProducers.add(new ColorPipelinePropertyProducer());

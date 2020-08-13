@@ -4,10 +4,10 @@ import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-public class ValueVector1PipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
-    public ValueVector1PipelineNodeConfiguration() {
-        super("ValueVector1", "Vector1 value");
+public class ValueFkiatPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
+    public ValueFkiatPipelineNodeConfiguration() {
+        super("ValueFloat", "Float value");
         addNodeOutput(
-                new PipelineNodeOutputImpl("value", "Value", PropertyType.Vector1));
+                new PipelineNodeOutputImpl("value", "Value", PropertyType.Float));
     }
 }
