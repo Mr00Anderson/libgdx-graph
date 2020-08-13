@@ -5,13 +5,11 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationI
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-import java.util.Arrays;
-
 public class SplitPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public SplitPipelineNodeConfiguration() {
         super("Split", "Split");
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.Vector2, PropertyType.Vector3, PropertyType.Color), true, false));
+                new PipelineNodeInputImpl("input", "Input", true, PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2));
         addNodeOutput(
                 new PipelineNodeOutputImpl("x", "X", PropertyType.Vector1));
         addNodeOutput(

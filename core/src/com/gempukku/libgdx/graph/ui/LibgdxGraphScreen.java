@@ -50,8 +50,7 @@ public class LibgdxGraphScreen extends Table {
                         insideTable.clearChildren();
                         insideTable.add(tab.getContentTable()).grow().row();
                     }
-                }
-        );
+                });
 
         MenuBar menuBar = createMenuBar();
         add(menuBar.getTable()).growX().row();
@@ -95,26 +94,47 @@ public class LibgdxGraphScreen extends Table {
                 });
         fileMenu.addItem(save);
 
+        MenuItem saveAs = new MenuItem("Save As");
+        saveAs.addListener(
+                new ClickListener(Input.Buttons.LEFT) {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        saveAs();
+                    }
+                });
+        fileMenu.addItem(saveAs);
+
         fileMenu.addSeparator();
 
-        MenuItem close = new MenuItem("Close");
+        MenuItem close = new MenuItem("Close pipeline");
         close.addListener(
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        close();
+                        closePipeline();
                     }
                 });
         fileMenu.addItem(close);
 
+        fileMenu.addSeparator();
+        MenuItem exit = new MenuItem("Exit");
+        exit.addListener(
+                new ClickListener(Input.Buttons.LEFT) {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        closeApplication();
+                    }
+                });
+        fileMenu.addItem(exit);
+
         return fileMenu;
     }
 
-    private void close() {
+    private void closeApplication() {
         if (pipelineDesignTab != null && pipelineDesignTab.isDirty()) {
             Dialogs.showOptionDialog(getStage(), "Pipeline modified",
                     "Current pipeline has been modified, would you like to save it?",
-                    Dialogs.OptionDialogType.YES_NO_CANCEL, new OptionDialogListener() {
+                    Dialogs.OptionDialogType.YES_NO, new OptionDialogListener() {
                         @Override
                         public void yes() {
                             save();
@@ -133,6 +153,32 @@ public class LibgdxGraphScreen extends Table {
                     });
         } else {
             Gdx.app.exit();
+        }
+    }
+
+    private void closePipeline() {
+        if (pipelineDesignTab != null && pipelineDesignTab.isDirty()) {
+            Dialogs.showOptionDialog(getStage(), "Pipeline modified",
+                    "Current pipeline has been modified, would you like to save it?",
+                    Dialogs.OptionDialogType.YES_NO, new OptionDialogListener() {
+                        @Override
+                        public void yes() {
+                            save();
+                            removeAllTabs();
+                        }
+
+                        @Override
+                        public void no() {
+                            removeAllTabs();
+                        }
+
+                        @Override
+                        public void cancel() {
+
+                        }
+                    });
+        } else {
+            removeAllTabs();
         }
     }
 
@@ -156,6 +202,24 @@ public class LibgdxGraphScreen extends Table {
             });
             getStage().addActor(fileChooser.fadeIn());
         }
+    }
+
+    private void saveAs() {
+        FileChooser fileChooser = new FileChooser(FileChooser.Mode.SAVE);
+        fileChooser.setModal(true);
+        fileChooser.setSelectionMode(FileChooser.SelectionMode.FILES);
+        fileChooser.setListener(new FileChooserAdapter() {
+            @Override
+            public void selected(Array<FileHandle> file) {
+                FileHandle selectedFile = file.get(0);
+                if (!selectedFile.name().toLowerCase().endsWith(".json")) {
+                    selectedFile = selectedFile.parent().child(selectedFile.name() + ".json");
+                }
+                editedFile = selectedFile;
+                saveToFile(pipelineDesignTab, selectedFile);
+            }
+        });
+        getStage().addActor(fileChooser.fadeIn());
     }
 
     private void save() {

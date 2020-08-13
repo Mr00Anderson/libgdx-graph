@@ -13,6 +13,6 @@ public class StartPipelineNodeConfiguration extends PipelineNodeConfigurationImp
         addNodeInput(
                 new PipelineNodeInputImpl("size", "Size", PropertyType.Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", PropertyType.RenderPipeline, true));
+                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
     }
 }

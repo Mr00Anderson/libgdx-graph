@@ -6,6 +6,7 @@ import com.google.common.base.Function;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
@@ -18,8 +19,13 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     }
 
     @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+    public PropertyType determinePropertyType(String name, List<PropertyType> acceptedPropertyTypes) {
+        List<PropertyType> producablePropertyTypes = configuration.getNodeOutput(name).getProducablePropertyTypes();
+        for (PropertyType acceptedPropertyType : acceptedPropertyTypes) {
+            if (producablePropertyTypes.contains(acceptedPropertyType))
+                return acceptedPropertyType;
+        }
+        return null;
     }
 
     @Override

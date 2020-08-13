@@ -1,7 +1,10 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 import com.google.common.base.Supplier;
+
+import java.util.List;
 
 public class GraphBoxInputConnectorImpl implements GraphBoxInputConnector {
     private Side side;
@@ -45,7 +48,7 @@ public class GraphBoxInputConnectorImpl implements GraphBoxInputConnector {
     }
 
     @Override
-    public InputPropertyType getPropertyType() {
-        return pipelineNodeInput.getPropertyType();
+    public List<PropertyType> getAcceptedPropertyTypes() {
+        return pipelineNodeInput.getAcceptedPropertyTypes();
     }
 }

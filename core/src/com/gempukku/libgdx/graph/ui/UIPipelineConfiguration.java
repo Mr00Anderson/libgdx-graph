@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.ui;
 
+import com.gempukku.libgdx.graph.renderer.config.math.MultiplyPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.part.MergePipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.part.SplitPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.postprocessor.BloomPipelineNodeConfiguration;
@@ -64,6 +65,7 @@ public class UIPipelineConfiguration {
         graphBoxProducers.put("Provided", providedProducers);
 
         Set<GraphBoxProducer> mathProducers = new LinkedHashSet<>();
+        mathProducers.add(new GraphBoxProducerImpl(new MultiplyPipelineNodeConfiguration()));
         mathProducers.add(new GraphBoxProducerImpl(new SplitPipelineNodeConfiguration()));
         mathProducers.add(new GraphBoxProducerImpl(new MergePipelineNodeConfiguration()));
         graphBoxProducers.put("Math", mathProducers);

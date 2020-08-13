@@ -7,6 +7,7 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.google.common.base.Function;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ValuePipelineNode implements PipelineNode {
     private PipelineNodeConfiguration configuration;
@@ -25,8 +26,13 @@ public class ValuePipelineNode implements PipelineNode {
     }
 
     @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+    public PropertyType determinePropertyType(String name, List<PropertyType> acceptedPropertyTypes) {
+        List<PropertyType> producablePropertyTypes = configuration.getNodeOutput(name).getProducablePropertyTypes();
+        for (PropertyType acceptedPropertyType : acceptedPropertyTypes) {
+            if (producablePropertyTypes.contains(acceptedPropertyType))
+                return acceptedPropertyType;
+        }
+        return null;
     }
 
     @Override

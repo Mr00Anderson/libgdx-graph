@@ -8,6 +8,8 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.google.common.base.Function;
 
+import java.util.List;
+
 public class EndPipelineNode implements PipelineNode {
     private PipelineNodeConfiguration configuration = new EndPipelineNodeConfiguration();
     private Function<PipelineRenderingContext, RenderPipeline> renderPipeline;
@@ -17,8 +19,8 @@ public class EndPipelineNode implements PipelineNode {
     }
 
     @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return configuration;
+    public PropertyType determinePropertyType(String name, List<PropertyType> acceptedPropertyTypes) {
+        return null;
     }
 
     @Override

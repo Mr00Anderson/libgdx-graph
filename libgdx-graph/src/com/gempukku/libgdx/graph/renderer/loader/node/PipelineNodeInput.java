@@ -13,9 +13,5 @@ public interface PipelineNodeInput {
 
     String getFieldId();
 
-    InputPropertyType getPropertyType();
-
-    interface InputPropertyType {
-        List<PropertyType> getAcceptedPropertyTypes();
-    }
+    List<PropertyType> getAcceptedPropertyTypes();
 }

@@ -10,6 +10,7 @@ import com.google.common.base.Function;
 import org.json.simple.JSONObject;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 
 public class PropertyPipelineNodeProducer implements PipelineNodeProducer {
@@ -45,8 +46,8 @@ public class PropertyPipelineNodeProducer implements PipelineNodeProducer {
             }
 
             @Override
-            public PipelineNodeConfiguration getConfiguration() {
-                return configuration;
+            public PropertyType determinePropertyType(String name, List<PropertyType> acceptedPropertyTypes) {
+                return propertyType;
             }
 
             @Override

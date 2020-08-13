@@ -5,16 +5,14 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationI
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-import java.util.Arrays;
-
 public class GaussianBlurPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public GaussianBlurPipelineNodeConfiguration() {
         super("GaussianBlur", "Gaussian blur");
         addNodeInput(
                 new PipelineNodeInputImpl("blurRadius", "Radius", PropertyType.Vector1));
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.RenderPipeline), true, true));
+                new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", PropertyType.RenderPipeline, true));
+                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
     }
 }

@@ -1,7 +1,10 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
+import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 import com.google.common.base.Supplier;
+
+import java.util.List;
 
 public class GraphBoxOutputConnectorImpl implements GraphBoxOutputConnector {
     private Side side;
@@ -40,8 +43,8 @@ public class GraphBoxOutputConnectorImpl implements GraphBoxOutputConnector {
     }
 
     @Override
-    public OutputPropertyType getPropertyType() {
-        return pipelineNodeOutput.getPropertyType();
+    public List<PropertyType> getProducablePropertyTypes() {
+        return pipelineNodeOutput.getProducablePropertyTypes();
     }
 
     @Override

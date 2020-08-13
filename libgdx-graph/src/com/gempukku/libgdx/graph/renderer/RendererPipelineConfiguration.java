@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.renderer;
 
+import com.gempukku.libgdx.graph.renderer.loader.math.MultiplyPipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.part.MergePipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.part.SplitPipelineNodeProducer;
@@ -54,6 +55,7 @@ public class RendererPipelineConfiguration {
         addNodeProducer(new RenderSizePipelineNodeProducer());
         addNodeProducer(new TimePipelineNodeProducer());
 
+        addNodeProducer(new MultiplyPipelineNodeProducer());
         addNodeProducer(new MergePipelineNodeProducer());
         addNodeProducer(new SplitPipelineNodeProducer());
 

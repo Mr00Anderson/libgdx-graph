@@ -5,20 +5,18 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationI
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-import java.util.Arrays;
-
 public class DefaultRendererPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public DefaultRendererPipelineNodeConfiguration() {
         super("DefaultRenderer", "Default renderer");
         addNodeInput(
-                new PipelineNodeInputImpl("models", "Models", Arrays.asList(PropertyType.Models), true, false));
+                new PipelineNodeInputImpl("models", "Models", true, PropertyType.Models));
         addNodeInput(
-                new PipelineNodeInputImpl("camera", "Camera", Arrays.asList(PropertyType.Camera), true, false));
+                new PipelineNodeInputImpl("camera", "Camera", true, PropertyType.Camera));
         addNodeInput(
                 new PipelineNodeInputImpl("lights", "Lights", PropertyType.Lights));
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.RenderPipeline), true, true));
+                new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", PropertyType.RenderPipeline, true));
+                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
     }
 }

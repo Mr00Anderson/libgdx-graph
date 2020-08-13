@@ -5,8 +5,6 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationI
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-import java.util.Arrays;
-
 public class BloomPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
     public BloomPipelineNodeConfiguration() {
         super("Bloom", "Bloom post-processor");
@@ -17,8 +15,8 @@ public class BloomPipelineNodeConfiguration extends PipelineNodeConfigurationImp
         addNodeInput(
                 new PipelineNodeInputImpl("bloomStrength", "Strength", PropertyType.Vector1));
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.RenderPipeline), true, true));
+                new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", PropertyType.RenderPipeline, true));
+                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
     }
 }

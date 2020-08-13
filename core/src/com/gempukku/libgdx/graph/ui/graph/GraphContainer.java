@@ -280,11 +280,12 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
     }
 
     private boolean connectorsMatch(PipelineNodeInput input, PipelineNodeOutput output) {
-        for (PropertyType value : PropertyType.values()) {
-            if (input.getPropertyType().getAcceptedPropertyTypes().contains(value)
-                    && output.getPropertyType().mayProduce(value))
+        List<PropertyType> producablePropertyTypes = output.getProducablePropertyTypes();
+        for (PropertyType acceptedPropertyType : input.getAcceptedPropertyTypes()) {
+            if (producablePropertyTypes.contains(acceptedPropertyType))
                 return true;
         }
+
         return false;
     }
 

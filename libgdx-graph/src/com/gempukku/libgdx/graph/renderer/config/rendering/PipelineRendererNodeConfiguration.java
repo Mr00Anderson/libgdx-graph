@@ -5,20 +5,18 @@ import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationI
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-import java.util.Arrays;
-
 public class PipelineRendererNodeConfiguration extends PipelineNodeConfigurationImpl {
     public PipelineRendererNodeConfiguration() {
         super("PipelineRenderer", "Pipeline renderer");
         addNodeInput(
-                new PipelineNodeInputImpl("pipeline", "Pipeline", Arrays.asList(PropertyType.RenderPipeline), true, false));
+                new PipelineNodeInputImpl("pipeline", "Pipeline", true, PropertyType.RenderPipeline));
         addNodeInput(
-                new PipelineNodeInputImpl("position", "Position", Arrays.asList(PropertyType.Vector2), true, false));
+                new PipelineNodeInputImpl("position", "Position", true, PropertyType.Vector2));
         addNodeInput(
-                new PipelineNodeInputImpl("size", "Size", Arrays.asList(PropertyType.Vector2), true, false));
+                new PipelineNodeInputImpl("size", "Size", true, PropertyType.Vector2));
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", Arrays.asList(PropertyType.RenderPipeline), true, true));
+                new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", PropertyType.RenderPipeline, true));
+                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
     }
 }

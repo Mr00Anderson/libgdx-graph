@@ -39,7 +39,7 @@ public class GraphValidator {
             PipelineNodeOutput output = remoteNode.getOutput(incomingConnection.getFieldFrom());
 
             // Validate the actual output is accepted by the input
-            List<PropertyType> acceptedPropertyTypes = input.getPropertyType().getAcceptedPropertyTypes();
+            List<PropertyType> acceptedPropertyTypes = input.getAcceptedPropertyTypes();
             if (!outputAcceptsPropertyType(output, acceptedPropertyTypes)) {
                 result.addErrorConnection(incomingConnection);
             }
@@ -55,8 +55,9 @@ public class GraphValidator {
     }
 
     private static boolean outputAcceptsPropertyType(PipelineNodeOutput output, List<PropertyType> acceptedPropertyTypes) {
+        List<PropertyType> producablePropertyTypes = output.getProducablePropertyTypes();
         for (PropertyType acceptedPropertyType : acceptedPropertyTypes) {
-            if (output.getPropertyType().mayProduce(acceptedPropertyType))
+            if (producablePropertyTypes.contains(acceptedPropertyType))
                 return true;
         }
         return false;

@@ -8,31 +8,24 @@ import java.util.List;
 public class PipelineNodeInputImpl implements PipelineNodeInput {
     private String id;
     private String name;
+    private List<PropertyType> acceptedTypes;
     private boolean required;
     private boolean mainConnection;
 
-    private InputPropertyType inputPropertyType;
-
-    public PipelineNodeInputImpl(String id, String name, PropertyType acceptedType) {
-        this(id, name, Arrays.asList(acceptedType), false, false);
+    public PipelineNodeInputImpl(String id, String name, PropertyType... acceptedType) {
+        this(id, name, false, acceptedType);
     }
 
-    public PipelineNodeInputImpl(String id, String name, List<PropertyType> acceptedTypes) {
-        this(id, name, acceptedTypes, false, false);
+    public PipelineNodeInputImpl(String id, String name, boolean required, PropertyType... acceptedType) {
+        this(id, name, required, false, acceptedType);
     }
 
-    public PipelineNodeInputImpl(String id, String name, final List<PropertyType> acceptedTypes, boolean required, boolean mainConnection) {
+    public PipelineNodeInputImpl(String id, String name, boolean required, boolean mainConnection, PropertyType... acceptedType) {
         this.id = id;
         this.name = name;
         this.required = required;
         this.mainConnection = mainConnection;
-
-        inputPropertyType = new InputPropertyType() {
-            @Override
-            public List<PropertyType> getAcceptedPropertyTypes() {
-                return acceptedTypes;
-            }
-        };
+        this.acceptedTypes = Arrays.asList(acceptedType);
     }
 
     @Override
@@ -56,7 +49,7 @@ public class PipelineNodeInputImpl implements PipelineNodeInput {
     }
 
     @Override
-    public InputPropertyType getPropertyType() {
-        return inputPropertyType;
+    public List<PropertyType> getAcceptedPropertyTypes() {
+        return acceptedTypes;
     }
 }

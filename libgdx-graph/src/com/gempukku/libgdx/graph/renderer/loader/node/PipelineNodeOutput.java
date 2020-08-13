@@ -11,13 +11,7 @@ public interface PipelineNodeOutput {
 
     String getFieldId();
 
-    OutputPropertyType getPropertyType();
+    List<PropertyType> getProducablePropertyTypes();
 
     boolean supportsMultiple();
-
-    interface OutputPropertyType {
-        boolean mayProduce(PropertyType propertyType);
-
-        PropertyType determinePropertyType(List<PropertyType> acceptedTypes);
-    }
 }
