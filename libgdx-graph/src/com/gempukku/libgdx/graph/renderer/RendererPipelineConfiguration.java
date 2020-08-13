@@ -74,7 +74,7 @@ public class RendererPipelineConfiguration {
     }
 
     private static void addNodeProducer(PipelineNodeProducer producer) {
-        pipelineNodeProducers.put(producer.getConfiguration().getType(), producer);
+        pipelineNodeProducers.put(producer.getType(), producer);
     }
 
     private RendererPipelineConfiguration() {

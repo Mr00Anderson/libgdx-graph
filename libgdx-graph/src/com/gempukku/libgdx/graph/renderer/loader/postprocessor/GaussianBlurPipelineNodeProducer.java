@@ -56,7 +56,7 @@ public class GaussianBlurPipelineNodeProducer extends PipelineNodeProducerImpl {
         final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
 
         final Function<PipelineRenderingContext, Float> finalBlurRadius = blurRadius;
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);

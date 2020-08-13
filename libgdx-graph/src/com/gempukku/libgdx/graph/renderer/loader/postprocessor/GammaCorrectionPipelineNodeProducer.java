@@ -55,7 +55,7 @@ public class GammaCorrectionPipelineNodeProducer extends PipelineNodeProducerImp
         final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
 
         final Function<PipelineRenderingContext, Float> finalGamma = gamma;
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);

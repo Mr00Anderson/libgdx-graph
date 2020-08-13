@@ -20,7 +20,7 @@ public class SplitPipelineNodeProducer extends PipelineNodeProducerImpl {
 
     @Override
     public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 Object input = inputFunctions.get("input").apply(pipelineRenderingContext);

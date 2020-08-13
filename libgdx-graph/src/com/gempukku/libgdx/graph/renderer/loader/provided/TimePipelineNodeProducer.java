@@ -18,7 +18,7 @@ public class TimePipelineNodeProducer extends PipelineNodeProducerImpl {
 
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             private float timeCumulative = -1;
             private float delta;
 

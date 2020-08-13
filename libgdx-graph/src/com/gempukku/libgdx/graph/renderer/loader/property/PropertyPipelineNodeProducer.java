@@ -5,7 +5,6 @@ import com.gempukku.libgdx.graph.renderer.config.PropertyPipelineNodeConfigurati
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.google.common.base.Function;
 import org.json.simple.JSONObject;
@@ -15,8 +14,14 @@ import java.util.Map;
 
 public class PropertyPipelineNodeProducer implements PipelineNodeProducer {
     @Override
-    public PipelineNodeConfiguration getConfiguration() {
-        return new PipelineNodeConfigurationImpl("Property", "Property");
+    public String getType() {
+        return "Property";
+    }
+
+    @Override
+    public PipelineNodeConfiguration getConfiguration(JSONObject data) {
+        final PropertyType propertyType = PropertyType.valueOf((String) data.get("type"));
+        return new PropertyPipelineNodeConfiguration("Property", "Property", propertyType);
     }
 
     @Override

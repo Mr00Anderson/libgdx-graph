@@ -22,7 +22,7 @@ public class UIRendererPipelineNodeProducer extends PipelineNodeProducerImpl {
     public PipelineNode createNode(JSONObject data, final Map<String, Function<PipelineRenderingContext, ?>> inputFunctions) {
         final Function<PipelineRenderingContext, Stage> stageInput = (Function<PipelineRenderingContext, Stage>) inputFunctions.get("stage");
         final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);

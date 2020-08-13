@@ -58,7 +58,7 @@ public class MergePipelineNodeProducer extends PipelineNodeProducerImpl {
         final Function<PipelineRenderingContext, Float> finalZ = z;
         final Function<PipelineRenderingContext, Float> finalW = w;
 
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 float xValue = finalX.apply(pipelineRenderingContext);

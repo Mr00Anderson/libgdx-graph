@@ -19,7 +19,7 @@ public class StartPipelineNodeProducer extends PipelineNodeProducerImpl {
 
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers) {
-        return new StartPipelineNode(getConfiguration(),
+        return new StartPipelineNode(configuration,
                 (Function<PipelineRenderingContext, Color>) inputSuppliers.get("background"),
                 (Function<PipelineRenderingContext, Vector2>) inputSuppliers.get("size"));
     }

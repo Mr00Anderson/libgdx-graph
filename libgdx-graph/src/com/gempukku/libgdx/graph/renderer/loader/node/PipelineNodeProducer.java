@@ -7,7 +7,9 @@ import org.json.simple.JSONObject;
 import java.util.Map;
 
 public interface PipelineNodeProducer {
-    PipelineNodeConfiguration getConfiguration();
+    String getType();
+
+    PipelineNodeConfiguration getConfiguration(JSONObject data);
 
     PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputFunctions);
 }

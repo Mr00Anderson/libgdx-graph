@@ -17,6 +17,6 @@ public class ValueBooleanPipelineNodeProducer extends PipelineNodeProducerImpl {
 
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, Function<PipelineRenderingContext, ?>> inputSuppliers) {
-        return new ValuePipelineNode(getConfiguration(), "value", (Boolean) data.get("value"));
+        return new ValuePipelineNode(configuration, "value", (Boolean) data.get("value"));
     }
 }

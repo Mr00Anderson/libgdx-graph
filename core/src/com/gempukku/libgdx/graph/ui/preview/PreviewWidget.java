@@ -22,7 +22,7 @@ public class PreviewWidget extends Widget {
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        navigateCanvasTo(x, y);
+                        navigateCanvasTo(x + getX(), y + getY());
                         event.stop();
                     }
                 });

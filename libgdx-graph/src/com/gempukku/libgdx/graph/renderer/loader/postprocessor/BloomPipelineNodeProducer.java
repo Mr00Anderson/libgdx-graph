@@ -84,7 +84,7 @@ public class BloomPipelineNodeProducer extends PipelineNodeProducerImpl {
         final Function<PipelineRenderingContext, Float> finalBloomStrength = bloomStrength;
         final Function<PipelineRenderingContext, Float> finalBloomRadius = bloomRadius;
         final Function<PipelineRenderingContext, Float> finalMinimalBrightness = minimalBrightness;
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline renderPipeline = renderPipelineInput.apply(pipelineRenderingContext);

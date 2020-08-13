@@ -25,7 +25,7 @@ public class PipelineRendererNodeProducer extends PipelineNodeProducerImpl {
         final Function<PipelineRenderingContext, Vector2> positionInput = (Function<PipelineRenderingContext, Vector2>) inputFunctions.get("position");
         final Function<PipelineRenderingContext, Vector2> sizeInput = (Function<PipelineRenderingContext, Vector2>) inputFunctions.get("size");
 
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 RenderPipeline canvasPipeline = renderPipelineInput.apply(pipelineRenderingContext);

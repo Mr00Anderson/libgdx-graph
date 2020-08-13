@@ -28,7 +28,7 @@ public class DefaultRendererPipelineNodeProducer extends PipelineNodeProducerImp
         final Function<PipelineRenderingContext, Camera> cameraInput = (Function<PipelineRenderingContext, Camera>) inputFunctions.get("camera");
         final Function<PipelineRenderingContext, RenderPipeline> renderPipelineInput = (Function<PipelineRenderingContext, RenderPipeline>) inputFunctions.get("input");
 
-        return new OncePerFrameJobPipelineNode(getConfiguration()) {
+        return new OncePerFrameJobPipelineNode(configuration) {
             private ModelBatch modelBatch = new ModelBatch();
 
             @Override
