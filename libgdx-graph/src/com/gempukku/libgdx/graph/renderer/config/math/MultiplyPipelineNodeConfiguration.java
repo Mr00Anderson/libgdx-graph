@@ -9,10 +9,10 @@ public class MultiplyPipelineNodeConfiguration extends PipelineNodeConfiguration
     public MultiplyPipelineNodeConfiguration() {
         super("Multiply", "Multiply");
         addNodeInput(
-                new PipelineNodeInputImpl("inputA", "A",
+                new PipelineNodeInputImpl("inputA", "A", true,
                         PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2, PropertyType.Vector1));
         addNodeInput(
-                new PipelineNodeInputImpl("inputB", "B",
+                new PipelineNodeInputImpl("inputB", "B", true,
                         PropertyType.Color, PropertyType.Vector3, PropertyType.Vector2, PropertyType.Vector1));
         addNodeOutput(
                 new PipelineNodeOutputImpl("output", "Result",
