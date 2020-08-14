@@ -15,7 +15,7 @@ import com.gempukku.libgdx.graph.renderer.config.rendering.StartPipelineNodeConf
 import com.gempukku.libgdx.graph.renderer.config.rendering.UIRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.value.ValueBooleanPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.value.ValueColorPipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.config.value.ValueFkiatPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueFloatPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.value.ValueVector2PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.config.value.ValueVector3PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
@@ -50,7 +50,7 @@ public class UIPipelineConfiguration {
     static {
         Set<GraphBoxProducer> valueProducers = new LinkedHashSet<>();
         valueProducers.add(new ValueColorBoxProducer(new ValueColorPipelineNodeConfiguration()));
-        valueProducers.add(new ValueFloatBoxProducer(new ValueFkiatPipelineNodeConfiguration()));
+        valueProducers.add(new ValueFloatBoxProducer(new ValueFloatPipelineNodeConfiguration()));
         valueProducers.add(new ValueVector2BoxProducer(new ValueVector2PipelineNodeConfiguration()));
         valueProducers.add(new ValueVector3BoxProducer(new ValueVector3PipelineNodeConfiguration()));
         valueProducers.add(new ValueBooleanBoxProducer(new ValueBooleanPipelineNodeConfiguration()));

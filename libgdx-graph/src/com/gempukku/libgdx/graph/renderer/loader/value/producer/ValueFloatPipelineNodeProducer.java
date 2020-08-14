@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.renderer.loader.value.producer;
 
-import com.gempukku.libgdx.graph.renderer.config.value.ValueFkiatPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.renderer.config.value.ValueFloatPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducerImpl;
 import com.gempukku.libgdx.graph.renderer.loader.value.node.ValuePipelineNode;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ValueFloatPipelineNodeProducer extends PipelineNodeProducerImpl {
     public ValueFloatPipelineNodeProducer() {
-        super(new ValueFkiatPipelineNodeConfiguration());
+        super(new ValueFloatPipelineNodeConfiguration());
     }
 
     @Override
