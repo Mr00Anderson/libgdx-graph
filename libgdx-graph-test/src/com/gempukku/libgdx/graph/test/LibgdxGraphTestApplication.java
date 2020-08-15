@@ -25,8 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.PipelineLoader;
+import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
 import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
-import com.gempukku.libgdx.graph.renderer.PipelineRendererModels;
 import com.gempukku.libgdx.graph.renderer.RenderOutputs;
 import com.gempukku.libgdx.graph.renderer.RendererLoaderCallback;
 
@@ -39,7 +39,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private long lastProcessedInput;
 
     private PipelineRenderer pipelineRenderer;
-    private PipelineRendererModels models;
+    private LibGDXModels models;
     private Model sphereModel;
     private Environment environment;
     private Camera camera;
@@ -55,7 +55,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                 new Material(TextureAttribute.createDiffuse(WhitePixel.texture), ColorAttribute.createDiffuse(new Color(0.5f, 0.5f, 0.5f, 1f))),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
-        models = new PipelineRendererModels();
+        models = new LibGDXModels();
         models.addModelInstance(new ModelInstance(sphereModel));
 
         environment = new Environment();

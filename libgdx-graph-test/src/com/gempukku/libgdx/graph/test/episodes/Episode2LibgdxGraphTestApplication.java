@@ -20,8 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.PipelineLoader;
+import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
 import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
-import com.gempukku.libgdx.graph.renderer.PipelineRendererModels;
 import com.gempukku.libgdx.graph.renderer.RenderOutputs;
 import com.gempukku.libgdx.graph.renderer.RendererLoaderCallback;
 import com.gempukku.libgdx.graph.test.WhitePixel;
@@ -35,7 +35,7 @@ public class Episode2LibgdxGraphTestApplication extends ApplicationAdapter {
     private long lastProcessedInput;
 
     private PipelineRenderer pipelineRenderer;
-    private PipelineRendererModels models;
+    private LibGDXModels models;
     private Model sphereModel;
     private Environment environment;
     private Camera camera;
@@ -70,13 +70,13 @@ public class Episode2LibgdxGraphTestApplication extends ApplicationAdapter {
         return environment;
     }
 
-    private PipelineRendererModels createModels() {
+    private LibGDXModels createModels() {
         ModelBuilder modelBuilder = new ModelBuilder();
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 new Material(TextureAttribute.createDiffuse(WhitePixel.texture)),
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
-        PipelineRendererModels models = new PipelineRendererModels();
+        LibGDXModels models = new LibGDXModels();
         models.addModelInstance(new ModelInstance(sphereModel));
         return models;
     }
