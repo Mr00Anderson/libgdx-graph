@@ -1,7 +1,7 @@
 package com.gempukku.libgdx.graph.renderer;
 
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.RenderableProvider;
 
 public interface PipelineRendererModels {
-    Iterable<? extends ModelInstance> getModels();
+    Iterable<? extends RenderableProvider> getModels();
 }

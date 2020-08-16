@@ -57,7 +57,7 @@ public class Episode3LibgdxGraphTestApplication extends ApplicationAdapter {
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
         models = new LibGDXModels();
-        models.addModelInstance(new ModelInstance(sphereModel));
+        models.addRenderableProvider(new ModelInstance(sphereModel));
 
         environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2f, 0.2f, 0.2f, 1f));

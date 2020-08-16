@@ -77,7 +77,7 @@ public class Episode2LibgdxGraphTestApplication extends ApplicationAdapter {
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
         LibGDXModels models = new LibGDXModels();
-        models.addModelInstance(new ModelInstance(sphereModel));
+        models.addRenderableProvider(new ModelInstance(sphereModel));
         return models;
     }
 
