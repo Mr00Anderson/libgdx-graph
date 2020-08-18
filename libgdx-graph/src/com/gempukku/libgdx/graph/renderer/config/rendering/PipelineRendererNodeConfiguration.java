@@ -13,7 +13,7 @@ public class PipelineRendererNodeConfiguration extends PipelineNodeConfiguration
         addNodeInput(
                 new PipelineNodeInputImpl("position", "Position", true, PropertyType.Vector2));
         addNodeInput(
-                new PipelineNodeInputImpl("size", "Size", true, PropertyType.Vector2));
+                new PipelineNodeInputImpl("size", "Size", false, PropertyType.Vector2));
         addNodeInput(
                 new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
         addNodeOutput(
