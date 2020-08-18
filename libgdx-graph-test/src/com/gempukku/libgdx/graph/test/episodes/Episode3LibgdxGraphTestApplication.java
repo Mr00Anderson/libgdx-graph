@@ -49,32 +49,47 @@ public class Episode3LibgdxGraphTestApplication extends ApplicationAdapter {
     public void create() {
         WhitePixel.initialize();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
-        constructStage();
+        stage = constructStage();
 
-        ModelBuilder modelBuilder = new ModelBuilder();
-        sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
-                new Material(TextureAttribute.createDiffuse(WhitePixel.texture), ColorAttribute.createDiffuse(new Color(0.5f, 0.5f, 0.5f, 1f))),
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+        models = createModels();
 
-        models = new LibGDXModels();
-        models.addRenderableProvider(new ModelInstance(sphereModel));
+        environment = createEnvironment();
 
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2f, 0.2f, 0.2f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-        camera = new PerspectiveCamera();
-        camera.position.set(5f, 5f, 5f);
-        camera.lookAt(0, 0, 0);
-        camera.update();
+        camera = createCamera();
 
         pipelineRenderer = loadPipelineRenderer();
 
         Gdx.input.setInputProcessor(stage);
     }
 
-    private void constructStage() {
-        stage = new Stage(new ScreenViewport());
+    private Camera createCamera() {
+        Camera camera = new PerspectiveCamera();
+        camera.position.set(3f, 3f, 3f);
+        camera.lookAt(0, 0, 0);
+        camera.update();
+        return camera;
+    }
+
+    private Environment createEnvironment() {
+        Environment environment = new Environment();
+        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2f, 0.2f, 0.2f, 1f));
+        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+        return environment;
+    }
+
+    private LibGDXModels createModels() {
+        ModelBuilder modelBuilder = new ModelBuilder();
+        sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
+                new Material(TextureAttribute.createDiffuse(WhitePixel.texture), ColorAttribute.createDiffuse(new Color(0.5f, 0.5f, 0.5f, 1f))),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+
+        LibGDXModels models = new LibGDXModels();
+        models.addRenderableProvider(new ModelInstance(sphereModel));
+        return models;
+    }
+
+    private Stage constructStage() {
+        Stage stage = new Stage(new ScreenViewport());
 
         final Slider bloomRadius = new Slider(0, 64, 1, false, skin);
         bloomRadius.addListener(
@@ -139,6 +154,7 @@ public class Episode3LibgdxGraphTestApplication extends ApplicationAdapter {
         tbl.align(Align.topLeft);
 
         stage.addActor(tbl);
+        return stage;
     }
 
     private void setPropertyIfDefined(String propertyName, float value) {
