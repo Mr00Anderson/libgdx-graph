@@ -1,0 +1,320 @@
+{
+  "pipeline": {
+    "objects": [
+      {
+        "x": 585.0,
+        "y": 444.0,
+        "id": "e2b909a7778646cb8875395ae95c69ba",
+        "type": "PipelineStart"
+      },
+      {
+        "x": 913.0,
+        "y": 271.0,
+        "id": "3e653a35c168439c9b603918cb940d2c",
+        "type": "PipelineRenderer"
+      },
+      {
+        "x": 575.0,
+        "y": 549.0,
+        "id": "2beef67537cb4c29902d4b2c561b9fe5",
+        "type": "DefaultRenderer"
+      },
+      {
+        "x": 330.0,
+        "y": 666.0,
+        "id": "b2ebce3c61a44676ba80022969f1f778",
+        "type": "Multiply"
+      },
+      {
+        "data": {
+          "name": "Models",
+          "type": "Models"
+        },
+        "x": 338.0,
+        "y": 478.0,
+        "id": "2e50b00d93b6447aa997528949860bce",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "name": "Camera1",
+          "type": "Camera"
+        },
+        "x": 326.0,
+        "y": 566.0,
+        "id": "c2a95a786b284e79947f03eb6d9ef402",
+        "type": "Property"
+      },
+      {
+        "x": 373.0,
+        "y": 88.0,
+        "id": "f224bb6d66bc49ff8afb042af8ebad87",
+        "type": "Multiply"
+      },
+      {
+        "x": 570.0,
+        "y": 692.0,
+        "id": "d5b47d66b9bc495bbf9823a06eb9ce33",
+        "type": "PipelineStart"
+      },
+      {
+        "data": {
+          "name": "Lights",
+          "type": "Lights"
+        },
+        "x": 344.0,
+        "y": 385.0,
+        "id": "ecda6fb411974804a6cba93be186590a",
+        "type": "Property"
+      },
+      {
+        "x": 913.0,
+        "y": 513.0,
+        "id": "3b30a4b0c6604efd819b86b98aacf97d",
+        "type": "PipelineRenderer"
+      },
+      {
+        "data": {
+          "v1": 0.0,
+          "v2": 0.0
+        },
+        "x": 739.0,
+        "y": 403.0,
+        "id": "05e57097eac4468e932beaf435cebcc0",
+        "type": "ValueVector2"
+      },
+      {
+        "data": {
+          "name": "Camera2",
+          "type": "Camera"
+        },
+        "x": 364.0,
+        "y": 293.0,
+        "id": "d75b77e4c9704155a8da90ea17d1c433",
+        "type": "Property"
+      },
+      {
+        "data": {
+          "v1": 0.5,
+          "v2": 0.0
+        },
+        "x": 67.0,
+        "y": 205.0,
+        "id": "60e0e984bdf04eb189480a5b958dee87",
+        "type": "ValueVector2"
+      },
+      {
+        "x": 916.0,
+        "y": 136.0,
+        "id": "7d2427e384c2498b88779e75f733c0ff",
+        "type": "UIRenderer"
+      },
+      {
+        "x": 913.0,
+        "y": 682.0,
+        "id": "dcb271c305124354aba05f38a3d185d3",
+        "type": "PipelineStart"
+      },
+      {
+        "x": 916.0,
+        "y": 50.0,
+        "id": "end",
+        "type": "PipelineEnd"
+      },
+      {
+        "x": 63.0,
+        "y": 391.0,
+        "id": "57a65262b7ae4af88c785d0bc3266370",
+        "type": "RenderSize"
+      },
+      {
+        "x": 587.0,
+        "y": 307.0,
+        "id": "2dc3fe6f3dcc42fcbdda2c6df002c5b3",
+        "type": "DefaultRenderer"
+      },
+      {
+        "data": {
+          "v1": 0.5,
+          "v2": 1.0
+        },
+        "x": 50.0,
+        "y": 681.0,
+        "id": "c7ffaa988eff4769a3062072b7a4985a",
+        "type": "ValueVector2"
+      },
+      {
+        "data": {
+          "name": "Stage",
+          "type": "Stage"
+        },
+        "x": 703.0,
+        "y": 134.0,
+        "id": "cff4d91ba45f499fb5fb55d43e6008f2",
+        "type": "Property"
+      }
+    ],
+    "connections": [
+      {
+        "fromNode": "cff4d91ba45f499fb5fb55d43e6008f2",
+        "toField": "stage",
+        "fromField": "value",
+        "toNode": "7d2427e384c2498b88779e75f733c0ff"
+      },
+      {
+        "fromNode": "7d2427e384c2498b88779e75f733c0ff",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "end"
+      },
+      {
+        "fromNode": "2e50b00d93b6447aa997528949860bce",
+        "toField": "models",
+        "fromField": "value",
+        "toNode": "2beef67537cb4c29902d4b2c561b9fe5"
+      },
+      {
+        "fromNode": "ecda6fb411974804a6cba93be186590a",
+        "toField": "lights",
+        "fromField": "value",
+        "toNode": "2beef67537cb4c29902d4b2c561b9fe5"
+      },
+      {
+        "fromNode": "2e50b00d93b6447aa997528949860bce",
+        "toField": "models",
+        "fromField": "value",
+        "toNode": "2dc3fe6f3dcc42fcbdda2c6df002c5b3"
+      },
+      {
+        "fromNode": "ecda6fb411974804a6cba93be186590a",
+        "toField": "lights",
+        "fromField": "value",
+        "toNode": "2dc3fe6f3dcc42fcbdda2c6df002c5b3"
+      },
+      {
+        "fromNode": "c2a95a786b284e79947f03eb6d9ef402",
+        "toField": "camera",
+        "fromField": "value",
+        "toNode": "2beef67537cb4c29902d4b2c561b9fe5"
+      },
+      {
+        "fromNode": "d75b77e4c9704155a8da90ea17d1c433",
+        "toField": "camera",
+        "fromField": "value",
+        "toNode": "2dc3fe6f3dcc42fcbdda2c6df002c5b3"
+      },
+      {
+        "fromNode": "d5b47d66b9bc495bbf9823a06eb9ce33",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "2beef67537cb4c29902d4b2c561b9fe5"
+      },
+      {
+        "fromNode": "e2b909a7778646cb8875395ae95c69ba",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "2dc3fe6f3dcc42fcbdda2c6df002c5b3"
+      },
+      {
+        "fromNode": "3b30a4b0c6604efd819b86b98aacf97d",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "3e653a35c168439c9b603918cb940d2c"
+      },
+      {
+        "fromNode": "3e653a35c168439c9b603918cb940d2c",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "7d2427e384c2498b88779e75f733c0ff"
+      },
+      {
+        "fromNode": "dcb271c305124354aba05f38a3d185d3",
+        "toField": "input",
+        "fromField": "output",
+        "toNode": "3b30a4b0c6604efd819b86b98aacf97d"
+      },
+      {
+        "fromNode": "2beef67537cb4c29902d4b2c561b9fe5",
+        "toField": "pipeline",
+        "fromField": "output",
+        "toNode": "3b30a4b0c6604efd819b86b98aacf97d"
+      },
+      {
+        "fromNode": "b2ebce3c61a44676ba80022969f1f778",
+        "toField": "size",
+        "fromField": "output",
+        "toNode": "d5b47d66b9bc495bbf9823a06eb9ce33"
+      },
+      {
+        "fromNode": "b2ebce3c61a44676ba80022969f1f778",
+        "toField": "size",
+        "fromField": "output",
+        "toNode": "e2b909a7778646cb8875395ae95c69ba"
+      },
+      {
+        "fromNode": "05e57097eac4468e932beaf435cebcc0",
+        "toField": "position",
+        "fromField": "value",
+        "toNode": "3b30a4b0c6604efd819b86b98aacf97d"
+      },
+      {
+        "fromNode": "57a65262b7ae4af88c785d0bc3266370",
+        "toField": "inputA",
+        "fromField": "size",
+        "toNode": "f224bb6d66bc49ff8afb042af8ebad87"
+      },
+      {
+        "fromNode": "60e0e984bdf04eb189480a5b958dee87",
+        "toField": "inputB",
+        "fromField": "value",
+        "toNode": "f224bb6d66bc49ff8afb042af8ebad87"
+      },
+      {
+        "fromNode": "f224bb6d66bc49ff8afb042af8ebad87",
+        "toField": "position",
+        "fromField": "output",
+        "toNode": "3e653a35c168439c9b603918cb940d2c"
+      },
+      {
+        "fromNode": "2dc3fe6f3dcc42fcbdda2c6df002c5b3",
+        "toField": "pipeline",
+        "fromField": "output",
+        "toNode": "3e653a35c168439c9b603918cb940d2c"
+      },
+      {
+        "fromNode": "c7ffaa988eff4769a3062072b7a4985a",
+        "toField": "inputA",
+        "fromField": "value",
+        "toNode": "b2ebce3c61a44676ba80022969f1f778"
+      },
+      {
+        "fromNode": "57a65262b7ae4af88c785d0bc3266370",
+        "toField": "inputB",
+        "fromField": "size",
+        "toNode": "b2ebce3c61a44676ba80022969f1f778"
+      }
+    ],
+    "properties": [
+      {
+        "name": "Stage",
+        "type": "Stage"
+      },
+      {
+        "name": "Models",
+        "type": "Models"
+      },
+      {
+        "name": "Lights",
+        "type": "Lights"
+      },
+      {
+        "name": "Camera1",
+        "type": "Camera"
+      },
+      {
+        "name": "Camera2",
+        "type": "Camera"
+      }
+    ]
+  }
+}
