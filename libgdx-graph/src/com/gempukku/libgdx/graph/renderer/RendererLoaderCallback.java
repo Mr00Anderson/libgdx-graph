@@ -1,7 +1,6 @@
 package com.gempukku.libgdx.graph.renderer;
 
 import com.gempukku.libgdx.graph.PipelineLoaderCallback;
-import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.renderer.impl.PipelineRendererImpl;
 import com.gempukku.libgdx.graph.renderer.impl.WritablePipelineProperty;
@@ -79,7 +78,7 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
             if (vertexInfo != null) {
                 PipelineNode vertexNode = populatePipelineNodes(vertexInfo.fromNode, pipelineNodeMap);
                 PipelineNode.FieldOutput<?> fieldOutput = vertexNode.getFieldOutput(vertexInfo.fromField);
-                FieldType fieldType = fieldOutput.getPropertyType();
+                PipelineFieldType fieldType = fieldOutput.getPropertyType();
                 if (!nodeInput.getAcceptedPropertyTypes().contains(fieldType))
                     throw new IllegalStateException("Producer produces a field of value not compatible with consumer");
                 inputFields.put(inputName, fieldOutput);

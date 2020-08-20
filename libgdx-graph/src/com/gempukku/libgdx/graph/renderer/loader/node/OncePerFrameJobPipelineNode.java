@@ -1,6 +1,5 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
-import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 
@@ -22,7 +21,7 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     public FieldOutput<?> getFieldOutput(String name) {
         WorkerFieldOutput<Object> fieldOutput = workerFieldOutputs.get(name);
         if (fieldOutput == null) {
-            FieldType fieldType = determineOutputType(name, inputFields);
+            PipelineFieldType fieldType = determineOutputType(name, inputFields);
             fieldOutput = new WorkerFieldOutput<>(fieldType);
             workerFieldOutputs.put(name, fieldOutput);
         }
@@ -30,7 +29,7 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
         return fieldOutput;
     }
 
-    protected FieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
+    protected PipelineFieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
         return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
     }
 
@@ -52,10 +51,10 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     }
 
     private class WorkerFieldOutput<T> implements FieldOutput<T>, OutputValue<T> {
-        private FieldType fieldType;
+        private PipelineFieldType fieldType;
         private T value;
 
-        public WorkerFieldOutput(FieldType fieldType) {
+        public WorkerFieldOutput(PipelineFieldType fieldType) {
             this.fieldType = fieldType;
         }
 
@@ -65,7 +64,7 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
         }
 
         @Override
-        public FieldType getPropertyType() {
+        public PipelineFieldType getPropertyType() {
             return fieldType;
         }
 

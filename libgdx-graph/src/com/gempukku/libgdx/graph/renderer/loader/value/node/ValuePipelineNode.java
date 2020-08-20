@@ -1,6 +1,5 @@
 package com.gempukku.libgdx.graph.renderer.loader.value.node;
 
-import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
@@ -23,7 +22,7 @@ public class ValuePipelineNode implements PipelineNode {
             throw new IllegalArgumentException();
         return new FieldOutput<Object>() {
             @Override
-            public FieldType getPropertyType() {
+            public PipelineFieldType getPropertyType() {
                 return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
             }
 

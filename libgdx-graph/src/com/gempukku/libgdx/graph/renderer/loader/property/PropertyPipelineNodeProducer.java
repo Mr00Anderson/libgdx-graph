@@ -26,14 +26,14 @@ public class PropertyPipelineNodeProducer implements PipelineNodeProducer {
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
         final String propertyName = (String) data.get("name");
-        final FieldType fieldType = PipelineFieldType.valueOf((String) data.get("type"));
+        final PipelineFieldType fieldType = PipelineFieldType.valueOf((String) data.get("type"));
 
         return new PipelineNode() {
             @Override
             public FieldOutput<?> getFieldOutput(String name) {
                 return new FieldOutput<Object>() {
                     @Override
-                    public FieldType getPropertyType() {
+                    public PipelineFieldType getPropertyType() {
                         return fieldType;
                     }
 
