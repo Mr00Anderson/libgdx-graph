@@ -2,7 +2,7 @@ package com.gempukku.libgdx.graph.libgdx;
 
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.RenderableProvider;
-import com.gempukku.libgdx.graph.graph.pipeline.PipelineRendererModels;
+import com.gempukku.libgdx.graph.pipeline.PipelineRendererModels;
 
 import java.util.HashSet;
 import java.util.Map;

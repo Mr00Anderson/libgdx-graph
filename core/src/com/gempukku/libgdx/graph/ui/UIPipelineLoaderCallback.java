@@ -1,8 +1,8 @@
 package com.gempukku.libgdx.graph.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.libgdx.graph.PipelineLoaderCallback;
-import com.gempukku.libgdx.graph.graph.pipeline.PipelineFieldType;
+import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
+import com.gempukku.libgdx.graph.pipeline.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
 import com.gempukku.libgdx.graph.ui.pipeline.PipelineDesignTab;

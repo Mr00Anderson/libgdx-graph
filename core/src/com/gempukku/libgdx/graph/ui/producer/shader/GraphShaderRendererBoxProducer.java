@@ -1,11 +1,11 @@
 package com.gempukku.libgdx.graph.ui.producer.shader;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
-import com.gempukku.libgdx.graph.graph.NodeConfiguration;
-import com.gempukku.libgdx.graph.graph.pipeline.PipelineFieldType;
-import com.gempukku.libgdx.graph.graph.pipeline.config.rendering.GraphShaderRendererPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
+import com.gempukku.libgdx.graph.pipeline.config.rendering.GraphShaderRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;

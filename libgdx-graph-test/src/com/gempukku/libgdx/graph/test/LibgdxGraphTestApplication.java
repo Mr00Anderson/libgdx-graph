@@ -24,11 +24,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.gempukku.libgdx.graph.PipelineLoader;
-import com.gempukku.libgdx.graph.graph.pipeline.PipelineRenderer;
-import com.gempukku.libgdx.graph.graph.pipeline.RenderOutputs;
-import com.gempukku.libgdx.graph.graph.pipeline.RendererLoaderCallback;
 import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
+import com.gempukku.libgdx.graph.pipeline.PipelineLoader;
+import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
+import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
+import com.gempukku.libgdx.graph.pipeline.RendererLoaderCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
