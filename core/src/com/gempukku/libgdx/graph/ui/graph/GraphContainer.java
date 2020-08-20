@@ -13,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphConnection;
+import com.gempukku.libgdx.graph.data.GraphNodeInput;
+import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.data.NodeConnector;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
 import com.gempukku.libgdx.graph.ui.preview.NavigableCanvas;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisWindow;
@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphContainer extends WidgetGroup implements NavigableCanvas {
+public class GraphContainer<T extends FieldType> extends WidgetGroup implements NavigableCanvas {
     private static final float CANVAS_GAP = 50f;
     private static final float CONNECTOR_LENGTH = 10;
     private static final float CONNECTOR_RADIUS = 5;
@@ -44,7 +44,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
     private float canvasHeight;
     private boolean navigating;
 
-    private Map<String, GraphBox> graphBoxes = new HashMap<>();
+    private Map<String, GraphBox<T>> graphBoxes = new HashMap<>();
     private Map<String, VisWindow> boxWindows = new HashMap<>();
     private List<GraphConnection> graphConnections = new LinkedList<>();
 
@@ -54,7 +54,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
     private ShapeRenderer shapeRenderer;
 
     private NodeConnector drawingFromConnector;
-    private GraphValidator.ValidationResult<GraphBox, GraphConnection> validationResult = new GraphValidator.ValidationResult<>();
+    private GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, T> validationResult = new GraphValidator.ValidationResult<>();
 
     public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
@@ -164,9 +164,9 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         updateCanvas(true);
     }
 
-    public void setValidationResult(GraphValidator.ValidationResult<GraphBox, GraphConnection> validationResult) {
+    public void setValidationResult(GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, T> validationResult) {
         this.validationResult = validationResult;
-        for (GraphBox value : graphBoxes.values()) {
+        for (GraphBox<T> value : graphBoxes.values()) {
             VisWindow window = boxWindows.get(value.getId());
             if (validationResult.getErrorNodes().contains(value)) {
                 window.getTitleLabel().setColor(Color.RED);
@@ -221,10 +221,10 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
     }
 
     private void processNodeClick(NodeConnector clickedNodeConnector) {
-        GraphBox clickedNode = getGraphBoxById(clickedNodeConnector.getNodeId());
+        GraphBox<T> clickedNode = getGraphBoxById(clickedNodeConnector.getNodeId());
         if (drawingFromConnector != null) {
             if (!drawingFromConnector.equals(clickedNodeConnector)) {
-                GraphBox drawingFromNode = getGraphBoxById(drawingFromConnector.getNodeId());
+                GraphBox<T> drawingFromNode = getGraphBoxById(drawingFromConnector.getNodeId());
 
                 boolean drawingFromIsInput = drawingFromNode.isInputField(drawingFromConnector.getFieldId());
                 if (drawingFromIsInput == clickedNode.isInputField(clickedNodeConnector.getFieldId())) {
@@ -233,8 +233,8 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
                     NodeConnector connectorFrom = drawingFromIsInput ? clickedNodeConnector : drawingFromConnector;
                     NodeConnector connectorTo = drawingFromIsInput ? drawingFromConnector : clickedNodeConnector;
 
-                    PipelineNodeOutput output = getGraphBoxById(connectorFrom.getNodeId()).getOutput(connectorFrom.getFieldId());
-                    PipelineNodeInput input = getGraphBoxById(connectorTo.getNodeId()).getInput(connectorTo.getFieldId());
+                    GraphNodeOutput<T> output = getGraphBoxById(connectorFrom.getNodeId()).getOutput(connectorFrom.getFieldId());
+                    GraphNodeInput<T> input = getGraphBoxById(connectorTo.getNodeId()).getInput(connectorTo.getFieldId());
 
                     if (!connectorsMatch(input, output)) {
                         // Either input-input, output-output, or different property type
@@ -279,9 +279,9 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         }
     }
 
-    private boolean connectorsMatch(PipelineNodeInput input, PipelineNodeOutput output) {
-        List<PropertyType> producablePropertyTypes = output.getProducablePropertyTypes();
-        for (PropertyType acceptedPropertyType : input.getAcceptedPropertyTypes()) {
+    private boolean connectorsMatch(GraphNodeInput<T> input, GraphNodeOutput<T> output) {
+        List<? extends T> producablePropertyTypes = output.getProducablePropertyTypes();
+        for (T acceptedPropertyType : input.getAcceptedPropertyTypes()) {
             if (producablePropertyTypes.contains(acceptedPropertyType))
                 return true;
         }
@@ -302,7 +302,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         return result;
     }
 
-    public void addGraphBox(final GraphBox graphBox, String windowTitle, boolean closeable, float x, float y) {
+    public void addGraphBox(final GraphBox<T> graphBox, String windowTitle, boolean closeable, float x, float y) {
         graphBoxes.put(graphBox.getId(), graphBox);
         VisWindow window = new VisWindow(windowTitle) {
             @Override
@@ -330,7 +330,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         fire(new GraphChangedEvent(true));
     }
 
-    private void removeGraphBox(GraphBox graphBox) {
+    private void removeGraphBox(GraphBox<T> graphBox) {
         Iterator<GraphConnection> graphConnectionIterator = graphConnections.iterator();
         while (graphConnectionIterator.hasNext()) {
             GraphConnection graphConnectionImpl = graphConnectionIterator.next();
@@ -369,10 +369,10 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         for (Map.Entry<String, VisWindow> windowEntry : boxWindows.entrySet()) {
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
-            GraphBox graphBox = graphBoxes.get(nodeId);
+            GraphBox<T> graphBox = graphBoxes.get(nodeId);
             float windowX = window.getX();
             float windowY = window.getY();
-            for (GraphBoxInputConnector connector : graphBox.getInputs()) {
+            for (GraphBoxInputConnector<T> connector : graphBox.getInputs()) {
                 switch (connector.getSide()) {
                     case Left:
                         from.set(windowX - CONNECTOR_LENGTH, windowY + connector.getOffset());
@@ -387,7 +387,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
 
                 connectionNodeMap.put(new NodeConnector(nodeId, connector.getFieldId()), rectangle);
             }
-            for (GraphBoxOutputConnector connector : graphBox.getOutputs()) {
+            for (GraphBoxOutputConnector<T> connector : graphBox.getOutputs()) {
                 switch (connector.getSide()) {
                     case Right:
                         from.set(windowX + window.getWidth() + CONNECTOR_LENGTH, windowY + connector.getOffset());
@@ -409,11 +409,11 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         for (GraphConnection graphConnection : graphConnections) {
             NodeConnector fromNode = getNodeInfo(graphConnection.getNodeFrom(), graphConnection.getFieldFrom());
             Window fromWindow = boxWindows.get(fromNode.getNodeId());
-            GraphBoxOutputConnector output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
+            GraphBoxOutputConnector<T> output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
             calculateConnection(from, fromWindow, output);
             NodeConnector toNode = getNodeInfo(graphConnection.getNodeTo(), graphConnection.getFieldTo());
             Window toWindow = boxWindows.get(toNode.getNodeId());
-            GraphBoxInputConnector input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
+            GraphBoxInputConnector<T> input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
             calculateConnection(to, toWindow, input);
 
             Shape shape = basicStroke.createStrokedShape(new Line2D.Float(from.x, from.y, to.x, to.y));
@@ -423,7 +423,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
     }
 
     private NodeConnector getNodeInfo(String nodeId, String fieldId) {
-        GraphBox graphBox = graphBoxes.get(nodeId);
+        GraphBox<T> graphBox = graphBoxes.get(nodeId);
         if (graphBox.getInput(fieldId) != null || graphBox.getOutput(fieldId) != null)
             return new NodeConnector(nodeId, fieldId);
         return null;
@@ -451,8 +451,8 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         for (Map.Entry<String, VisWindow> windowEntry : boxWindows.entrySet()) {
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
-            GraphBox graphBox = graphBoxes.get(nodeId);
-            for (GraphBoxInputConnector connector : graphBox.getInputs()) {
+            GraphBox<T> graphBox = graphBoxes.get(nodeId);
+            for (GraphBoxInputConnector<T> connector : graphBox.getInputs()) {
                 if (!connector.isRequired()) {
                     calculateConnector(from, to, window, connector);
                     from.add(x, y);
@@ -463,7 +463,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
                 }
             }
 
-            for (GraphBoxOutputConnector connector : graphBox.getOutputs()) {
+            for (GraphBoxOutputConnector<T> connector : graphBox.getOutputs()) {
                 calculateConnector(from, to, window, connector);
                 from.add(x, y);
                 to.add(x, y);
@@ -476,11 +476,11 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         for (GraphConnection graphConnection : graphConnections) {
             NodeConnector fromNode = getNodeInfo(graphConnection.getNodeFrom(), graphConnection.getFieldFrom());
             Window fromWindow = boxWindows.get(fromNode.getNodeId());
-            GraphBoxOutputConnector output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
+            GraphBoxOutputConnector<T> output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
             calculateConnection(from, fromWindow, output);
             NodeConnector toNode = getNodeInfo(graphConnection.getNodeTo(), graphConnection.getFieldTo());
             Window toWindow = boxWindows.get(toNode.getNodeId());
-            GraphBoxInputConnector input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
+            GraphBoxInputConnector<T> input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
             calculateConnection(to, toWindow, input);
 
             boolean error = validationResult.getErrorConnections().contains(graphConnection);
@@ -494,14 +494,14 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
 
         if (drawingFromConnector != null) {
             shapeRenderer.setColor(Color.WHITE);
-            GraphBox drawingFromNode = getGraphBoxById(drawingFromConnector.getNodeId());
+            GraphBox<T> drawingFromNode = getGraphBoxById(drawingFromConnector.getNodeId());
             Window fromWindow = getBoxWindow(drawingFromConnector.getNodeId());
             if (drawingFromNode.isInputField(drawingFromConnector.getFieldId())) {
-                GraphBoxInputConnector input = drawingFromNode.getInput(drawingFromConnector.getFieldId());
+                GraphBoxInputConnector<T> input = drawingFromNode.getInput(drawingFromConnector.getFieldId());
                 calculateConnection(from, fromWindow, input);
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             } else {
-                GraphBoxOutputConnector output = drawingFromNode.getOutput(drawingFromConnector.getFieldId());
+                GraphBoxOutputConnector<T> output = drawingFromNode.getOutput(drawingFromConnector.getFieldId());
                 calculateConnection(from, fromWindow, output);
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             }
@@ -512,8 +512,8 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         for (Map.Entry<String, VisWindow> windowEntry : boxWindows.entrySet()) {
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
-            GraphBox graphBox = graphBoxes.get(nodeId);
-            for (GraphBoxInputConnector connector : graphBox.getInputs()) {
+            GraphBox<T> graphBox = graphBoxes.get(nodeId);
+            for (GraphBoxInputConnector<T> connector : graphBox.getInputs()) {
                 if (connector.isRequired()) {
                     calculateConnector(from, to, window, connector);
                     from.add(x, y);
@@ -536,7 +536,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         shapeRenderer.end();
     }
 
-    private void calculateConnector(Vector2 from, Vector2 to, Window window, GraphBoxOutputConnector connector) {
+    private void calculateConnector(Vector2 from, Vector2 to, Window window, GraphBoxOutputConnector<T> connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {
@@ -551,7 +551,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         }
     }
 
-    private void calculateConnector(Vector2 from, Vector2 to, Window window, GraphBoxInputConnector connector) {
+    private void calculateConnector(Vector2 from, Vector2 to, Window window, GraphBoxInputConnector<T> connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {
@@ -566,11 +566,11 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         }
     }
 
-    public GraphBox getGraphBoxById(String id) {
+    public GraphBox<T> getGraphBoxById(String id) {
         return graphBoxes.get(id);
     }
 
-    public List<GraphConnection> getIncomingConnections(GraphBox graphBox) {
+    public List<GraphConnection> getIncomingConnections(GraphBox<T> graphBox) {
         List<GraphConnection> result = new LinkedList<>();
         for (GraphConnection graphConnection : graphConnections) {
             if (graphConnection.getNodeTo().equals(graphBox.getId()))
@@ -579,7 +579,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         return result;
     }
 
-    public Iterable<GraphBox> getGraphBoxes() {
+    public Iterable<GraphBox<T>> getGraphBoxes() {
         return graphBoxes.values();
     }
 
@@ -592,7 +592,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         shapeRenderer.updateMatrices();
     }
 
-    private void calculateConnection(Vector2 position, Window window, GraphBoxInputConnector connector) {
+    private void calculateConnection(Vector2 position, Window window, GraphBoxInputConnector<T> connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {
@@ -605,7 +605,7 @@ public class GraphContainer extends WidgetGroup implements NavigableCanvas {
         }
     }
 
-    private void calculateConnection(Vector2 position, Window window, GraphBoxOutputConnector connector) {
+    private void calculateConnection(Vector2 position, Window window, GraphBoxOutputConnector<T> connector) {
         float windowX = window.getX();
         float windowY = window.getY();
         switch (connector.getSide()) {

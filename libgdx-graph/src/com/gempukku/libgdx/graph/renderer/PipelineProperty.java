@@ -1,7 +1,9 @@
 package com.gempukku.libgdx.graph.renderer;
 
-public interface PipelineProperty {
-    PropertyType getPropertyType();
+import com.gempukku.libgdx.graph.data.FieldType;
+
+public interface PipelineProperty<T extends FieldType> {
+    T getPropertyType();
 
     Object getValue();
 }

@@ -1,18 +1,21 @@
 package com.gempukku.libgdx.graph.renderer.config.postprocessor;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeInputImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-public class GammaCorrectionPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Float;
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.RenderPipeline;
+
+public class GammaCorrectionPipelineNodeConfiguration extends PipelineNodeConfigurationImpl<PipelineFieldType> {
     public GammaCorrectionPipelineNodeConfiguration() {
         super("GammaCorrection", "Gamma correction");
         addNodeInput(
-                new PipelineNodeInputImpl("gamma", "Gamma", PropertyType.Float));
+                new GraphNodeInputImpl<PipelineFieldType>("gamma", "Gamma", Float));
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
+                new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, true, RenderPipeline));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
+                new GraphNodeOutputImpl<PipelineFieldType>("output", "Output", true, RenderPipeline));
     }
 }

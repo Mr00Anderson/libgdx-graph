@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.WhitePixel;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
@@ -23,24 +23,24 @@ import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import org.json.simple.JSONObject;
 
-public class PropertyColorBoxProducer implements PropertyBoxProducer {
+public class PropertyColorBoxProducer implements PropertyBoxProducer<PipelineFieldType> {
     @Override
     public boolean supportsType(String type) {
         return type.equals("Color");
     }
 
     @Override
-    public PropertyBox createPropertyBox(Skin skin, String name, JSONObject jsonObject) {
+    public PropertyBox<PipelineFieldType> createPropertyBox(Skin skin, String name, JSONObject jsonObject) {
         String color = ((String) jsonObject.get("color"));
         return createPropertyBoxDefault(skin, name, color);
     }
 
     @Override
-    public PropertyBox createDefaultPropertyBox(Skin skin) {
+    public PropertyBox<PipelineFieldType> createDefaultPropertyBox(Skin skin) {
         return createPropertyBoxDefault(skin, "New Color", "FFFFFFFF");
     }
 
-    private PropertyBox createPropertyBoxDefault(Skin skin, String name, String colorStr) {
+    private PropertyBox<PipelineFieldType> createPropertyBoxDefault(Skin skin, String name, String colorStr) {
         Color color = Color.valueOf(colorStr);
 
         final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.texture);
@@ -82,9 +82,9 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer {
         table.add(new Label("Color", skin)).growX();
         table.add(image);
 
-        return new PropertyBoxImpl(skin, "Color",
+        return new PropertyBoxImpl<PipelineFieldType>(skin, "Color",
                 name,
-                PropertyType.Color,
+                PipelineFieldType.Color,
                 new PropertyDefaultBox() {
                     @Override
                     public Actor getActor() {

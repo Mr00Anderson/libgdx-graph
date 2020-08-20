@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
@@ -15,13 +16,13 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
-public class ValueVector2BoxProducer extends ValueGraphBoxProducer {
-    public ValueVector2BoxProducer(PipelineNodeConfiguration configuration) {
+public class ValueVector2BoxProducer<T extends FieldType> extends ValueGraphBoxProducer<T> {
+    public ValueVector2BoxProducer(PipelineNodeConfiguration<T> configuration) {
         super(configuration);
     }
 
     @Override
-    public GraphBox createPipelineGraphBox(Skin skin, String id, JSONObject data) {
+    public GraphBox<T> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         float v1 = ((Number) data.get("v1")).floatValue();
         float v2 = ((Number) data.get("v2")).floatValue();
 
@@ -29,18 +30,18 @@ public class ValueVector2BoxProducer extends ValueGraphBoxProducer {
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id) {
+    public GraphBox<T> createDefault(Skin skin, String id) {
         return createGraphBox(skin, id, 0, 0);
     }
 
-    private GraphBox createGraphBox(Skin skin, String id, float v1, float v2) {
-        GraphBoxImpl end = new GraphBoxImpl(id, configuration, skin);
+    private GraphBox<T> createGraphBox(Skin skin, String id, float v1, float v2) {
+        GraphBoxImpl<T> end = new GraphBoxImpl<T>(id, configuration, skin);
         end.addGraphBoxPart(createValuePart(skin, v1, v2));
 
         return end;
     }
 
-    private GraphBoxPartImpl createValuePart(Skin skin, float v1, float v2) {
+    private GraphBoxPartImpl<T> createValuePart(Skin skin, float v1, float v2) {
         final VisValidatableTextField v1Input = new VisValidatableTextField(new Validators.FloatValidator()) {
             @Override
             public float getPrefWidth() {
@@ -77,7 +78,7 @@ public class ValueVector2BoxProducer extends ValueGraphBoxProducer {
         horizontalGroup.addActor(new Label("y", skin));
         horizontalGroup.addActor(v2Input);
 
-        GraphBoxPartImpl colorPart = new GraphBoxPartImpl(horizontalGroup,
+        GraphBoxPartImpl<T> colorPart = new GraphBoxPartImpl<T>(horizontalGroup,
                 new GraphBoxPartImpl.Callback() {
                     @Override
                     public void serialize(JSONObject object) {

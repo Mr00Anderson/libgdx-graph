@@ -1,24 +1,28 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeInput;
+import com.gempukku.libgdx.graph.data.GraphNodeOutput;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class PipelineNodeConfigurationImpl implements PipelineNodeConfiguration {
+public class PipelineNodeConfigurationImpl<T extends FieldType> implements PipelineNodeConfiguration<T> {
     private String type;
     private String name;
-    private Map<String, PipelineNodeInput> nodeInputs = new LinkedHashMap<>();
-    private Map<String, PipelineNodeOutput> nodeOutputs = new LinkedHashMap<>();
+    private Map<String, GraphNodeInput<T>> nodeInputs = new LinkedHashMap<>();
+    private Map<String, GraphNodeOutput<T>> nodeOutputs = new LinkedHashMap<>();
 
     public PipelineNodeConfigurationImpl(String type, String name) {
         this.type = type;
         this.name = name;
     }
 
-    public void addNodeInput(PipelineNodeInput input) {
+    public void addNodeInput(GraphNodeInput<T> input) {
         nodeInputs.put(input.getFieldId(), input);
     }
 
-    public void addNodeOutput(PipelineNodeOutput output) {
+    public void addNodeOutput(GraphNodeOutput<T> output) {
         nodeOutputs.put(output.getFieldId(), output);
     }
 
@@ -33,22 +37,22 @@ public class PipelineNodeConfigurationImpl implements PipelineNodeConfiguration 
     }
 
     @Override
-    public Iterable<PipelineNodeInput> getNodeInputs() {
+    public Iterable<GraphNodeInput<T>> getNodeInputs() {
         return nodeInputs.values();
     }
 
     @Override
-    public Iterable<PipelineNodeOutput> getNodeOutputs() {
+    public Iterable<GraphNodeOutput<T>> getNodeOutputs() {
         return nodeOutputs.values();
     }
 
     @Override
-    public PipelineNodeInput getNodeInput(String name) {
+    public GraphNodeInput<T> getNodeInput(String name) {
         return nodeInputs.get(name);
     }
 
     @Override
-    public PipelineNodeOutput getNodeOutput(String name) {
+    public GraphNodeOutput<T> getNodeOutput(String name) {
         return nodeOutputs.get(name);
     }
 }

@@ -1,15 +1,19 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
-public interface PipelineNodeConfiguration {
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeInput;
+import com.gempukku.libgdx.graph.data.GraphNodeOutput;
+
+public interface PipelineNodeConfiguration<T extends FieldType> {
     String getType();
 
     String getName();
 
-    Iterable<PipelineNodeInput> getNodeInputs();
+    Iterable<GraphNodeInput<T>> getNodeInputs();
 
-    Iterable<PipelineNodeOutput> getNodeOutputs();
+    Iterable<GraphNodeOutput<T>> getNodeOutputs();
 
-    PipelineNodeInput getNodeInput(String name);
+    GraphNodeInput<T> getNodeInput(String name);
 
-    PipelineNodeOutput getNodeOutput(String name);
+    GraphNodeOutput<T> getNodeOutput(String name);
 }

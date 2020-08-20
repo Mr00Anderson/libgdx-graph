@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.renderer.config.math.MultiplyPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.OncePerFrameJobPipelineNode;
@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 
 import java.util.Map;
 
-import static com.gempukku.libgdx.graph.renderer.PropertyType.Float;
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Float;
 
 public class MultiplyPipelineNodeProducer extends PipelineNodeProducerImpl {
     public MultiplyPipelineNodeProducer() {
@@ -27,11 +27,11 @@ public class MultiplyPipelineNodeProducer extends PipelineNodeProducerImpl {
         final PipelineNode.FieldOutput<?> bFunction = inputFields.get("inputB");
         return new OncePerFrameJobPipelineNode(configuration, inputFields) {
             @Override
-            protected PropertyType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
+            protected FieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
                 FieldOutput<?> a = inputFields.get("inputA");
                 FieldOutput<?> b = inputFields.get("inputB");
-                PropertyType aType = a.getPropertyType();
-                PropertyType bType = b.getPropertyType();
+                FieldType aType = a.getPropertyType();
+                FieldType bType = b.getPropertyType();
                 if (aType == Float)
                     return bType;
                 if (bType == Float)

@@ -3,6 +3,8 @@ package com.gempukku.libgdx.graph.shader.builder;
 import com.gempukku.libgdx.graph.shader.UniformRegistry;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public abstract class CommonShaderBuilder {
@@ -13,6 +15,7 @@ public abstract class CommonShaderBuilder {
     private Map<String, String> variables = new LinkedHashMap<String, String>();
     private Map<String, String> functions = new LinkedHashMap<String, String>();
     private Map<String, String> structures = new LinkedHashMap<String, String>();
+    private List<String> mainLines = new LinkedList<>();
 
     public CommonShaderBuilder(UniformRegistry uniformRegistry) {
         this.uniformRegistry = uniformRegistry;
@@ -66,6 +69,10 @@ public abstract class CommonShaderBuilder {
         structures.put(name, structureText);
     }
 
+    public void addMainLin(String mainLine) {
+        mainLines.add(mainLine);
+    }
+
     protected void appendUniformVariables(StringBuilder stringBuilder) {
         for (Map.Entry<String, UniformVariable> uniformDefinition : uniformVariables.entrySet()) {
             UniformVariable uniformVariable = uniformDefinition.getValue();
@@ -75,7 +82,7 @@ public abstract class CommonShaderBuilder {
             stringBuilder.append("uniform " + type + " " + uniformDefinition.getKey() + ";\n");
         }
         if (!uniformVariables.isEmpty())
-            stringBuilder.append("\n");
+            stringBuilder.append('\n');
     }
 
     protected void appendVaryingVariables(StringBuilder stringBuilder) {
@@ -83,7 +90,7 @@ public abstract class CommonShaderBuilder {
             stringBuilder.append("varying " + varyingDefinition.getValue() + " " + varyingDefinition.getKey() + ";\n");
         }
         if (!varyingVariables.isEmpty())
-            stringBuilder.append("\n");
+            stringBuilder.append('\n');
     }
 
     protected void appendVariables(StringBuilder stringBuilder) {
@@ -91,13 +98,13 @@ public abstract class CommonShaderBuilder {
             stringBuilder.append(variable.getValue() + " " + variable.getKey() + ";\n");
         }
         if (!variables.isEmpty())
-            stringBuilder.append("\n");
+            stringBuilder.append('\n');
     }
 
     protected void appendFunctions(StringBuilder stringBuilder) {
         for (String function : functions.values()) {
             stringBuilder.append(function);
-            stringBuilder.append("\n");
+            stringBuilder.append('\n');
         }
     }
 
@@ -107,7 +114,16 @@ public abstract class CommonShaderBuilder {
                     .append(structureEntry.getValue()).append("};\n");
         }
         if (!structures.isEmpty())
-            stringBuilder.append("\n");
+            stringBuilder.append('\n');
+    }
+
+    protected void appendMain(StringBuilder stringBuilder) {
+        stringBuilder.append("void main() {\n");
+        for (String mainLine : mainLines) {
+            stringBuilder.append(mainLine).append('\n');
+        }
+
+        stringBuilder.append("}\n");
     }
 
     private class UniformVariable {

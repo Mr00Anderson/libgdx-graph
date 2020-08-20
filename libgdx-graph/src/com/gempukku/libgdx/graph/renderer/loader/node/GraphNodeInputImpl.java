@@ -1,26 +1,27 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeInput;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class PipelineNodeInputImpl implements PipelineNodeInput {
+public class GraphNodeInputImpl<T extends FieldType> implements GraphNodeInput<T> {
     private String id;
     private String name;
-    private List<PropertyType> acceptedTypes;
+    private List<? extends T> acceptedTypes;
     private boolean required;
     private boolean mainConnection;
 
-    public PipelineNodeInputImpl(String id, String name, PropertyType... acceptedType) {
+    public GraphNodeInputImpl(String id, String name, T... acceptedType) {
         this(id, name, false, acceptedType);
     }
 
-    public PipelineNodeInputImpl(String id, String name, boolean required, PropertyType... acceptedType) {
+    public GraphNodeInputImpl(String id, String name, boolean required, T... acceptedType) {
         this(id, name, required, false, acceptedType);
     }
 
-    public PipelineNodeInputImpl(String id, String name, boolean required, boolean mainConnection, PropertyType... acceptedType) {
+    public GraphNodeInputImpl(String id, String name, boolean required, boolean mainConnection, T... acceptedType) {
         this.id = id;
         this.name = name;
         this.required = required;
@@ -49,7 +50,7 @@ public class PipelineNodeInputImpl implements PipelineNodeInput {
     }
 
     @Override
-    public List<PropertyType> getAcceptedPropertyTypes() {
+    public List<? extends T> getAcceptedPropertyTypes() {
         return acceptedTypes;
     }
 }

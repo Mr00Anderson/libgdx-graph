@@ -1,13 +1,15 @@
 package com.gempukku.libgdx.graph.renderer.config.value;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-public class ValueBooleanPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Boolean;
+
+public class ValueBooleanPipelineNodeConfiguration extends PipelineNodeConfigurationImpl<PipelineFieldType> {
     public ValueBooleanPipelineNodeConfiguration() {
         super("ValueBoolean", "Boolean value");
         addNodeOutput(
-                new PipelineNodeOutputImpl("value", "Value", PropertyType.Boolean));
+                new GraphNodeOutputImpl<PipelineFieldType>("value", "Value", Boolean));
     }
 }

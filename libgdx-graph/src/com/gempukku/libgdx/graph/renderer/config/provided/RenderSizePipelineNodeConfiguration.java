@@ -1,17 +1,20 @@
 package com.gempukku.libgdx.graph.renderer.config.provided;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-public class RenderSizePipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Float;
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Vector2;
+
+public class RenderSizePipelineNodeConfiguration extends PipelineNodeConfigurationImpl<PipelineFieldType> {
     public RenderSizePipelineNodeConfiguration() {
         super("RenderSize", "Render size");
         addNodeOutput(
-                new PipelineNodeOutputImpl("size", "Size", PropertyType.Vector2));
+                new GraphNodeOutputImpl<PipelineFieldType>("size", "Size", Vector2));
         addNodeOutput(
-                new PipelineNodeOutputImpl("width", "Width", PropertyType.Float));
+                new GraphNodeOutputImpl<PipelineFieldType>("width", "Width", Float));
         addNodeOutput(
-                new PipelineNodeOutputImpl("height", "Height", PropertyType.Float));
+                new GraphNodeOutputImpl<PipelineFieldType>("height", "Height", Float));
     }
 }

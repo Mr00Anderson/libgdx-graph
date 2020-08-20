@@ -1,25 +1,25 @@
 package com.gempukku.libgdx.graph.renderer.impl;
 
 import com.badlogic.gdx.utils.Disposable;
+import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.renderer.PipelineProperty;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
 import com.google.common.base.Supplier;
 
-public class WritablePipelineProperty implements PipelineProperty {
+public class WritablePipelineProperty<T extends FieldType> implements PipelineProperty<T> {
     private boolean useDefault = true;
     private boolean initialized = false;
     private Object value;
 
-    private PropertyType propertyType;
+    private T propertyType;
     private Supplier<?> defaultValueSupplier;
 
-    public WritablePipelineProperty(PropertyType propertyType, Supplier<?> defaultValueSupplier) {
+    public WritablePipelineProperty(T propertyType, Supplier<?> defaultValueSupplier) {
         this.propertyType = propertyType;
         this.defaultValueSupplier = defaultValueSupplier;
     }
 
     @Override
-    public PropertyType getPropertyType() {
+    public T getPropertyType() {
         return propertyType;
     }
 

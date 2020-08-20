@@ -1,11 +1,12 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import org.json.simple.JSONObject;
 
 public abstract class PipelineNodeProducerImpl implements PipelineNodeProducer {
-    protected PipelineNodeConfiguration configuration;
+    protected PipelineNodeConfiguration<PipelineFieldType> configuration;
 
-    public PipelineNodeProducerImpl(PipelineNodeConfiguration configuration) {
+    public PipelineNodeProducerImpl(PipelineNodeConfiguration<PipelineFieldType> configuration) {
         this.configuration = configuration;
     }
 
@@ -15,7 +16,7 @@ public abstract class PipelineNodeProducerImpl implements PipelineNodeProducer {
     }
 
     @Override
-    public final PipelineNodeConfiguration getConfiguration(JSONObject data) {
+    public final PipelineNodeConfiguration<PipelineFieldType> getConfiguration(JSONObject data) {
         return configuration;
     }
 }

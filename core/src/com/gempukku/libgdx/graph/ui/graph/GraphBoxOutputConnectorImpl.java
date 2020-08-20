@@ -1,20 +1,20 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.google.common.base.Supplier;
 
 import java.util.List;
 
-public class GraphBoxOutputConnectorImpl implements GraphBoxOutputConnector {
+public class GraphBoxOutputConnectorImpl<T extends FieldType> implements GraphBoxOutputConnector<T> {
     private Side side;
     private Supplier<Float> offsetSupplier;
-    private PipelineNodeOutput pipelineNodeOutput;
+    private GraphNodeOutput<T> graphNodeOutput;
 
-    public GraphBoxOutputConnectorImpl(Side side, Supplier<Float> offsetSupplier, PipelineNodeOutput pipelineNodeOutput) {
+    public GraphBoxOutputConnectorImpl(Side side, Supplier<Float> offsetSupplier, GraphNodeOutput<T> graphNodeOutput) {
         this.side = side;
         this.offsetSupplier = offsetSupplier;
-        this.pipelineNodeOutput = pipelineNodeOutput;
+        this.graphNodeOutput = graphNodeOutput;
     }
 
     @Override
@@ -29,26 +29,26 @@ public class GraphBoxOutputConnectorImpl implements GraphBoxOutputConnector {
 
     @Override
     public boolean isMainConnection() {
-        return pipelineNodeOutput.isMainConnection();
+        return graphNodeOutput.isMainConnection();
     }
 
     @Override
     public String getFieldName() {
-        return pipelineNodeOutput.getFieldName();
+        return graphNodeOutput.getFieldName();
     }
 
     @Override
     public String getFieldId() {
-        return pipelineNodeOutput.getFieldId();
+        return graphNodeOutput.getFieldId();
     }
 
     @Override
-    public List<PropertyType> getProducablePropertyTypes() {
-        return pipelineNodeOutput.getProducablePropertyTypes();
+    public List<? extends T> getProducablePropertyTypes() {
+        return graphNodeOutput.getProducablePropertyTypes();
     }
 
     @Override
     public boolean supportsMultiple() {
-        return pipelineNodeOutput.supportsMultiple();
+        return graphNodeOutput.supportsMultiple();
     }
 }

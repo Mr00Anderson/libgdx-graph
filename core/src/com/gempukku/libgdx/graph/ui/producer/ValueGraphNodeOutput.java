@@ -1,16 +1,16 @@
 package com.gempukku.libgdx.graph.ui.producer;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutput;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class ValuePipelineNodeOutput implements PipelineNodeOutput {
+public class ValueGraphNodeOutput<T extends FieldType> implements GraphNodeOutput<T> {
     private String fieldName;
-    private List<PropertyType> propertyTypes;
+    private List<? extends T> propertyTypes;
 
-    public ValuePipelineNodeOutput(String fieldName, PropertyType propertyType) {
+    public ValueGraphNodeOutput(String fieldName, T propertyType) {
         this.fieldName = fieldName;
         this.propertyTypes = Arrays.asList(propertyType);
     }
@@ -31,7 +31,7 @@ public class ValuePipelineNodeOutput implements PipelineNodeOutput {
     }
 
     @Override
-    public List<PropertyType> getProducablePropertyTypes() {
+    public List<? extends T> getProducablePropertyTypes() {
         return propertyTypes;
     }
 

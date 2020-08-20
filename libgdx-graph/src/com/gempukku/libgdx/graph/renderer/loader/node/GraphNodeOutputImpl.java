@@ -1,21 +1,22 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class PipelineNodeOutputImpl implements PipelineNodeOutput {
+public class GraphNodeOutputImpl<T extends FieldType> implements GraphNodeOutput<T> {
     private String id;
     private String name;
     private boolean mainConnection;
-    private List<PropertyType> propertyTypes;
+    private List<? extends T> propertyTypes;
 
-    public PipelineNodeOutputImpl(String id, String name, PropertyType... producedType) {
+    public GraphNodeOutputImpl(String id, String name, T... producedType) {
         this(id, name, false, producedType);
     }
 
-    public PipelineNodeOutputImpl(String id, String name, boolean mainConnection, PropertyType... producedType) {
+    public GraphNodeOutputImpl(String id, String name, boolean mainConnection, T... producedType) {
         this.id = id;
         this.name = name;
         this.mainConnection = mainConnection;
@@ -38,7 +39,7 @@ public class PipelineNodeOutputImpl implements PipelineNodeOutput {
     }
 
     @Override
-    public List<PropertyType> getProducablePropertyTypes() {
+    public List<? extends T> getProducablePropertyTypes() {
         return propertyTypes;
     }
 

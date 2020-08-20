@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.renderer.loader;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 
 public class FloatFieldOutput implements PipelineNode.FieldOutput<Float> {
@@ -11,8 +12,8 @@ public class FloatFieldOutput implements PipelineNode.FieldOutput<Float> {
     }
 
     @Override
-    public PropertyType getPropertyType() {
-        return PropertyType.Float;
+    public FieldType getPropertyType() {
+        return PipelineFieldType.Float;
     }
 
     @Override

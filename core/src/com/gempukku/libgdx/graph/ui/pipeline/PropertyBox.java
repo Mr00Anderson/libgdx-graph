@@ -1,10 +1,11 @@
 package com.gempukku.libgdx.graph.ui.pipeline;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
 import org.json.simple.JSONObject;
 
-public interface PropertyBox extends PropertyProducer {
+public interface PropertyBox<T extends FieldType> extends PropertyProducer<T> {
     String getType();
 
     JSONObject serializeData();

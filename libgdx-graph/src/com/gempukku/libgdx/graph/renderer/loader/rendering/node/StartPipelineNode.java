@@ -7,7 +7,8 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.renderer.RenderPipeline;
 import com.gempukku.libgdx.graph.renderer.impl.RenderPipelineImpl;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
@@ -31,8 +32,8 @@ public class StartPipelineNode extends OncePerFrameJobPipelineNode {
             final Color defaultColor = Color.BLACK;
             color = new FieldOutput<Color>() {
                 @Override
-                public PropertyType getPropertyType() {
-                    return PropertyType.Color;
+                public FieldType getPropertyType() {
+                    return PipelineFieldType.Color;
                 }
 
                 @Override
@@ -44,8 +45,8 @@ public class StartPipelineNode extends OncePerFrameJobPipelineNode {
         if (size == null) {
             size = new FieldOutput<Vector2>() {
                 @Override
-                public PropertyType getPropertyType() {
-                    return PropertyType.Vector2;
+                public FieldType getPropertyType() {
+                    return PipelineFieldType.Vector2;
                 }
 
                 @Override

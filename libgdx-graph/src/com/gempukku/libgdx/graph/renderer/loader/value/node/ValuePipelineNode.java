@@ -1,16 +1,17 @@
 package com.gempukku.libgdx.graph.renderer.loader.value.node;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
 
 public class ValuePipelineNode implements PipelineNode {
-    private PipelineNodeConfiguration configuration;
+    private PipelineNodeConfiguration<PipelineFieldType> configuration;
     private String propertyName;
     private Object value;
 
-    public ValuePipelineNode(PipelineNodeConfiguration configuration, String propertyName, final Object value) {
+    public ValuePipelineNode(PipelineNodeConfiguration<PipelineFieldType> configuration, String propertyName, final Object value) {
         this.configuration = configuration;
         this.propertyName = propertyName;
         this.value = value;
@@ -22,7 +23,7 @@ public class ValuePipelineNode implements PipelineNode {
             throw new IllegalArgumentException();
         return new FieldOutput<Object>() {
             @Override
-            public PropertyType getPropertyType() {
+            public FieldType getPropertyType() {
                 return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
             }
 

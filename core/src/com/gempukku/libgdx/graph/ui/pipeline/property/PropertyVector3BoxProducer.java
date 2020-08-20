@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
@@ -15,14 +15,14 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
-public class PropertyVector3BoxProducer implements PropertyBoxProducer {
+public class PropertyVector3BoxProducer implements PropertyBoxProducer<PipelineFieldType> {
     @Override
     public boolean supportsType(String type) {
         return type.equals("Vector3");
     }
 
     @Override
-    public PropertyBox createPropertyBox(Skin skin, String name, JSONObject jsonObject) {
+    public PropertyBox<PipelineFieldType> createPropertyBox(Skin skin, String name, JSONObject jsonObject) {
         float x = ((Number) jsonObject.get("x")).floatValue();
         float y = ((Number) jsonObject.get("y")).floatValue();
         float z = ((Number) jsonObject.get("z")).floatValue();
@@ -30,11 +30,11 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer {
     }
 
     @Override
-    public PropertyBox createDefaultPropertyBox(Skin skin) {
+    public PropertyBox<PipelineFieldType> createDefaultPropertyBox(Skin skin) {
         return createPropertyBoxDefault(skin, "New Vector3", 0f, 0f, 0f);
     }
 
-    private PropertyBox createPropertyBoxDefault(Skin skin, String name, float v1, float v2, float v3) {
+    private PropertyBox<PipelineFieldType> createPropertyBoxDefault(Skin skin, String name, float v1, float v2, float v3) {
         final VisValidatableTextField v1Input = new VisValidatableTextField(new Validators.FloatValidator()) {
             @Override
             public float getPrefWidth() {
@@ -86,9 +86,9 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer {
         table.add(new Label("Z ", skin));
         table.add(v3Input).grow();
 
-        return new PropertyBoxImpl(skin, "Vector3",
+        return new PropertyBoxImpl<PipelineFieldType>(skin, "Vector3",
                 name,
-                PropertyType.Vector3,
+                PipelineFieldType.Vector3,
                 new PropertyDefaultBox() {
                     @Override
                     public Actor getActor() {

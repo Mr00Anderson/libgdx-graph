@@ -8,7 +8,7 @@ public class FragmentShaderBuilder extends CommonShaderBuilder {
         super(uniformRegistry);
     }
 
-    public String buildProgram(String mainBody) {
+    public String buildProgram() {
         StringBuilder result = new StringBuilder();
 
         appendStructures(result);
@@ -18,11 +18,8 @@ public class FragmentShaderBuilder extends CommonShaderBuilder {
 
         appendFunctions(result);
 
-        result.append("void main() {\n");
+        appendMain(result);
 
-        result.append(mainBody);
-
-        result.append("}\n");
         return result.toString();
     }
 }

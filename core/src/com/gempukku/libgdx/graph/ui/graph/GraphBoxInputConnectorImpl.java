@@ -1,20 +1,20 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.google.common.base.Supplier;
 
 import java.util.List;
 
-public class GraphBoxInputConnectorImpl implements GraphBoxInputConnector {
+public class GraphBoxInputConnectorImpl<T extends FieldType> implements GraphBoxInputConnector<T> {
     private Side side;
     private Supplier<Float> offsetSupplier;
-    private PipelineNodeInput pipelineNodeInput;
+    private GraphNodeInput<T> graphNodeInput;
 
-    public GraphBoxInputConnectorImpl(Side side, Supplier<Float> offsetSupplier, PipelineNodeInput pipelineNodeInput) {
+    public GraphBoxInputConnectorImpl(Side side, Supplier<Float> offsetSupplier, GraphNodeInput<T> graphNodeInput) {
         this.side = side;
         this.offsetSupplier = offsetSupplier;
-        this.pipelineNodeInput = pipelineNodeInput;
+        this.graphNodeInput = graphNodeInput;
     }
 
     @Override
@@ -29,26 +29,26 @@ public class GraphBoxInputConnectorImpl implements GraphBoxInputConnector {
 
     @Override
     public boolean isRequired() {
-        return pipelineNodeInput.isRequired();
+        return graphNodeInput.isRequired();
     }
 
     @Override
     public boolean isMainConnection() {
-        return pipelineNodeInput.isMainConnection();
+        return graphNodeInput.isMainConnection();
     }
 
     @Override
     public String getFieldName() {
-        return pipelineNodeInput.getFieldName();
+        return graphNodeInput.getFieldName();
     }
 
     @Override
     public String getFieldId() {
-        return pipelineNodeInput.getFieldId();
+        return graphNodeInput.getFieldId();
     }
 
     @Override
-    public List<PropertyType> getAcceptedPropertyTypes() {
-        return pipelineNodeInput.getAcceptedPropertyTypes();
+    public List<? extends T> getAcceptedPropertyTypes() {
+        return graphNodeInput.getAcceptedPropertyTypes();
     }
 }

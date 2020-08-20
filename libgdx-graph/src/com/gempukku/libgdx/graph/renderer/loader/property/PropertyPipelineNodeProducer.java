@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.renderer.loader.property;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.renderer.config.PropertyPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
@@ -18,22 +19,22 @@ public class PropertyPipelineNodeProducer implements PipelineNodeProducer {
 
     @Override
     public PipelineNodeConfiguration getConfiguration(JSONObject data) {
-        final PropertyType propertyType = PropertyType.valueOf((String) data.get("type"));
-        return new PropertyPipelineNodeConfiguration("Property", "Property", propertyType);
+        final FieldType fieldType = PipelineFieldType.valueOf((String) data.get("type"));
+        return new PropertyPipelineNodeConfiguration("Property", "Property", fieldType);
     }
 
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
         final String propertyName = (String) data.get("name");
-        final PropertyType propertyType = PropertyType.valueOf((String) data.get("type"));
+        final FieldType fieldType = PipelineFieldType.valueOf((String) data.get("type"));
 
         return new PipelineNode() {
             @Override
             public FieldOutput<?> getFieldOutput(String name) {
                 return new FieldOutput<Object>() {
                     @Override
-                    public PropertyType getPropertyType() {
-                        return propertyType;
+                    public FieldType getPropertyType() {
+                        return fieldType;
                     }
 
                     @Override

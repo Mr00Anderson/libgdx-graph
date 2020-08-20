@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.renderer.loader.node;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
 import com.gempukku.libgdx.graph.renderer.loader.PipelineRenderingContext;
 
 import java.util.HashMap;
@@ -8,11 +9,11 @@ import java.util.Map;
 
 public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     private boolean executedInFrame;
-    private PipelineNodeConfiguration configuration;
+    private PipelineNodeConfiguration<PipelineFieldType> configuration;
     private Map<String, FieldOutput<?>> inputFields;
     private Map<String, WorkerFieldOutput<Object>> workerFieldOutputs = new HashMap<>();
 
-    public OncePerFrameJobPipelineNode(PipelineNodeConfiguration configuration, Map<String, FieldOutput<?>> inputFields) {
+    public OncePerFrameJobPipelineNode(PipelineNodeConfiguration<PipelineFieldType> configuration, Map<String, FieldOutput<?>> inputFields) {
         this.configuration = configuration;
         this.inputFields = inputFields;
     }
@@ -21,15 +22,15 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     public FieldOutput<?> getFieldOutput(String name) {
         WorkerFieldOutput<Object> fieldOutput = workerFieldOutputs.get(name);
         if (fieldOutput == null) {
-            PropertyType propertyType = determineOutputType(name, inputFields);
-            fieldOutput = new WorkerFieldOutput<>(propertyType);
+            FieldType fieldType = determineOutputType(name, inputFields);
+            fieldOutput = new WorkerFieldOutput<>(fieldType);
             workerFieldOutputs.put(name, fieldOutput);
         }
 
         return fieldOutput;
     }
 
-    protected PropertyType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
+    protected FieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
         return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
     }
 
@@ -51,11 +52,11 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     }
 
     private class WorkerFieldOutput<T> implements FieldOutput<T>, OutputValue<T> {
-        private PropertyType propertyType;
+        private FieldType fieldType;
         private T value;
 
-        public WorkerFieldOutput(PropertyType propertyType) {
-            this.propertyType = propertyType;
+        public WorkerFieldOutput(FieldType fieldType) {
+            this.fieldType = fieldType;
         }
 
         @Override
@@ -64,8 +65,8 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
         }
 
         @Override
-        public PropertyType getPropertyType() {
-            return propertyType;
+        public FieldType getPropertyType() {
+            return fieldType;
         }
 
         @Override

@@ -1,8 +1,9 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeInput;
 
-public interface GraphBoxInputConnector extends PipelineNodeInput {
+public interface GraphBoxInputConnector<T extends FieldType> extends GraphNodeInput<T> {
     enum Side {
         Left, Top;
     }

@@ -1,10 +1,11 @@
 package com.gempukku.libgdx.graph.renderer;
 
 import com.gempukku.libgdx.graph.PipelineLoaderCallback;
+import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.renderer.impl.PipelineRendererImpl;
 import com.gempukku.libgdx.graph.renderer.impl.WritablePipelineProperty;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNode;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInput;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeProducer;
 import com.gempukku.libgdx.graph.renderer.loader.rendering.node.EndPipelineNode;
 import com.gempukku.libgdx.graph.renderer.property.PipelinePropertyProducer;
@@ -18,7 +19,7 @@ import java.util.Map;
 public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRenderer> {
     private Map<String, PipelineNodeInfo> nodes = new HashMap<>();
     private List<PipelineVertextInfo> vertices = new LinkedList<>();
-    private Map<String, WritablePipelineProperty> propertyMap = new HashMap<>();
+    private Map<String, WritablePipelineProperty<PipelineFieldType>> propertyMap = new HashMap<>();
 
     @Override
     public void start() {
@@ -52,8 +53,8 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
                 pipelineNodeMap.values(), propertyMap, (EndPipelineNode) pipelineNode);
     }
 
-    private PipelinePropertyProducer findPropertyProducerByType(String type) {
-        for (PipelinePropertyProducer pipelinePropertyProducer : RendererPipelineConfiguration.pipelinePropertyProducers) {
+    private PipelinePropertyProducer<PipelineFieldType> findPropertyProducerByType(String type) {
+        for (PipelinePropertyProducer<PipelineFieldType> pipelinePropertyProducer : RendererPipelineConfiguration.pipelinePropertyProducers) {
             if (pipelinePropertyProducer.supportsType(type))
                 return pipelinePropertyProducer;
         }
@@ -70,7 +71,7 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
         if (nodeProducer == null)
             throw new IllegalStateException("Unable to find node producer for type: " + nodeInfo.type);
         Map<String, PipelineNode.FieldOutput<?>> inputFields = new HashMap<>();
-        for (PipelineNodeInput nodeInput : nodeProducer.getConfiguration(nodeInfo.data).getNodeInputs()) {
+        for (GraphNodeInput nodeInput : nodeProducer.getConfiguration(nodeInfo.data).getNodeInputs()) {
             String inputName = nodeInput.getFieldId();
             PipelineVertextInfo vertexInfo = findInputProducer(nodeId, inputName);
             if (vertexInfo == null && nodeInput.isRequired())
@@ -78,8 +79,8 @@ public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRe
             if (vertexInfo != null) {
                 PipelineNode vertexNode = populatePipelineNodes(vertexInfo.fromNode, pipelineNodeMap);
                 PipelineNode.FieldOutput<?> fieldOutput = vertexNode.getFieldOutput(vertexInfo.fromField);
-                PropertyType propertyType = fieldOutput.getPropertyType();
-                if (!nodeInput.getAcceptedPropertyTypes().contains(propertyType))
+                FieldType fieldType = fieldOutput.getPropertyType();
+                if (!nodeInput.getAcceptedPropertyTypes().contains(fieldType))
                     throw new IllegalStateException("Producer produces a field of value not compatible with consumer");
                 inputFields.put(inputName, fieldOutput);
             }

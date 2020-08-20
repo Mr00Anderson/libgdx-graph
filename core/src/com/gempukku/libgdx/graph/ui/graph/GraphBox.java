@@ -1,10 +1,11 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphNode;
 import org.json.simple.JSONObject;
 
-public interface GraphBox extends GraphNode {
+public interface GraphBox<T extends FieldType> extends GraphNode<T> {
     Actor getActor();
 
     JSONObject serializeData();
@@ -13,11 +14,11 @@ public interface GraphBox extends GraphNode {
 
     String getType();
 
-    GraphBoxInputConnector getInput(String fieldId);
+    GraphBoxInputConnector<T> getInput(String fieldId);
 
-    Iterable<GraphBoxInputConnector> getInputs();
+    Iterable<GraphBoxInputConnector<T>> getInputs();
 
-    GraphBoxOutputConnector getOutput(String fieldId);
+    GraphBoxOutputConnector<T> getOutput(String fieldId);
 
-    Iterable<GraphBoxOutputConnector> getOutputs();
+    Iterable<GraphBoxOutputConnector<T>> getOutputs();
 }

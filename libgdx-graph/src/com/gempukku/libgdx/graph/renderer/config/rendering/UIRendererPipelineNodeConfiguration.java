@@ -1,18 +1,21 @@
 package com.gempukku.libgdx.graph.renderer.config.rendering;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeInputImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-public class UIRendererPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.RenderPipeline;
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Stage;
+
+public class UIRendererPipelineNodeConfiguration extends PipelineNodeConfigurationImpl<PipelineFieldType> {
     public UIRendererPipelineNodeConfiguration() {
         super("UIRenderer", "UI renderer");
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
+                new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, true, RenderPipeline));
         addNodeInput(
-                new PipelineNodeInputImpl("stage", "Stage", true, PropertyType.Stage));
+                new GraphNodeInputImpl<PipelineFieldType>("stage", "Stage", true, Stage));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
+                new GraphNodeOutputImpl<PipelineFieldType>("output", "Output", true, RenderPipeline));
     }
 }

@@ -39,7 +39,7 @@ import java.util.Map;
 
 public class RendererPipelineConfiguration {
     public static Map<String, PipelineNodeProducer> pipelineNodeProducers = new HashMap<>();
-    public static List<PipelinePropertyProducer> pipelinePropertyProducers = new LinkedList<>();
+    public static List<PipelinePropertyProducer<PipelineFieldType>> pipelinePropertyProducers = new LinkedList<>();
 
     static {
         addNodeProducer(new StartPipelineNodeProducer());

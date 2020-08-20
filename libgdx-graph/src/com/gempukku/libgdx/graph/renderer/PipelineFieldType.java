@@ -1,13 +1,14 @@
 package com.gempukku.libgdx.graph.renderer;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.gempukku.libgdx.graph.data.FieldType;
 
-public enum PropertyType {
+public enum PipelineFieldType implements FieldType {
     Float, Vector2, Vector3, Color, Boolean,
     Stage, Camera, Lights, Models,
     RenderPipeline;
 
+    @Override
     public boolean accepts(Object value) {
         switch (this) {
             case Float:
@@ -17,7 +18,7 @@ public enum PropertyType {
             case Vector3:
                 return value instanceof com.badlogic.gdx.math.Vector3;
             case Color:
-                return value instanceof Color;
+                return value instanceof com.badlogic.gdx.graphics.Color;
             case Boolean:
                 return value instanceof Boolean;
             case RenderPipeline:
@@ -34,6 +35,7 @@ public enum PropertyType {
         return false;
     }
 
+    @Override
     public Object convert(Object value) {
         return value;
     }

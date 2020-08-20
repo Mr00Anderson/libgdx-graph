@@ -5,18 +5,20 @@ import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeInputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
 
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Camera;
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Lights;
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Models;
 import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.RenderPipeline;
-import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Vector2;
 
-public class PipelineRendererNodeConfiguration extends PipelineNodeConfigurationImpl<PipelineFieldType> {
-    public PipelineRendererNodeConfiguration() {
-        super("PipelineRenderer", "Pipeline renderer");
+public class GraphShaderRendererPipelineNodeConfiguration extends PipelineNodeConfigurationImpl<PipelineFieldType> {
+    public GraphShaderRendererPipelineNodeConfiguration() {
+        super("GraphShaderRenderer", "Graph Shaders");
         addNodeInput(
-                new GraphNodeInputImpl<PipelineFieldType>("pipeline", "Pipeline", true, RenderPipeline));
+                new GraphNodeInputImpl<PipelineFieldType>("models", "Models", true, Models));
         addNodeInput(
-                new GraphNodeInputImpl<PipelineFieldType>("position", "Position", true, Vector2));
+                new GraphNodeInputImpl<PipelineFieldType>("camera", "Camera", true, Camera));
         addNodeInput(
-                new GraphNodeInputImpl<PipelineFieldType>("size", "Size", false, Vector2));
+                new GraphNodeInputImpl<PipelineFieldType>("lights", "Lights", Lights));
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, true, RenderPipeline));
         addNodeOutput(

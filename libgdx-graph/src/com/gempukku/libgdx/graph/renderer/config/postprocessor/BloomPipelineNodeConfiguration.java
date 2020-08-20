@@ -1,22 +1,25 @@
 package com.gempukku.libgdx.graph.renderer.config.postprocessor;
 
-import com.gempukku.libgdx.graph.renderer.PropertyType;
+import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeInputImpl;
+import com.gempukku.libgdx.graph.renderer.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfigurationImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeInputImpl;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeOutputImpl;
 
-public class BloomPipelineNodeConfiguration extends PipelineNodeConfigurationImpl {
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.Float;
+import static com.gempukku.libgdx.graph.renderer.PipelineFieldType.RenderPipeline;
+
+public class BloomPipelineNodeConfiguration extends PipelineNodeConfigurationImpl<PipelineFieldType> {
     public BloomPipelineNodeConfiguration() {
         super("Bloom", "Bloom post-processor");
         addNodeInput(
-                new PipelineNodeInputImpl("bloomRadius", "Radius", PropertyType.Float));
+                new GraphNodeInputImpl<PipelineFieldType>("bloomRadius", "Radius", Float));
         addNodeInput(
-                new PipelineNodeInputImpl("minimalBrightness", "Min Brightness", PropertyType.Float));
+                new GraphNodeInputImpl<PipelineFieldType>("minimalBrightness", "Min Brightness", Float));
         addNodeInput(
-                new PipelineNodeInputImpl("bloomStrength", "Strength", PropertyType.Float));
+                new GraphNodeInputImpl<PipelineFieldType>("bloomStrength", "Strength", Float));
         addNodeInput(
-                new PipelineNodeInputImpl("input", "Input", true, true, PropertyType.RenderPipeline));
+                new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, true, RenderPipeline));
         addNodeOutput(
-                new PipelineNodeOutputImpl("output", "Output", true, PropertyType.RenderPipeline));
+                new GraphNodeOutputImpl<PipelineFieldType>("output", "Output", true, RenderPipeline));
     }
 }

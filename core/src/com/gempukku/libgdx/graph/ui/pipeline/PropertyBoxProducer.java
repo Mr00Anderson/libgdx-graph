@@ -1,12 +1,13 @@
 package com.gempukku.libgdx.graph.ui.pipeline;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.gempukku.libgdx.graph.data.FieldType;
 import org.json.simple.JSONObject;
 
-public interface PropertyBoxProducer {
+public interface PropertyBoxProducer<T extends FieldType> {
     boolean supportsType(String type);
 
-    PropertyBox createPropertyBox(Skin skin, String name, JSONObject jsonObject);
+    PropertyBox<T> createPropertyBox(Skin skin, String name, JSONObject jsonObject);
 
-    PropertyBox createDefaultPropertyBox(Skin skin);
+    PropertyBox<T> createDefaultPropertyBox(Skin skin);
 }

@@ -26,7 +26,7 @@ public class VertexShaderBuilder extends CommonShaderBuilder {
             stringBuilder.append("\n");
     }
 
-    public String buildProgram(String mainBody) {
+    public String buildProgram() {
         StringBuilder result = new StringBuilder();
 
         appendStructures(result);
@@ -37,11 +37,8 @@ public class VertexShaderBuilder extends CommonShaderBuilder {
 
         appendFunctions(result);
 
-        result.append("void main() {\n");
+        appendMain(result);
 
-        result.append(mainBody);
-
-        result.append("}\n");
         return result.toString();
     }
 }
