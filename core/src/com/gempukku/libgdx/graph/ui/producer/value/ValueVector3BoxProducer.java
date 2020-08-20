@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.gempukku.libgdx.graph.data.FieldType;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
@@ -17,7 +17,7 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.json.simple.JSONObject;
 
 public class ValueVector3BoxProducer<T extends FieldType> extends ValueGraphBoxProducer<T> {
-    public ValueVector3BoxProducer(PipelineNodeConfiguration<T> configuration) {
+    public ValueVector3BoxProducer(NodeConfiguration<T> configuration) {
         super(configuration);
     }
 

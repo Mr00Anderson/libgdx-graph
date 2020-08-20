@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Align;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.graph.NodeConfiguration;
 import com.google.common.base.Supplier;
 import org.json.simple.JSONObject;
 
@@ -19,13 +19,13 @@ import java.util.Map;
 
 public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
     private String id;
-    private PipelineNodeConfiguration<T> configuration;
+    private NodeConfiguration<T> configuration;
     private Table table;
     private List<GraphBoxPart<T>> graphBoxParts = new LinkedList<>();
     private Map<String, GraphBoxInputConnector<T>> inputConnectors = new HashMap<>();
     private Map<String, GraphBoxOutputConnector<T>> outputConnectors = new HashMap<>();
 
-    public GraphBoxImpl(String id, PipelineNodeConfiguration<T> configuration, Skin skin) {
+    public GraphBoxImpl(String id, NodeConfiguration<T> configuration, Skin skin) {
         this.id = id;
         this.configuration = configuration;
         table = new Table(skin);

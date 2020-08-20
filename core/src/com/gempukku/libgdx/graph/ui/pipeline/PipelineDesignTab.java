@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Align;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphValidator;
-import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.AwareTab;
 import com.gempukku.libgdx.graph.ui.UIPipelineConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;

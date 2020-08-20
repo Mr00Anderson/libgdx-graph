@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.gempukku.libgdx.graph.data.FieldType;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.ui.WhitePixel;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
@@ -24,7 +24,7 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import org.json.simple.JSONObject;
 
 public class ValueColorBoxProducer<T extends FieldType> extends ValueGraphBoxProducer<T> {
-    public ValueColorBoxProducer(PipelineNodeConfiguration<T> configuration) {
+    public ValueColorBoxProducer(NodeConfiguration<T> configuration) {
         super(configuration);
     }
 

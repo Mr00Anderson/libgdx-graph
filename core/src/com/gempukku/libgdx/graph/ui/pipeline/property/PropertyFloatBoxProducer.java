@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;

@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.libgdx.graph.data.FieldType;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
@@ -15,7 +15,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import org.json.simple.JSONObject;
 
 public class ValueBooleanBoxProducer<T extends FieldType> extends ValueGraphBoxProducer<T> {
-    public ValueBooleanBoxProducer(PipelineNodeConfiguration<T> configuration) {
+    public ValueBooleanBoxProducer(NodeConfiguration<T> configuration) {
         super(configuration);
     }
 

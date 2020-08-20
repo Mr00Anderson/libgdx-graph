@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.WhitePixel;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;

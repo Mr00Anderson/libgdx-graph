@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.gempukku.libgdx.graph.data.FieldType;
-import com.gempukku.libgdx.graph.renderer.config.PropertyPipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.graph.PropertyNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
@@ -74,7 +74,7 @@ public class PropertyBoxImpl<T extends FieldType> extends Table implements Prope
     @Override
     public GraphBox<T> createPropertyBox(Skin skin, String id, float x, float y) {
         final String name = getName();
-        GraphBoxImpl<T> result = new GraphBoxImpl<T>(id, new PropertyPipelineNodeConfiguration("Property", name, propertyType), skin) {
+        GraphBoxImpl<T> result = new GraphBoxImpl<T>(id, new PropertyNodeConfiguration<T>("Property", name, propertyType), skin) {
             @Override
             public JSONObject serializeData() {
                 JSONObject result = new JSONObject();
@@ -83,7 +83,7 @@ public class PropertyBoxImpl<T extends FieldType> extends Table implements Prope
                 return result;
             }
         };
-        result.addOutputGraphPart(skin, new ValueGraphNodeOutput(name, propertyType));
+        result.addOutputGraphPart(skin, new ValueGraphNodeOutput<T>(name, propertyType));
         return result;
     }
 }

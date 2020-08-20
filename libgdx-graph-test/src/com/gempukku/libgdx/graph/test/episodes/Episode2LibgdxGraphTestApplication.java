@@ -20,10 +20,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.PipelineLoader;
+import com.gempukku.libgdx.graph.graph.pipeline.PipelineRenderer;
+import com.gempukku.libgdx.graph.graph.pipeline.RenderOutputs;
+import com.gempukku.libgdx.graph.graph.pipeline.RendererLoaderCallback;
 import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
-import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
-import com.gempukku.libgdx.graph.renderer.RenderOutputs;
-import com.gempukku.libgdx.graph.renderer.RendererLoaderCallback;
 import com.gempukku.libgdx.graph.test.WhitePixel;
 
 import java.io.IOException;

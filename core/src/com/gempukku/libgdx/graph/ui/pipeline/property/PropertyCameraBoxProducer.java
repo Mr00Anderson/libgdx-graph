@@ -1,7 +1,7 @@
 package com.gempukku.libgdx.graph.ui.pipeline.property;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
+import com.gempukku.libgdx.graph.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
 import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;

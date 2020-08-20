@@ -5,9 +5,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.gempukku.libgdx.graph.PipelineLoader;
-import com.gempukku.libgdx.graph.renderer.PipelineRenderer;
-import com.gempukku.libgdx.graph.renderer.RenderOutputs;
-import com.gempukku.libgdx.graph.renderer.RendererLoaderCallback;
+import com.gempukku.libgdx.graph.graph.pipeline.PipelineRenderer;
+import com.gempukku.libgdx.graph.graph.pipeline.RenderOutputs;
+import com.gempukku.libgdx.graph.graph.pipeline.RendererLoaderCallback;
 
 import java.io.IOException;
 import java.io.InputStream;

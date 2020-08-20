@@ -3,9 +3,9 @@ package com.gempukku.libgdx.graph.ui.producer.shader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
-import com.gempukku.libgdx.graph.renderer.PipelineFieldType;
-import com.gempukku.libgdx.graph.renderer.config.rendering.GraphShaderRendererPipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.renderer.loader.node.PipelineNodeConfiguration;
+import com.gempukku.libgdx.graph.graph.NodeConfiguration;
+import com.gempukku.libgdx.graph.graph.pipeline.PipelineFieldType;
+import com.gempukku.libgdx.graph.graph.pipeline.config.rendering.GraphShaderRendererPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
@@ -14,7 +14,7 @@ import org.json.simple.JSONObject;
 import java.util.Iterator;
 
 public class GraphShaderRendererBoxProducer implements GraphBoxProducer<PipelineFieldType> {
-    private PipelineNodeConfiguration<PipelineFieldType> configuration = new GraphShaderRendererPipelineNodeConfiguration();
+    private NodeConfiguration<PipelineFieldType> configuration = new GraphShaderRendererPipelineNodeConfiguration();
 
     @Override
     public String getType() {
@@ -35,7 +35,9 @@ public class GraphShaderRendererBoxProducer implements GraphBoxProducer<Pipeline
     public GraphBox<PipelineFieldType> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         GraphBoxImpl<PipelineFieldType> result = new GraphBoxImpl<PipelineFieldType>(id, configuration, skin);
         addInputsAndOutputs(result, skin);
-        //result.addGraphBoxPart();
+        GraphShadersBoxPart graphBoxPart = new GraphShadersBoxPart(skin);
+        graphBoxPart.initialize(data);
+        result.addGraphBoxPart(graphBoxPart);
         return result;
     }
 
@@ -76,6 +78,9 @@ public class GraphShaderRendererBoxProducer implements GraphBoxProducer<Pipeline
 
     @Override
     public GraphBox<PipelineFieldType> createDefault(Skin skin, String id) {
-        return null;
+        GraphBoxImpl<PipelineFieldType> result = new GraphBoxImpl<PipelineFieldType>(id, configuration, skin);
+        addInputsAndOutputs(result, skin);
+        result.addGraphBoxPart(new GraphShadersBoxPart(skin));
+        return result;
     }
 }
