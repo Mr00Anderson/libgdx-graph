@@ -15,6 +15,7 @@ import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxInputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPart;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -61,7 +62,7 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
                         String id = UUID.randomUUID().toString().replace("-", "");
                         try {
                             JSONParser parser = new JSONParser();
-                            InputStream is = Gdx.files.internal("tempate/empty-shader.json").read();
+                            InputStream is = Gdx.files.internal("template/empty-shader.json").read();
                             try {
                                 JSONObject shader = (JSONObject) parser.parse(new InputStreamReader(is));
                                 addShaderGraph(id, "", shader);
@@ -83,7 +84,13 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
     }
 
     public void initialize(JSONObject data) {
-
+        JSONArray shaderArray = (JSONArray) data.get("shaders");
+        for (JSONObject shaderObject : (List<JSONObject>) shaderArray) {
+            String id = (String) shaderObject.get("id");
+            String tag = (String) shaderObject.get("tag");
+            JSONObject shader = (JSONObject) shaderObject.get("shader");
+            addShaderGraph(id, tag, shader);
+        }
     }
 
     @Override
@@ -119,7 +126,16 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
 
     @Override
     public void serializePart(JSONObject object) {
+        JSONArray shaderArray = new JSONArray();
+        for (ShaderInfo shader : shaders) {
+            JSONObject shaderObject = new JSONObject();
+            shaderObject.put("id", shader.getId());
+            shaderObject.put("tag", shader.getTag());
+            shaderObject.put("shader", shader.getShaderJson());
+            shaderArray.add(shaderObject);
+        }
 
+        object.put("shaders", shaderArray);
     }
 
     private class ShaderInfo {
@@ -136,6 +152,7 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
             textField.setMessageText("Shader Tag");
             table.add(textField).growX();
             TextButton textButton = new TextButton("Edit", skin);
+            textButton.fire(new RequestGraphOpen(id, shaderJson));
             table.add(textButton).width(ACTIONS_WIDTH);
             table.add().width(ACTIONS_WIDTH);
             table.row();
@@ -147,6 +164,14 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
 
         public Table getTable() {
             return table;
+        }
+
+        public String getTag() {
+            return textField.getText();
+        }
+
+        public JSONObject getShaderJson() {
+            return shaderJson;
         }
     }
 }

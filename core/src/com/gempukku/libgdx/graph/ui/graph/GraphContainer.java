@@ -357,7 +357,6 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
     @Override
     public void layout() {
         super.layout();
-        System.out.println("Layout!");
         updateShadeRenderer();
         recreateClickableShapes();
         updateCanvas(false);

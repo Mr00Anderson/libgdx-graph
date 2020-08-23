@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class RendererLoaderCallback implements PipelineLoaderCallback<PipelineRenderer> {
+public class RendererLoaderCallback implements GraphLoaderCallback<PipelineRenderer> {
     private Map<String, PipelineNodeInfo> nodes = new HashMap<>();
     private List<PipelineVertextInfo> vertices = new LinkedList<>();
     private Map<String, WritablePipelineProperty> propertyMap = new HashMap<>();

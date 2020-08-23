@@ -2,7 +2,7 @@ package com.gempukku.libgdx.graph.pipeline;
 
 import org.json.simple.JSONObject;
 
-public interface PipelineLoaderCallback<T> {
+public interface GraphLoaderCallback<T> {
     void start();
 
     void addPipelineNode(String id, String type, float x, float y, JSONObject data);

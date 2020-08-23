@@ -1,5 +1,5 @@
 {
-  "objects": [
+  "nodes": [
     {
       "type": "ShaderEnd",
       "id": "end",

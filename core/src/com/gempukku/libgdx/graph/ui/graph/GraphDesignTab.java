@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui.pipeline;
+package com.gempukku.libgdx.graph.ui.graph;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -23,15 +23,14 @@ import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphValidator;
-import com.gempukku.libgdx.graph.ui.graph.GraphBox;
-import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
-import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
-import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
-import com.gempukku.libgdx.graph.ui.graph.PopupMenuProducer;
-import com.gempukku.libgdx.graph.ui.graph.PropertyBasedPopupMenuProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
+import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
 import com.gempukku.libgdx.graph.ui.preview.PreviewWidget;
+import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -42,31 +41,48 @@ import org.json.simple.JSONObject;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<GraphBox<T>, GraphConnection, T> {
     private List<PropertyBox<T>> propertyBoxes = new LinkedList<>();
+    private final GraphContainer<T> graphContainer;
+
+    private Skin skin;
+    private Map<String, PropertyBoxProducer<T>> propertyBoxProducers;
+    private Map<String, Set<GraphBoxProducer<T>>> graphBoxProducers;
+    private Predicate<GraphBoxProducer<T>> addablePredicate;
+
+    private String id;
+    private String title;
 
     private final VerticalGroup pipelineProperties;
-    private final GraphContainer<T> graphContainer;
-    private PopupMenuProducer propertyPopupMenuProducer;
-
     private Table contentTable;
     private Label validationLabel;
 
-    public GraphDesignTab(Skin skin, final PropertyBasedPopupMenuProducer<T> graphPopupMenuProducer, PopupMenuProducer propertyPopupMenuProducer) {
+    public GraphDesignTab(String id, String title, Skin skin,
+                          Map<String, PropertyBoxProducer<T>> propertyBoxProducers,
+                          Map<String, Set<GraphBoxProducer<T>>> graphBoxProducers,
+                          Predicate<GraphBoxProducer<T>> addablePredicate) {
         super(true, false);
+        this.id = id;
+        this.title = title;
 
         contentTable = new Table(skin);
         pipelineProperties = createPropertiesUI(skin);
+        this.skin = skin;
+        this.propertyBoxProducers = propertyBoxProducers;
+        this.graphBoxProducers = graphBoxProducers;
+        this.addablePredicate = addablePredicate;
 
         graphContainer = new GraphContainer<T>(
                 new PopupMenuProducer() {
                     @Override
                     public PopupMenu createPopupMenu(float x, float y) {
-                        return graphPopupMenuProducer.createPopupMenu(propertyBoxes, x, y);
+                        return createGraphPopupMenu(x, y);
                     }
                 });
-        this.propertyPopupMenuProducer = propertyPopupMenuProducer;
         contentTable.addListener(
                 new GraphChangedListener() {
                     @Override
@@ -110,6 +126,87 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         splitPane.setMaxSplitAmount(0.2f);
 
         contentTable.add(splitPane).grow().row();
+    }
+
+    private PopupMenu createGraphPopupMenu(final float popupX, final float popupY) {
+        PopupMenu popupMenu = new PopupMenu();
+
+        for (Map.Entry<String, Set<GraphBoxProducer<T>>> producersEntry : graphBoxProducers.entrySet()) {
+            String menuName = producersEntry.getKey();
+            Set<GraphBoxProducer<T>> producer = producersEntry.getValue();
+            createSubMenu(popupX, popupY, popupMenu, menuName, producer);
+        }
+
+        if (!propertyBoxes.isEmpty()) {
+            MenuItem propertyMenuItem = new MenuItem("Property");
+            PopupMenu propertyMenu = new PopupMenu();
+            for (final PropertyProducer<T> propertyProducer : propertyBoxes) {
+                final String name = propertyProducer.getName();
+                MenuItem valueMenuItem = new MenuItem(name);
+                valueMenuItem.addListener(
+                        new ClickListener(Input.Buttons.LEFT) {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                String id = UUID.randomUUID().toString().replace("-", "");
+                                GraphBox<T> graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
+                                graphContainer.addGraphBox(graphBox, "Property", true, popupX, popupY);
+                            }
+                        });
+                propertyMenu.addItem(valueMenuItem);
+            }
+            propertyMenuItem.setSubMenu(propertyMenu);
+            popupMenu.addItem(propertyMenuItem);
+        }
+
+        return popupMenu;
+    }
+
+    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName,
+                               Set<GraphBoxProducer<T>> producers) {
+        MenuItem valuesMenuItem = new MenuItem(menuName);
+        PopupMenu valuesMenu = new PopupMenu();
+        for (final GraphBoxProducer<T> producer : producers) {
+            final String name = producer.getTitle();
+            if (addablePredicate.apply(producer)) {
+                MenuItem valueMenuItem = new MenuItem(name);
+                valueMenuItem.addListener(
+                        new ClickListener(Input.Buttons.LEFT) {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                String id = UUID.randomUUID().toString().replace("-", "");
+                                GraphBox<T> graphBox = producer.createDefault(skin, id);
+                                graphContainer.addGraphBox(graphBox, name, true, popupX, popupY);
+                            }
+                        });
+                valuesMenu.addItem(valueMenuItem);
+            }
+        }
+        valuesMenuItem.setSubMenu(valuesMenu);
+        popupMenu.addItem(valuesMenuItem);
+    }
+
+    private PopupMenu createPropertyPopupMenu(float x, float y) {
+        PopupMenu menu = new PopupMenu();
+        for (Map.Entry<String, PropertyBoxProducer<T>> propertyEntry : propertyBoxProducers.entrySet()) {
+            final String name = propertyEntry.getKey();
+            final PropertyBoxProducer<T> value = propertyEntry.getValue();
+            MenuItem valueMenuItem = new MenuItem(name);
+            valueMenuItem.addListener(
+                    new ClickListener(Input.Buttons.LEFT) {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            PropertyBox<T> defaultPropertyBox = value.createDefaultPropertyBox(skin);
+                            addPropertyBox(skin, name, defaultPropertyBox);
+                        }
+                    });
+            menu.addItem(valueMenuItem);
+        }
+
+        return menu;
+    }
+
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -163,7 +260,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        PopupMenu popupMenu = propertyPopupMenuProducer.createPopupMenu(x, y);
+                        PopupMenu popupMenu = createPropertyPopupMenu(x, y);
                         popupMenu.showMenu(pipelineProperties.getStage(), newPropertyButton);
                     }
                 });
@@ -221,7 +318,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
 
     @Override
     public String getTabTitle() {
-        return "Pipeline";
+        return title;
     }
 
     @Override
@@ -249,7 +346,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
 
             objects.add(object);
         }
-        pipeline.put("objects", objects);
+        pipeline.put("nodes", objects);
 
         JSONArray connections = new JSONArray();
         for (GraphConnection connection : graphContainer.getConnections()) {

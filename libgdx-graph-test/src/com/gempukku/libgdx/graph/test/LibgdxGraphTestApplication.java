@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
-import com.gempukku.libgdx.graph.pipeline.PipelineLoader;
+import com.gempukku.libgdx.graph.pipeline.GraphLoader;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
 import com.gempukku.libgdx.graph.pipeline.RendererLoaderCallback;
@@ -183,7 +183,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         try {
             InputStream stream = Gdx.files.local("test.json").read();
             try {
-                PipelineRenderer pipelineRenderer = PipelineLoader.loadPipeline(stream, new RendererLoaderCallback());
+                PipelineRenderer pipelineRenderer = GraphLoader.loadGraph(stream, new RendererLoaderCallback());
                 setupPipeline(pipelineRenderer);
                 return pipelineRenderer;
             } finally {

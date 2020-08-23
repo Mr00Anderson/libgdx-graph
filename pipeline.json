@@ -1,306 +1,304 @@
 {
-  "pipeline": {
-    "objects": [
-      {
-        "data": {
-          "name": "Min Brightness",
-          "type": "Float"
-        },
-        "x": 52.0,
-        "y": 313.0,
-        "id": "6ccc442cdddd47d7b9c9a6842fdcc836",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Background Color",
-          "type": "Color"
-        },
-        "x": 50.0,
-        "y": 717.0,
-        "id": "4ab6e3102e7944d7934007e130d634ec",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Blur Radius",
-          "type": "Float"
-        },
-        "x": 52.0,
-        "y": 435.0,
-        "id": "3b644dbf333e42b990e44fcd3dba985a",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Bloom Strength",
-          "type": "Float"
-        },
-        "x": 52.0,
-        "y": 256.0,
-        "id": "209cf4ce86cb4ccf9d99043ce7e1c119",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Models",
-          "type": "Models"
-        },
-        "x": 51.0,
-        "y": 626.0,
-        "id": "2e50b00d93b6447aa997528949860bce",
-        "type": "Property"
-      },
-      {
-        "x": 271.0,
-        "y": 320.0,
-        "id": "a6a8d16f2f484d25874dd60aede9713a",
-        "type": "Bloom"
-      },
-      {
-        "x": 288.0,
-        "y": 559.0,
-        "id": "42130262552043d1ba8ac6029e4333c6",
-        "type": "DefaultRenderer"
-      },
-      {
-        "x": 284.0,
-        "y": 228.0,
-        "id": "2b6d517c28934ef19d4838d2d8110f1e",
-        "type": "GammaCorrection"
-      },
-      {
-        "data": {
-          "name": "Lights",
-          "type": "Lights"
-        },
-        "x": 51.0,
-        "y": 506.0,
-        "id": "ecda6fb411974804a6cba93be186590a",
-        "type": "Property"
-      },
-      {
-        "x": 290.0,
-        "y": 694.0,
-        "id": "79c4964a2afd4e158e7660c3f5502680",
-        "type": "PipelineStart"
-      },
-      {
-        "x": 290.0,
-        "y": 462.0,
-        "id": "2a82a2a64d0c40c7bfc6c78468ee86f7",
-        "type": "GaussianBlur"
-      },
-      {
-        "data": {
-          "name": "Camera",
-          "type": "Camera"
-        },
-        "x": 51.0,
-        "y": 568.0,
-        "id": "fb241e4a93d44418ab8ffbefd898f5f3",
-        "type": "Property"
-      },
-      {
-        "data": {
-          "name": "Bloom Radius",
-          "type": "Float"
-        },
-        "x": 52.0,
-        "y": 371.0,
-        "id": "ff909af41c324ff49a914753bb3073cb",
-        "type": "Property"
-      },
-      {
-        "x": 291.0,
-        "y": 137.0,
-        "id": "7d2427e384c2498b88779e75f733c0ff",
-        "type": "UIRenderer"
-      },
-      {
-        "data": {
-          "name": "Gamma Correction",
-          "type": "Float"
-        },
-        "x": 52.0,
-        "y": 191.0,
-        "id": "fa8e19ccd38a4affa2bd0286c21f64f6",
-        "type": "Property"
-      },
-      {
-        "x": 291.0,
-        "y": 50.0,
-        "id": "end",
-        "type": "PipelineEnd"
-      },
-      {
-        "data": {
-          "name": "Stage",
-          "type": "Stage"
-        },
-        "x": 54.0,
-        "y": 124.0,
-        "id": "cff4d91ba45f499fb5fb55d43e6008f2",
-        "type": "Property"
-      }
-    ],
-    "connections": [
-      {
-        "fromNode": "cff4d91ba45f499fb5fb55d43e6008f2",
-        "toField": "stage",
-        "fromField": "value",
-        "toNode": "7d2427e384c2498b88779e75f733c0ff"
-      },
-      {
-        "fromNode": "79c4964a2afd4e158e7660c3f5502680",
-        "toField": "input",
-        "fromField": "output",
-        "toNode": "42130262552043d1ba8ac6029e4333c6"
-      },
-      {
-        "fromNode": "2e50b00d93b6447aa997528949860bce",
-        "toField": "models",
-        "fromField": "value",
-        "toNode": "42130262552043d1ba8ac6029e4333c6"
-      },
-      {
-        "fromNode": "ecda6fb411974804a6cba93be186590a",
-        "toField": "lights",
-        "fromField": "value",
-        "toNode": "42130262552043d1ba8ac6029e4333c6"
-      },
-      {
-        "fromNode": "fb241e4a93d44418ab8ffbefd898f5f3",
-        "toField": "camera",
-        "fromField": "value",
-        "toNode": "42130262552043d1ba8ac6029e4333c6"
-      },
-      {
-        "fromNode": "ff909af41c324ff49a914753bb3073cb",
-        "toField": "bloomRadius",
-        "fromField": "value",
-        "toNode": "a6a8d16f2f484d25874dd60aede9713a"
-      },
-      {
-        "fromNode": "6ccc442cdddd47d7b9c9a6842fdcc836",
-        "toField": "minimalBrightness",
-        "fromField": "value",
-        "toNode": "a6a8d16f2f484d25874dd60aede9713a"
-      },
-      {
-        "fromNode": "209cf4ce86cb4ccf9d99043ce7e1c119",
-        "toField": "bloomStrength",
-        "fromField": "value",
-        "toNode": "a6a8d16f2f484d25874dd60aede9713a"
-      },
-      {
-        "fromNode": "2a82a2a64d0c40c7bfc6c78468ee86f7",
-        "toField": "input",
-        "fromField": "output",
-        "toNode": "a6a8d16f2f484d25874dd60aede9713a"
-      },
-      {
-        "fromNode": "3b644dbf333e42b990e44fcd3dba985a",
-        "toField": "blurRadius",
-        "fromField": "value",
-        "toNode": "2a82a2a64d0c40c7bfc6c78468ee86f7"
-      },
-      {
-        "fromNode": "42130262552043d1ba8ac6029e4333c6",
-        "toField": "input",
-        "fromField": "output",
-        "toNode": "2a82a2a64d0c40c7bfc6c78468ee86f7"
-      },
-      {
-        "fromNode": "fa8e19ccd38a4affa2bd0286c21f64f6",
-        "toField": "gamma",
-        "fromField": "value",
-        "toNode": "2b6d517c28934ef19d4838d2d8110f1e"
-      },
-      {
-        "fromNode": "a6a8d16f2f484d25874dd60aede9713a",
-        "toField": "input",
-        "fromField": "output",
-        "toNode": "2b6d517c28934ef19d4838d2d8110f1e"
-      },
-      {
-        "fromNode": "2b6d517c28934ef19d4838d2d8110f1e",
-        "toField": "input",
-        "fromField": "output",
-        "toNode": "7d2427e384c2498b88779e75f733c0ff"
-      },
-      {
-        "fromNode": "7d2427e384c2498b88779e75f733c0ff",
-        "toField": "input",
-        "fromField": "output",
-        "toNode": "end"
-      },
-      {
-        "fromNode": "4ab6e3102e7944d7934007e130d634ec",
-        "toField": "background",
-        "fromField": "value",
-        "toNode": "79c4964a2afd4e158e7660c3f5502680"
-      }
-    ],
-    "properties": [
-      {
-        "data": {
-          "color": "000000ff"
-        },
-        "name": "Background Color",
-        "type": "Color"
-      },
-      {
-        "name": "Stage",
-        "type": "Stage"
-      },
-      {
-        "name": "Models",
-        "type": "Models"
-      },
-      {
-        "name": "Lights",
-        "type": "Lights"
-      },
-      {
-        "name": "Camera",
-        "type": "Camera"
-      },
-      {
-        "data": {
-          "x": 0.0
-        },
-        "name": "Bloom Radius",
-        "type": "Float"
-      },
-      {
-        "data": {
-          "x": 0.0
-        },
+  "nodes": [
+    {
+      "data": {
         "name": "Min Brightness",
         "type": "Float"
       },
-      {
-        "data": {
-          "x": 0.0
-        },
-        "name": "Bloom Strength",
-        "type": "Float"
+      "x": 52.0,
+      "y": 313.0,
+      "id": "6ccc442cdddd47d7b9c9a6842fdcc836",
+      "type": "Property"
+    },
+    {
+      "data": {
+        "name": "Background Color",
+        "type": "Color"
       },
-      {
-        "data": {
-          "x": 0.0
-        },
+      "x": 50.0,
+      "y": 717.0,
+      "id": "4ab6e3102e7944d7934007e130d634ec",
+      "type": "Property"
+    },
+    {
+      "data": {
         "name": "Blur Radius",
         "type": "Float"
       },
-      {
-        "data": {
-          "x": 1.0
-        },
+      "x": 52.0,
+      "y": 435.0,
+      "id": "3b644dbf333e42b990e44fcd3dba985a",
+      "type": "Property"
+    },
+    {
+      "data": {
+        "name": "Bloom Strength",
+        "type": "Float"
+      },
+      "x": 52.0,
+      "y": 256.0,
+      "id": "209cf4ce86cb4ccf9d99043ce7e1c119",
+      "type": "Property"
+    },
+    {
+      "data": {
+        "name": "Models",
+        "type": "Models"
+      },
+      "x": 51.0,
+      "y": 626.0,
+      "id": "2e50b00d93b6447aa997528949860bce",
+      "type": "Property"
+    },
+    {
+      "x": 271.0,
+      "y": 320.0,
+      "id": "a6a8d16f2f484d25874dd60aede9713a",
+      "type": "Bloom"
+    },
+    {
+      "x": 288.0,
+      "y": 559.0,
+      "id": "42130262552043d1ba8ac6029e4333c6",
+      "type": "DefaultRenderer"
+    },
+    {
+      "x": 284.0,
+      "y": 228.0,
+      "id": "2b6d517c28934ef19d4838d2d8110f1e",
+      "type": "GammaCorrection"
+    },
+    {
+      "data": {
+        "name": "Lights",
+        "type": "Lights"
+      },
+      "x": 51.0,
+      "y": 506.0,
+      "id": "ecda6fb411974804a6cba93be186590a",
+      "type": "Property"
+    },
+    {
+      "x": 290.0,
+      "y": 694.0,
+      "id": "79c4964a2afd4e158e7660c3f5502680",
+      "type": "PipelineStart"
+    },
+    {
+      "x": 290.0,
+      "y": 462.0,
+      "id": "2a82a2a64d0c40c7bfc6c78468ee86f7",
+      "type": "GaussianBlur"
+    },
+    {
+      "data": {
+        "name": "Camera",
+        "type": "Camera"
+      },
+      "x": 51.0,
+      "y": 568.0,
+      "id": "fb241e4a93d44418ab8ffbefd898f5f3",
+      "type": "Property"
+    },
+    {
+      "data": {
+        "name": "Bloom Radius",
+        "type": "Float"
+      },
+      "x": 52.0,
+      "y": 371.0,
+      "id": "ff909af41c324ff49a914753bb3073cb",
+      "type": "Property"
+    },
+    {
+      "x": 291.0,
+      "y": 137.0,
+      "id": "7d2427e384c2498b88779e75f733c0ff",
+      "type": "UIRenderer"
+    },
+    {
+      "data": {
         "name": "Gamma Correction",
         "type": "Float"
-      }
-    ]
-  }
+      },
+      "x": 52.0,
+      "y": 191.0,
+      "id": "fa8e19ccd38a4affa2bd0286c21f64f6",
+      "type": "Property"
+    },
+    {
+      "x": 291.0,
+      "y": 50.0,
+      "id": "end",
+      "type": "PipelineEnd"
+    },
+    {
+      "data": {
+        "name": "Stage",
+        "type": "Stage"
+      },
+      "x": 54.0,
+      "y": 124.0,
+      "id": "cff4d91ba45f499fb5fb55d43e6008f2",
+      "type": "Property"
+    }
+  ],
+  "connections": [
+    {
+      "fromNode": "cff4d91ba45f499fb5fb55d43e6008f2",
+      "toField": "stage",
+      "fromField": "value",
+      "toNode": "7d2427e384c2498b88779e75f733c0ff"
+    },
+    {
+      "fromNode": "79c4964a2afd4e158e7660c3f5502680",
+      "toField": "input",
+      "fromField": "output",
+      "toNode": "42130262552043d1ba8ac6029e4333c6"
+    },
+    {
+      "fromNode": "2e50b00d93b6447aa997528949860bce",
+      "toField": "models",
+      "fromField": "value",
+      "toNode": "42130262552043d1ba8ac6029e4333c6"
+    },
+    {
+      "fromNode": "ecda6fb411974804a6cba93be186590a",
+      "toField": "lights",
+      "fromField": "value",
+      "toNode": "42130262552043d1ba8ac6029e4333c6"
+    },
+    {
+      "fromNode": "fb241e4a93d44418ab8ffbefd898f5f3",
+      "toField": "camera",
+      "fromField": "value",
+      "toNode": "42130262552043d1ba8ac6029e4333c6"
+    },
+    {
+      "fromNode": "ff909af41c324ff49a914753bb3073cb",
+      "toField": "bloomRadius",
+      "fromField": "value",
+      "toNode": "a6a8d16f2f484d25874dd60aede9713a"
+    },
+    {
+      "fromNode": "6ccc442cdddd47d7b9c9a6842fdcc836",
+      "toField": "minimalBrightness",
+      "fromField": "value",
+      "toNode": "a6a8d16f2f484d25874dd60aede9713a"
+    },
+    {
+      "fromNode": "209cf4ce86cb4ccf9d99043ce7e1c119",
+      "toField": "bloomStrength",
+      "fromField": "value",
+      "toNode": "a6a8d16f2f484d25874dd60aede9713a"
+    },
+    {
+      "fromNode": "2a82a2a64d0c40c7bfc6c78468ee86f7",
+      "toField": "input",
+      "fromField": "output",
+      "toNode": "a6a8d16f2f484d25874dd60aede9713a"
+    },
+    {
+      "fromNode": "3b644dbf333e42b990e44fcd3dba985a",
+      "toField": "blurRadius",
+      "fromField": "value",
+      "toNode": "2a82a2a64d0c40c7bfc6c78468ee86f7"
+    },
+    {
+      "fromNode": "42130262552043d1ba8ac6029e4333c6",
+      "toField": "input",
+      "fromField": "output",
+      "toNode": "2a82a2a64d0c40c7bfc6c78468ee86f7"
+    },
+    {
+      "fromNode": "fa8e19ccd38a4affa2bd0286c21f64f6",
+      "toField": "gamma",
+      "fromField": "value",
+      "toNode": "2b6d517c28934ef19d4838d2d8110f1e"
+    },
+    {
+      "fromNode": "a6a8d16f2f484d25874dd60aede9713a",
+      "toField": "input",
+      "fromField": "output",
+      "toNode": "2b6d517c28934ef19d4838d2d8110f1e"
+    },
+    {
+      "fromNode": "2b6d517c28934ef19d4838d2d8110f1e",
+      "toField": "input",
+      "fromField": "output",
+      "toNode": "7d2427e384c2498b88779e75f733c0ff"
+    },
+    {
+      "fromNode": "7d2427e384c2498b88779e75f733c0ff",
+      "toField": "input",
+      "fromField": "output",
+      "toNode": "end"
+    },
+    {
+      "fromNode": "4ab6e3102e7944d7934007e130d634ec",
+      "toField": "background",
+      "fromField": "value",
+      "toNode": "79c4964a2afd4e158e7660c3f5502680"
+    }
+  ],
+  "properties": [
+    {
+      "data": {
+        "color": "000000ff"
+      },
+      "name": "Background Color",
+      "type": "Color"
+    },
+    {
+      "name": "Stage",
+      "type": "Stage"
+    },
+    {
+      "name": "Models",
+      "type": "Models"
+    },
+    {
+      "name": "Lights",
+      "type": "Lights"
+    },
+    {
+      "name": "Camera",
+      "type": "Camera"
+    },
+    {
+      "data": {
+        "x": 0.0
+      },
+      "name": "Bloom Radius",
+      "type": "Float"
+    },
+    {
+      "data": {
+        "x": 0.0
+      },
+      "name": "Min Brightness",
+      "type": "Float"
+    },
+    {
+      "data": {
+        "x": 0.0
+      },
+      "name": "Bloom Strength",
+      "type": "Float"
+    },
+    {
+      "data": {
+        "x": 0.0
+      },
+      "name": "Blur Radius",
+      "type": "Float"
+    },
+    {
+      "data": {
+        "x": 1.0
+      },
+      "name": "Gamma Correction",
+      "type": "Float"
+    }
+  ]
 }

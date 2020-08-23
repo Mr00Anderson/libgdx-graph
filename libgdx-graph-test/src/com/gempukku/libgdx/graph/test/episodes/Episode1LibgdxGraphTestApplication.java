@@ -4,7 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.gempukku.libgdx.graph.pipeline.PipelineLoader;
+import com.gempukku.libgdx.graph.pipeline.GraphLoader;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
 import com.gempukku.libgdx.graph.pipeline.RendererLoaderCallback;
@@ -50,7 +50,7 @@ public class Episode1LibgdxGraphTestApplication extends ApplicationAdapter {
         try {
             InputStream stream = Gdx.files.local("episodes/episode1.json").read();
             try {
-                PipelineRenderer pipelineRenderer = PipelineLoader.loadPipeline(stream, new RendererLoaderCallback());
+                PipelineRenderer pipelineRenderer = GraphLoader.loadGraph(stream, new RendererLoaderCallback());
                 setupPipeline(pipelineRenderer);
                 return pipelineRenderer;
             } finally {

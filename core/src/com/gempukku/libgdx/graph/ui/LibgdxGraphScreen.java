@@ -3,14 +3,19 @@ package com.gempukku.libgdx.graph.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.gempukku.libgdx.graph.pipeline.GraphLoader;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
-import com.gempukku.libgdx.graph.pipeline.PipelineLoader;
-import com.gempukku.libgdx.graph.ui.pipeline.GraphDesignTab;
+import com.gempukku.libgdx.graph.ui.graph.GraphDesignTab;
+import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.gempukku.libgdx.graph.ui.producer.shader.RequestGraphOpen;
+import com.google.common.base.Predicate;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogListener;
 import com.kotcrab.vis.ui.widget.Menu;
@@ -24,6 +29,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import org.json.simple.JSONObject;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -50,10 +56,43 @@ public class LibgdxGraphScreen extends Table {
                     }
                 });
 
+        addListener(
+                new EventListener() {
+                    @Override
+                    public boolean handle(Event event) {
+                        if (event instanceof RequestGraphOpen) {
+                            RequestGraphOpen request = (RequestGraphOpen) event;
+                            Tab tab = findTabByGraphId(request.getId());
+                            if (tab != null) {
+                                tabbedPane.switchTab(tab);
+                            } else {
+                                openShaderTab(request.getId(), request.getJsonObject());
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
         MenuBar menuBar = createMenuBar();
         add(menuBar.getTable()).growX().row();
         add(tabbedPane.getTable()).left().growX().row();
         add(insideTable).grow().row();
+    }
+
+    private void openShaderTab(String id, JSONObject shader) {
+
+    }
+
+    private Tab findTabByGraphId(String id) {
+        for (Tab tab : tabbedPane.getTabs()) {
+            if (tab instanceof GraphDesignTab) {
+                GraphDesignTab graphDesignTab = (GraphDesignTab) tab;
+                if (graphDesignTab.getId().equals(id))
+                    return tab;
+            }
+        }
+        return null;
     }
 
     private MenuBar createMenuBar() {
@@ -163,11 +202,13 @@ public class LibgdxGraphScreen extends Table {
                         public void yes() {
                             save();
                             removeAllTabs();
+                            graphDesignTab = null;
                         }
 
                         @Override
                         public void no() {
                             removeAllTabs();
+                            graphDesignTab = null;
                         }
 
                         @Override
@@ -177,6 +218,7 @@ public class LibgdxGraphScreen extends Table {
                     });
         } else {
             removeAllTabs();
+            graphDesignTab = null;
         }
     }
 
@@ -245,13 +287,12 @@ public class LibgdxGraphScreen extends Table {
     }
 
     private void saveToFile(GraphDesignTab<PipelineFieldType> graphDesignTab, FileHandle editedFile) {
-        JSONObject renderer = new JSONObject();
-        renderer.put("pipeline", graphDesignTab.serializeGraph());
+        JSONObject graph = graphDesignTab.serializeGraph();
 
         try {
             OutputStreamWriter out = new OutputStreamWriter(editedFile.write(false));
             try {
-                renderer.writeJSONString(out);
+                graph.writeJSONString(out);
                 out.flush();
             } finally {
                 out.close();
@@ -285,7 +326,16 @@ public class LibgdxGraphScreen extends Table {
             try {
                 InputStream stream = fileHandle.read();
                 try {
-                    graphDesignTab = PipelineLoader.loadPipeline(stream, new UIPipelineLoaderCallback(skin));
+                    graphDesignTab = GraphLoader.loadGraph(stream, new UIGraphLoaderCallback<PipelineFieldType>(
+                            skin,
+                            UIPipelineConfiguration.propertyProducers,
+                            UIPipelineConfiguration.graphBoxProducers,
+                            new Predicate<GraphBoxProducer<PipelineFieldType>>() {
+                                @Override
+                                public boolean apply(@Nullable GraphBoxProducer<PipelineFieldType> pipelineFieldTypeGraphBoxProducer) {
+                                    return !UIPipelineConfiguration.notAddableProducers.contains(pipelineFieldTypeGraphBoxProducer);
+                                }
+                            }));
                     tabbedPane.add(graphDesignTab);
                     editedFile = null;
                 } finally {
