@@ -45,9 +45,6 @@ public class LibgdxGraphScreen extends Table {
                 new TabbedPaneAdapter() {
                     @Override
                     public void switchedTab(Tab tab) {
-                        ((AwareTab) tabbedPane.getActiveTab()).sleep();
-                        ((AwareTab) tabbedPane.getActiveTab()).awaken();
-
                         insideTable.clearChildren();
                         insideTable.add(tab.getContentTable()).grow().row();
                     }
@@ -247,7 +244,7 @@ public class LibgdxGraphScreen extends Table {
         }
     }
 
-    private void saveToFile(GraphDesignTab graphDesignTab, FileHandle editedFile) {
+    private void saveToFile(GraphDesignTab<PipelineFieldType> graphDesignTab, FileHandle editedFile) {
         JSONObject renderer = new JSONObject();
         renderer.put("pipeline", graphDesignTab.serializeGraph());
 
@@ -289,7 +286,6 @@ public class LibgdxGraphScreen extends Table {
                 InputStream stream = fileHandle.read();
                 try {
                     graphDesignTab = PipelineLoader.loadPipeline(stream, new UIPipelineLoaderCallback(skin));
-                    graphDesignTab.awaken();
                     tabbedPane.add(graphDesignTab);
                     editedFile = null;
                 } finally {

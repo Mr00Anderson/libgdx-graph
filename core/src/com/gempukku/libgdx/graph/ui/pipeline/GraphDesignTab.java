@@ -215,16 +215,6 @@ public class GraphDesignTab<T extends FieldType> extends AwareTab implements Gra
     }
 
     @Override
-    public void sleep() {
-
-    }
-
-    @Override
-    public void awaken() {
-
-    }
-
-    @Override
     public void dispose() {
         graphContainer.dispose();
     }

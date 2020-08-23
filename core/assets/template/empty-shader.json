@@ -1,0 +1,12 @@
+{
+  "objects": [
+    {
+      "type": "ShaderEnd",
+      "id": "end",
+      "x": 50,
+      "y": 50
+    }
+  ],
+  "connections": [],
+  "properties": []
+}

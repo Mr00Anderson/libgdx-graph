@@ -15,8 +15,4 @@ public abstract class AwareTab extends Tab {
     }
 
     public abstract void resized(int width, int height);
-
-    public abstract void sleep();
-
-    public abstract void awaken();
 }
