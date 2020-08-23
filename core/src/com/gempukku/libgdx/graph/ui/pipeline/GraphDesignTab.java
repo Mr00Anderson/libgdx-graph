@@ -23,7 +23,6 @@ import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphValidator;
-import com.gempukku.libgdx.graph.ui.AwareTab;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
@@ -36,6 +35,7 @@ import com.google.common.collect.Iterables;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -43,7 +43,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GraphDesignTab<T extends FieldType> extends AwareTab implements Graph<GraphBox<T>, GraphConnection, T> {
+public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<GraphBox<T>, GraphConnection, T> {
     private List<PropertyBox<T>> propertyBoxes = new LinkedList<>();
 
     private final VerticalGroup pipelineProperties;
@@ -277,10 +277,5 @@ public class GraphDesignTab<T extends FieldType> extends AwareTab implements Gra
         pipeline.put("properties", properties);
 
         return pipeline;
-    }
-
-    @Override
-    public void resized(int width, int height) {
-        graphContainer.resize(width, height);
     }
 }

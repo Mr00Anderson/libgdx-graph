@@ -33,7 +33,6 @@ public class LibgdxGraphApplication extends ApplicationAdapter {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        libgdxGraphScreen.resized(width, height);
     }
 
     @Override

@@ -357,6 +357,8 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
     @Override
     public void layout() {
         super.layout();
+        System.out.println("Layout!");
+        updateShadeRenderer();
         recreateClickableShapes();
         updateCanvas(false);
     }
@@ -587,8 +589,8 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
         return graphConnections;
     }
 
-    public void resize(int width, int height) {
-        shapeRenderer.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
+    private void updateShadeRenderer() {
+        shapeRenderer.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         shapeRenderer.updateMatrices();
     }
 

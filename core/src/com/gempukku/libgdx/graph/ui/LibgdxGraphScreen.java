@@ -302,12 +302,6 @@ public class LibgdxGraphScreen extends Table {
         insideTable.clearChildren();
     }
 
-    public void resized(int width, int height) {
-        for (Tab tab : tabbedPane.getTabs()) {
-            ((AwareTab) tab).resized(width, height);
-        }
-    }
-
     public void dispose() {
         for (Tab tab : tabbedPane.getTabs()) {
             tab.dispose();
