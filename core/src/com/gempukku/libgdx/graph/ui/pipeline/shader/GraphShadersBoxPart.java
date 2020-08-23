@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui.producer.shader;
+package com.gempukku.libgdx.graph.ui.pipeline.shader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -12,9 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
+import com.gempukku.libgdx.graph.ui.graph.GetSerializedGraph;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxInputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPart;
+import com.gempukku.libgdx.graph.ui.graph.RequestGraphOpen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -131,7 +133,9 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
             JSONObject shaderObject = new JSONObject();
             shaderObject.put("id", shader.getId());
             shaderObject.put("tag", shader.getTag());
-            shaderObject.put("shader", shader.getShaderJson());
+            GetSerializedGraph event = new GetSerializedGraph(shader.getId());
+            fire(event);
+            shaderObject.put("shader", event.getGraph());
             shaderArray.add(shaderObject);
         }
 
@@ -142,17 +146,21 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
         private String id;
         private Table table;
         private TextField textField;
-        private JSONObject shaderJson;
 
-        public ShaderInfo(String id, String tag, JSONObject shaderJson) {
+        public ShaderInfo(final String id, String tag, final JSONObject shaderJson) {
             this.id = id;
-            this.shaderJson = shaderJson;
             table = new Table(skin);
             textField = new TextField(tag, skin);
             textField.setMessageText("Shader Tag");
             table.add(textField).growX();
-            TextButton textButton = new TextButton("Edit", skin);
-            textButton.fire(new RequestGraphOpen(id, shaderJson));
+            final TextButton textButton = new TextButton("Edit", skin);
+            textButton.addListener(
+                    new ClickListener(Input.Buttons.LEFT) {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            textButton.fire(new RequestGraphOpen(id, shaderJson));
+                        }
+                    });
             table.add(textButton).width(ACTIONS_WIDTH);
             table.add().width(ACTIONS_WIDTH);
             table.row();
@@ -168,10 +176,6 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
 
         public String getTag() {
             return textField.getText();
-        }
-
-        public JSONObject getShaderJson() {
-            return shaderJson;
         }
     }
 }

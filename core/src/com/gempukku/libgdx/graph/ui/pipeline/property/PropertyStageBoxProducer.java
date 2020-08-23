@@ -2,9 +2,9 @@ package com.gempukku.libgdx.graph.ui.pipeline.property;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
-import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
-import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxImpl;
-import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyBoxImpl;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyBoxProducer;
 import org.json.simple.JSONObject;
 
 public class PropertyStageBoxProducer implements PropertyBoxProducer<PipelineFieldType> {

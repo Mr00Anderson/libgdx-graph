@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui.producer.shader;
+package com.gempukku.libgdx.graph.ui.graph;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
 import org.json.simple.JSONObject;

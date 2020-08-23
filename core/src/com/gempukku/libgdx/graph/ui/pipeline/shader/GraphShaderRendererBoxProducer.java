@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui.producer.shader;
+package com.gempukku.libgdx.graph.ui.pipeline.shader;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.libgdx.graph.NodeConfiguration;

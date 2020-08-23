@@ -23,12 +23,13 @@ import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphValidator;
-import com.gempukku.libgdx.graph.ui.pipeline.PropertyBox;
-import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
+import com.gempukku.libgdx.graph.ui.UIGraphConfiguration;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyBoxProducer;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyProducer;
 import com.gempukku.libgdx.graph.ui.preview.PreviewWidget;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
@@ -50,9 +51,8 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     private final GraphContainer<T> graphContainer;
 
     private Skin skin;
-    private Map<String, PropertyBoxProducer<T>> propertyBoxProducers;
-    private Map<String, Set<GraphBoxProducer<T>>> graphBoxProducers;
-    private Predicate<GraphBoxProducer<T>> addablePredicate;
+    private UIGraphConfiguration<T> uiGraphConfiguration;
+    private SaveCallback<T> saveCallback;
 
     private String id;
     private String title;
@@ -61,20 +61,17 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     private Table contentTable;
     private Label validationLabel;
 
-    public GraphDesignTab(String id, String title, Skin skin,
-                          Map<String, PropertyBoxProducer<T>> propertyBoxProducers,
-                          Map<String, Set<GraphBoxProducer<T>>> graphBoxProducers,
-                          Predicate<GraphBoxProducer<T>> addablePredicate) {
-        super(true, false);
+    public GraphDesignTab(boolean closeable, String id, String title, Skin skin,
+                          UIGraphConfiguration<T> uiGraphConfiguration, SaveCallback<T> saveCallback) {
+        super(true, closeable);
         this.id = id;
         this.title = title;
 
         contentTable = new Table(skin);
         pipelineProperties = createPropertiesUI(skin);
         this.skin = skin;
-        this.propertyBoxProducers = propertyBoxProducers;
-        this.graphBoxProducers = graphBoxProducers;
-        this.addablePredicate = addablePredicate;
+        this.uiGraphConfiguration = uiGraphConfiguration;
+        this.saveCallback = saveCallback;
 
         graphContainer = new GraphContainer<T>(
                 new PopupMenuProducer() {
@@ -128,10 +125,21 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         contentTable.add(splitPane).grow().row();
     }
 
+    @Override
+    public boolean save() {
+        super.save();
+
+        if (saveCallback != null)
+            saveCallback.save(this);
+        setDirty(false);
+
+        return true;
+    }
+
     private PopupMenu createGraphPopupMenu(final float popupX, final float popupY) {
         PopupMenu popupMenu = new PopupMenu();
 
-        for (Map.Entry<String, Set<GraphBoxProducer<T>>> producersEntry : graphBoxProducers.entrySet()) {
+        for (Map.Entry<String, Set<GraphBoxProducer<T>>> producersEntry : uiGraphConfiguration.getGraphBoxProducers().entrySet()) {
             String menuName = producersEntry.getKey();
             Set<GraphBoxProducer<T>> producer = producersEntry.getValue();
             createSubMenu(popupX, popupY, popupMenu, menuName, producer);
@@ -167,7 +175,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         PopupMenu valuesMenu = new PopupMenu();
         for (final GraphBoxProducer<T> producer : producers) {
             final String name = producer.getTitle();
-            if (addablePredicate.apply(producer)) {
+            if (uiGraphConfiguration.isAddableGraphBox(producer)) {
                 MenuItem valueMenuItem = new MenuItem(name);
                 valueMenuItem.addListener(
                         new ClickListener(Input.Buttons.LEFT) {
@@ -187,7 +195,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
 
     private PopupMenu createPropertyPopupMenu(float x, float y) {
         PopupMenu menu = new PopupMenu();
-        for (Map.Entry<String, PropertyBoxProducer<T>> propertyEntry : propertyBoxProducers.entrySet()) {
+        for (Map.Entry<String, PropertyBoxProducer<T>> propertyEntry : uiGraphConfiguration.getPropertyBoxProducers().entrySet()) {
             final String name = propertyEntry.getKey();
             final PropertyBoxProducer<T> value = propertyEntry.getValue();
             MenuItem valueMenuItem = new MenuItem(name);

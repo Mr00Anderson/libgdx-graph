@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui;
+package com.gempukku.libgdx.graph.ui.pipeline;
 
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.pipeline.config.math.AddPipelineNodeConfiguration;
@@ -21,7 +21,8 @@ import com.gempukku.libgdx.graph.pipeline.config.value.ValueColorPipelineNodeCon
 import com.gempukku.libgdx.graph.pipeline.config.value.ValueFloatPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.pipeline.config.value.ValueVector2PipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.pipeline.config.value.ValueVector3PipelineNodeConfiguration;
-import com.gempukku.libgdx.graph.ui.pipeline.PropertyBoxProducer;
+import com.gempukku.libgdx.graph.ui.UIGraphConfiguration;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyCameraBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyFloatBoxProducer;
@@ -30,10 +31,9 @@ import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyModelsBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyStageBoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.pipeline.property.PropertyVector3BoxProducer;
+import com.gempukku.libgdx.graph.ui.pipeline.shader.GraphShaderRendererBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducerImpl;
-import com.gempukku.libgdx.graph.ui.producer.PropertyGraphBoxProducer;
-import com.gempukku.libgdx.graph.ui.producer.shader.GraphShaderRendererBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueBooleanBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueFloatBoxProducer;
@@ -46,7 +46,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class UIPipelineConfiguration {
+public class UIPipelineConfiguration implements UIGraphConfiguration<PipelineFieldType> {
     public static Set<GraphBoxProducer<PipelineFieldType>> notAddableProducers = new HashSet<>();
     public static Map<String, Set<GraphBoxProducer<PipelineFieldType>>> graphBoxProducers = new LinkedHashMap<>();
     public static Map<String, PropertyBoxProducer<PipelineFieldType>> propertyProducers = new LinkedHashMap<>();
@@ -58,7 +58,7 @@ public class UIPipelineConfiguration {
         valueProducers.add(new ValueVector2BoxProducer<PipelineFieldType>(new ValueVector2PipelineNodeConfiguration()));
         valueProducers.add(new ValueVector3BoxProducer<PipelineFieldType>(new ValueVector3PipelineNodeConfiguration()));
         valueProducers.add(new ValueBooleanBoxProducer<PipelineFieldType>(new ValueBooleanPipelineNodeConfiguration()));
-        PropertyGraphBoxProducer propertyProducer = new PropertyGraphBoxProducer();
+        PropertyPipelineGraphBoxProducer propertyProducer = new PropertyPipelineGraphBoxProducer();
         notAddableProducers.add(propertyProducer);
         valueProducers.add(propertyProducer);
         graphBoxProducers.put("Value", valueProducers);
@@ -108,7 +108,18 @@ public class UIPipelineConfiguration {
         propertyProducers.put("Camera", new PropertyCameraBoxProducer());
     }
 
-    private UIPipelineConfiguration() {
+    @Override
+    public Map<String, Set<GraphBoxProducer<PipelineFieldType>>> getGraphBoxProducers() {
+        return graphBoxProducers;
+    }
 
+    @Override
+    public Map<String, PropertyBoxProducer<PipelineFieldType>> getPropertyBoxProducers() {
+        return propertyProducers;
+    }
+
+    @Override
+    public boolean isAddableGraphBox(GraphBoxProducer<PipelineFieldType> graphBoxProducer) {
+        return !notAddableProducers.contains(graphBoxProducer);
     }
 }

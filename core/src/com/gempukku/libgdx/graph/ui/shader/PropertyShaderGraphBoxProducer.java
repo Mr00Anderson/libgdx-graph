@@ -1,13 +1,15 @@
-package com.gempukku.libgdx.graph.ui.producer;
+package com.gempukku.libgdx.graph.ui.shader;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.gempukku.libgdx.graph.PropertyNodeConfiguration;
-import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
+import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
+import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.gempukku.libgdx.graph.ui.producer.ValueGraphNodeOutput;
 import org.json.simple.JSONObject;
 
-public class PropertyGraphBoxProducer implements GraphBoxProducer<PipelineFieldType> {
+public class PropertyShaderGraphBoxProducer implements GraphBoxProducer<ShaderFieldType> {
     @Override
     public String getType() {
         return "Property";
@@ -24,10 +26,10 @@ public class PropertyGraphBoxProducer implements GraphBoxProducer<PipelineFieldT
     }
 
     @Override
-    public GraphBox<PipelineFieldType> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
+    public GraphBox<ShaderFieldType> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         final String name = (String) data.get("name");
-        final PipelineFieldType propertyType = PipelineFieldType.valueOf((String) data.get("type"));
-        GraphBoxImpl<PipelineFieldType> result = new GraphBoxImpl<PipelineFieldType>(id, new PropertyNodeConfiguration<>("Property", name, propertyType), skin) {
+        final ShaderFieldType propertyType = ShaderFieldType.valueOf((String) data.get("type"));
+        GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, new PropertyNodeConfiguration<>("Property", name, propertyType), skin) {
             @Override
             public JSONObject serializeData() {
                 JSONObject result = new JSONObject();
@@ -42,7 +44,7 @@ public class PropertyGraphBoxProducer implements GraphBoxProducer<PipelineFieldT
     }
 
     @Override
-    public GraphBox createDefault(Skin skin, String id) {
+    public GraphBox<ShaderFieldType> createDefault(Skin skin, String id) {
         return null;
     }
 }

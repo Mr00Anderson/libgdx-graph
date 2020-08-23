@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui.pipeline.property;
+package com.gempukku.libgdx.graph.ui.shader.property;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
+import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.ui.WhitePixel;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;
@@ -23,24 +23,24 @@ import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import org.json.simple.JSONObject;
 
-public class PropertyColorBoxProducer implements PropertyBoxProducer<PipelineFieldType> {
+public class PropertyColorBoxProducer implements PropertyBoxProducer<ShaderFieldType> {
     @Override
     public boolean supportsType(String type) {
         return type.equals("Color");
     }
 
     @Override
-    public PropertyBox<PipelineFieldType> createPropertyBox(Skin skin, String name, JSONObject jsonObject) {
+    public PropertyBox<ShaderFieldType> createPropertyBox(Skin skin, String name, JSONObject jsonObject) {
         String color = ((String) jsonObject.get("color"));
         return createPropertyBoxDefault(skin, name, color);
     }
 
     @Override
-    public PropertyBox<PipelineFieldType> createDefaultPropertyBox(Skin skin) {
+    public PropertyBox<ShaderFieldType> createDefaultPropertyBox(Skin skin) {
         return createPropertyBoxDefault(skin, "New Color", "FFFFFFFF");
     }
 
-    private PropertyBox<PipelineFieldType> createPropertyBoxDefault(Skin skin, String name, String colorStr) {
+    private PropertyBox<ShaderFieldType> createPropertyBoxDefault(Skin skin, String name, String colorStr) {
         Color color = Color.valueOf(colorStr);
 
         final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.texture);
@@ -82,9 +82,9 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<PipelineFie
         table.add(new Label("Color", skin)).growX();
         table.add(image);
 
-        return new PropertyBoxImpl<PipelineFieldType>(skin, "Color",
+        return new PropertyBoxImpl<ShaderFieldType>(skin, "Color",
                 name,
-                PipelineFieldType.Color,
+                ShaderFieldType.Color,
                 new PropertyDefaultBox() {
                     @Override
                     public Actor getActor() {
