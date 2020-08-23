@@ -19,23 +19,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphValidator;
-import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.ui.AwareTab;
-import com.gempukku.libgdx.graph.ui.UIPipelineConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedListener;
 import com.gempukku.libgdx.graph.ui.graph.GraphContainer;
 import com.gempukku.libgdx.graph.ui.graph.PopupMenuProducer;
-import com.gempukku.libgdx.graph.ui.graph.PropertyProducer;
+import com.gempukku.libgdx.graph.ui.graph.PropertyBasedPopupMenuProducer;
 import com.gempukku.libgdx.graph.ui.preview.PreviewWidget;
-import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
-import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -45,29 +42,31 @@ import org.json.simple.JSONObject;
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
-public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<PipelineFieldType>, GraphConnection, PipelineFieldType> {
-    private List<PropertyBox<PipelineFieldType>> propertyBoxes = new LinkedList<>();
+public class GraphDesignTab<T extends FieldType> extends AwareTab implements Graph<GraphBox<T>, GraphConnection, T> {
+    private List<PropertyBox<T>> propertyBoxes = new LinkedList<>();
 
     private final VerticalGroup pipelineProperties;
-    private final GraphContainer<PipelineFieldType> graphContainer;
+    private final GraphContainer<T> graphContainer;
+    private PopupMenuProducer propertyPopupMenuProducer;
 
     private Table contentTable;
     private Label validationLabel;
-    private Skin skin;
 
-    public PipelineDesignTab(Skin skin) {
+    public GraphDesignTab(Skin skin, final PropertyBasedPopupMenuProducer<T> graphPopupMenuProducer, PopupMenuProducer propertyPopupMenuProducer) {
         super(true, false);
 
-        this.skin = skin;
         contentTable = new Table(skin);
-
         pipelineProperties = createPropertiesUI(skin);
 
-        graphContainer = new GraphContainer<PipelineFieldType>(createPopupMenuProducer());
+        graphContainer = new GraphContainer<T>(
+                new PopupMenuProducer() {
+                    @Override
+                    public PopupMenu createPopupMenu(float x, float y) {
+                        return graphPopupMenuProducer.createPopupMenu(propertyBoxes, x, y);
+                    }
+                });
+        this.propertyPopupMenuProducer = propertyPopupMenuProducer;
         contentTable.addListener(
                 new GraphChangedListener() {
                     @Override
@@ -114,7 +113,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
     }
 
     @Override
-    public GraphBox<PipelineFieldType> getNodeById(String id) {
+    public GraphBox<T> getNodeById(String id) {
         return graphContainer.getGraphBoxById(id);
     }
 
@@ -126,7 +125,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
     @Override
     public Iterable<String> getAllGraphNodes() {
         return Iterables.transform(graphContainer.getGraphBoxes(),
-                new Function<GraphBox<PipelineFieldType>, String>() {
+                new Function<GraphBox<T>, String>() {
                     @Override
                     public String apply(@Nullable GraphBox graphBox) {
                         return graphBox.getId();
@@ -134,12 +133,12 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
                 });
     }
 
-    public GraphContainer<PipelineFieldType> getGraphContainer() {
+    public GraphContainer<T> getGraphContainer() {
         return graphContainer;
     }
 
     private void updatePipelineValidation() {
-        GraphValidator.ValidationResult<GraphBox<PipelineFieldType>, GraphConnection, PipelineFieldType> validationResult = GraphValidator.validateGraph(this, "end");
+        GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, T> validationResult = GraphValidator.validateGraph(this, "end");
         graphContainer.setValidationResult(validationResult);
         if (validationResult.hasErrors()) {
             validationLabel.setColor(Color.RED);
@@ -153,67 +152,6 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
         }
     }
 
-    private PopupMenuProducer createPopupMenuProducer() {
-        return new PopupMenuProducer() {
-            @Override
-            public PopupMenu createPopupMenu(final float popupX, final float popupY) {
-                PopupMenu popupMenu = new PopupMenu();
-
-                for (Map.Entry<String, Set<GraphBoxProducer<PipelineFieldType>>> producersEntry : UIPipelineConfiguration.graphBoxProducers.entrySet()) {
-                    String menuName = producersEntry.getKey();
-                    Set<GraphBoxProducer<PipelineFieldType>> producer = producersEntry.getValue();
-                    createSubMenu(popupX, popupY, popupMenu, menuName, producer);
-                }
-
-                if (!propertyBoxes.isEmpty()) {
-                    MenuItem propertyMenuItem = new MenuItem("Property");
-                    PopupMenu propertyMenu = new PopupMenu();
-                    for (final PropertyProducer<PipelineFieldType> propertyProducer : propertyBoxes) {
-                        final String name = propertyProducer.getName();
-                        MenuItem valueMenuItem = new MenuItem(name);
-                        valueMenuItem.addListener(
-                                new ClickListener(Input.Buttons.LEFT) {
-                                    @Override
-                                    public void clicked(InputEvent event, float x, float y) {
-                                        String id = UUID.randomUUID().toString().replace("-", "");
-                                        GraphBox<PipelineFieldType> graphBox = propertyProducer.createPropertyBox(skin, id, popupX, popupY);
-                                        graphContainer.addGraphBox(graphBox, "Property", true, popupX, popupY);
-                                    }
-                                });
-                        propertyMenu.addItem(valueMenuItem);
-                    }
-                    propertyMenuItem.setSubMenu(propertyMenu);
-                    popupMenu.addItem(propertyMenuItem);
-                }
-
-                return popupMenu;
-            }
-        };
-    }
-
-    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName, Set<GraphBoxProducer<PipelineFieldType>> producers) {
-        MenuItem valuesMenuItem = new MenuItem(menuName);
-        PopupMenu valuesMenu = new PopupMenu();
-        for (final GraphBoxProducer<PipelineFieldType> producer : producers) {
-            final String name = producer.getTitle();
-            if (!UIPipelineConfiguration.notAddableProducers.contains(producer)) {
-                MenuItem valueMenuItem = new MenuItem(name);
-                valueMenuItem.addListener(
-                        new ClickListener(Input.Buttons.LEFT) {
-                            @Override
-                            public void clicked(InputEvent event, float x, float y) {
-                                String id = UUID.randomUUID().toString().replace("-", "");
-                                GraphBox<PipelineFieldType> graphBox = producer.createDefault(skin, id);
-                                graphContainer.addGraphBox(graphBox, name, true, popupX, popupY);
-                            }
-                        });
-                valuesMenu.addItem(valueMenuItem);
-            }
-        }
-        valuesMenuItem.setSubMenu(valuesMenu);
-        popupMenu.addItem(valuesMenuItem);
-    }
-
     private VerticalGroup createPropertiesUI(final Skin skin) {
         final VerticalGroup pipelineProperties = new VerticalGroup();
         pipelineProperties.grow();
@@ -225,7 +163,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        PopupMenu popupMenu = createPopupMenu(skin);
+                        PopupMenu popupMenu = propertyPopupMenuProducer.createPopupMenu(x, y);
                         popupMenu.showMenu(pipelineProperties.getStage(), newPropertyButton);
                     }
                 });
@@ -235,27 +173,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
         return pipelineProperties;
     }
 
-    private PopupMenu createPopupMenu(final Skin skin) {
-        PopupMenu menu = new PopupMenu();
-        for (Map.Entry<String, PropertyBoxProducer<PipelineFieldType>> propertyEntry : UIPipelineConfiguration.propertyProducers.entrySet()) {
-            final String name = propertyEntry.getKey();
-            final PropertyBoxProducer<PipelineFieldType> value = propertyEntry.getValue();
-            MenuItem valueMenuItem = new MenuItem(name);
-            valueMenuItem.addListener(
-                    new ClickListener(Input.Buttons.LEFT) {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            PropertyBox<PipelineFieldType> defaultPropertyBox = value.createDefaultPropertyBox(skin);
-                            addPropertyBox(skin, name, defaultPropertyBox);
-                        }
-                    });
-            menu.addItem(valueMenuItem);
-        }
-
-        return menu;
-    }
-
-    public void addPropertyBox(Skin skin, String type, final PropertyBox<PipelineFieldType> propertyBox) {
+    public void addPropertyBox(Skin skin, String type, final PropertyBox<T> propertyBox) {
         propertyBoxes.add(propertyBox);
         final Actor actor = propertyBox.getActor();
 
@@ -288,7 +206,7 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
         contentTable.fire(new GraphChangedEvent(true));
     }
 
-    private void removePropertyBox(PropertyBox<PipelineFieldType> propertyBox) {
+    private void removePropertyBox(PropertyBox<T> propertyBox) {
         Actor actor = propertyBox.getActor();
         propertyBoxes.remove(propertyBox);
         pipelineProperties.removeActor(actor.getParent());
@@ -321,13 +239,13 @@ public class PipelineDesignTab extends AwareTab implements Graph<GraphBox<Pipeli
         return contentTable;
     }
 
-    public JSONObject serializePipeline() {
+    public JSONObject serializeGraph() {
         JSONObject pipeline = new JSONObject();
 
         JSONArray objects = new JSONArray();
         Vector2 tmp = new Vector2();
         graphContainer.getCanvasPosition(tmp);
-        for (GraphBox<PipelineFieldType> graphBox : graphContainer.getGraphBoxes()) {
+        for (GraphBox<T> graphBox : graphContainer.getGraphBoxes()) {
             Window window = graphContainer.getBoxWindow(graphBox.getId());
             JSONObject object = new JSONObject();
             object.put("id", graphBox.getId());

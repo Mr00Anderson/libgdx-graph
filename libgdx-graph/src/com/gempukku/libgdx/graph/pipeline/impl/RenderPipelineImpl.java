@@ -2,6 +2,7 @@ package com.gempukku.libgdx.graph.pipeline.impl;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
 import com.gempukku.libgdx.graph.pipeline.RenderPipeline;
 
 import java.util.Iterator;
@@ -53,7 +54,10 @@ public class RenderPipelineImpl implements RenderPipeline {
         buffer = extractFrameBuffer(width, height, this.oldFrameBuffers);
         if (buffer != null) return buffer;
 
-        return new FrameBuffer(format, width, height, true);
+        GLFrameBuffer.FrameBufferBuilder frameBufferBuilder = new GLFrameBuffer.FrameBufferBuilder(width, height);
+        frameBufferBuilder.addBasicColorTextureAttachment(format);
+        frameBufferBuilder.addBasicDepthRenderBuffer();
+        return frameBufferBuilder.build();
     }
 
     @Override
