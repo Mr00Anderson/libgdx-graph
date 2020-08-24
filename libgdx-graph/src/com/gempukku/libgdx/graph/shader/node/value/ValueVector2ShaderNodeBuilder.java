@@ -27,10 +27,7 @@ public class ValueVector2ShaderNodeBuilder extends ConfigurationShaderNodeBuilde
         float v1 = ((Number) data.get("v1")).floatValue();
         float v2 = ((Number) data.get("v2")).floatValue();
 
-        final String variable = "value_" + nodeId;
-        fragmentShaderBuilder.addMainLine("vec2 " + variable + " = vec2(" + format(v1) + ", " + format(v2) + ");");
-
-        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Vector2, variable));
+        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Vector2, "vec2(" + format(v1) + ", " + format(v2) + ")"));
     }
 
     private String format(float component) {

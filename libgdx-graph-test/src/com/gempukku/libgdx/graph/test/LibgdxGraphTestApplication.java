@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.gempukku.libgdx.graph.GraphLoader;
@@ -43,9 +44,8 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         ModelBuilder modelBuilder = new ModelBuilder();
         GraphShaderAttribute graphShaderAttribute = new GraphShaderAttribute();
         graphShaderAttribute.addShaderTag("");
-        graphShaderAttribute.setProperty("Diffuse", rockTexture);
         graphShaderAttribute.setProperty("Cover", WhitePixel.textureRegion);
-        Material material = new Material(graphShaderAttribute);
+        Material material = new Material(TextureAttribute.createDiffuse(rockTexture), graphShaderAttribute);
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 material,
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
@@ -58,8 +58,9 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
         camera = new PerspectiveCamera();
-        camera.position.set(3f, 3f, 3f);
-        camera.lookAt(0, 0, 0);
+        camera.position.set(1.5f, 0f, 0f);
+        camera.up.set(0f, 1f, 0f);
+        camera.lookAt(0, 0f, 0f);
         camera.update();
 
         pipelineRenderer = loadPipelineRenderer();

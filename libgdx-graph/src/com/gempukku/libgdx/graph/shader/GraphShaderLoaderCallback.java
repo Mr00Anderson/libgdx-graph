@@ -61,6 +61,11 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
         GraphShaderContext context = new GraphShaderContextImpl(propertyMap);
         buildGraph(context, vertexShaderBuilder, fragmentShaderBuilder);
 
+        vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
+        vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
+        vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+        vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * (u_worldTrans * vec4(a_position, 1.0));");
+
         String vertexShader = vertexShaderBuilder.buildProgram();
         String fragmentShader = fragmentShaderBuilder.buildProgram();
 
@@ -99,10 +104,6 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
         fragmentShaderBuilder.addInitialLine("#define LOWP");
         fragmentShaderBuilder.addInitialLine("#define HIGH");
         fragmentShaderBuilder.addInitialLine("#endif");
-
-        vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
-        vertexShaderBuilder.addUniformVariable("u_projViewWorldTrans", "mat4", false, UniformSetters.projViewWorldTrans);
-        vertexShaderBuilder.addMainLine("gl_Position = u_projViewWorldTrans * vec4(a_position, 1.0);");
     }
 
     private void buildGraph(GraphShaderContext context, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {

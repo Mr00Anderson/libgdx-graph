@@ -59,7 +59,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
 
     private Map<String, DefaultFieldOutput> buildColorPropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
                                                                    VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
-        String variableName = "u_value_" + nodeId;
+        String variableName = "u_property_" + nodeId;
         fragmentShaderBuilder.addUniformVariable(variableName, "vec4", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
@@ -77,7 +77,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
 
     private Map<String, DefaultFieldOutput> buildFloatPropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
                                                                    VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
-        String variableName = "u_value_" + nodeId;
+        String variableName = "u_property_" + nodeId;
         fragmentShaderBuilder.addUniformVariable(variableName, "float", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
@@ -95,7 +95,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
 
     private Map<String, DefaultFieldOutput> buildVector2PropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
                                                                      VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
-        String variableName = "u_value_" + nodeId;
+        String variableName = "u_property_" + nodeId;
         fragmentShaderBuilder.addUniformVariable(variableName, "vec2", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
@@ -113,7 +113,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
 
     private Map<String, DefaultFieldOutput> buildVector3PropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
                                                                      VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
-        String variableName = "u_value_" + nodeId;
+        String variableName = "u_property_" + nodeId;
         fragmentShaderBuilder.addUniformVariable(variableName, "vec3", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
@@ -131,7 +131,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
 
     private Map<String, DefaultFieldOutput> buildTexturePropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
                                                                      VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
-        String textureVariableName = "u_texture_" + nodeId;
+        String textureVariableName = "u_property_" + nodeId;
         String uvTransformVariableName = "u_uvTransform_" + nodeId;
         fragmentShaderBuilder.addUniformVariable(textureVariableName, "sampler2D", false,
                 new UniformRegistry.UniformSetter() {

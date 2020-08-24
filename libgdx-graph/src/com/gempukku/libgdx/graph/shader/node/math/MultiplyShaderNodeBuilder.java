@@ -24,6 +24,7 @@ public class MultiplyShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
         FieldOutput bValue = inputs.get("b");
         ShaderFieldType resultType = determineOutputType(aValue, bValue);
 
+        fragmentShaderBuilder.addMainLine("// Multiply node");
         String name = "result_" + nodeId;
         fragmentShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = " + aValue.getRepresentation() + " * " + bValue.getRepresentation() + ";");
 

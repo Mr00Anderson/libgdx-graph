@@ -2,6 +2,7 @@ package com.gempukku.libgdx.graph.shader;
 
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -185,6 +186,14 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
         this.camera = camera;
         this.context = context;
         program.begin();
+
+        int cullFace = GL20.GL_BACK;
+        int depthFunc = GL20.GL_LEQUAL;
+        boolean depthMask = true;
+
+        context.setCullFace(cullFace);
+        context.setDepthTest(depthFunc, camera.near, camera.far);
+        context.setDepthMask(depthMask);
 
         for (Uniform uniform : uniforms.values()) {
             if (uniform.global)

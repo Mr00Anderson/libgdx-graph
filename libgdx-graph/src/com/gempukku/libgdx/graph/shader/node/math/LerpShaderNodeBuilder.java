@@ -25,6 +25,7 @@ public class LerpShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
         FieldOutput tValue = inputs.get("t");
         ShaderFieldType resultType = determineOutputType(aValue, bValue, tValue);
 
+        fragmentShaderBuilder.addMainLine("// Mix (lerp) node");
         String name = "result_" + nodeId;
         fragmentShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = mix(" + aValue.getRepresentation() + ", " + bValue.getRepresentation() + ", " + tValue.getRepresentation() + ");");
 

@@ -27,10 +27,8 @@ public class ValueColorShaderNodeBuilder extends ConfigurationShaderNodeBuilder 
     public Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
         final Color color = Color.valueOf((String) data.get("color"));
 
-        final String variable = "value_" + nodeId;
-        fragmentShaderBuilder.addMainLine("vec4 " + variable + " = vec4(" + format(color.r) + ", " + format(color.g) + ", " + format(color.b) + ", " + format(color.a) + ");");
-
-        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Color, variable));
+        String value = "vec4(" + format(color.r) + ", " + format(color.g) + ", " + format(color.b) + ", " + format(color.a) + ")";
+        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Color, value));
     }
 
     private String format(float component) {

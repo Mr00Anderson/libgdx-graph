@@ -10,6 +10,7 @@ import com.gempukku.libgdx.graph.shader.node.math.ClampShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.DotProductShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.LerpShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.MultiplyShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.PowerShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.MergeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.SplitShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.texture.Sampler2DShaderNodeBuilder;
@@ -45,6 +46,7 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new DotProductShaderNodeBuilder());
         addGraphShaderNodeBuilder(new LerpShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ClampShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new PowerShaderNodeBuilder());
 
         // Attributes
         addGraphShaderNodeBuilder(new AttributeNormalShaderNodeBuilder());

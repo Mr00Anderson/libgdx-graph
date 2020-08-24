@@ -26,11 +26,6 @@ public class DiffuseTextureShaderNodeBuilder extends ConfigurationShaderNodeBuil
         fragmentShaderBuilder.addUniformVariable("u_diffuseUVTransform", "vec4", false,
                 UniformSetters.diffuseUVTransform);
 
-        fragmentShaderBuilder.addMainLine("// Diffuse Texture Node");
-
-        String name = "texture_" + nodeId;
-        fragmentShaderBuilder.addMainLine("vec4 " + name + " = u_diffuseUVTransform;");
-
-        return Collections.singletonMap("texture", new DefaultFieldOutput(ShaderFieldType.TextureRegion, name, "u_diffuseTexture"));
+        return Collections.singletonMap("texture", new DefaultFieldOutput(ShaderFieldType.TextureRegion, "u_diffuseUVTransform", "u_diffuseTexture"));
     }
 }

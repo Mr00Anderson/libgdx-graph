@@ -25,6 +25,7 @@ public class ClampShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
         FieldOutput maxValue = inputs.get("max");
         ShaderFieldType resultType = determineOutputType(inputValue, minValue, maxValue);
 
+        fragmentShaderBuilder.addMainLine("// Clamp node");
         String name = "result_" + nodeId;
         fragmentShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = clamp(" + inputValue.getRepresentation() + ", " + minValue.getRepresentation() + ", " + maxValue.getRepresentation() + ");");
 

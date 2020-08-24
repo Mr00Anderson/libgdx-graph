@@ -22,9 +22,6 @@ public class ValueBooleanShaderNodeBuilder extends ConfigurationShaderNodeBuilde
     public Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
         boolean value = (Boolean) data.get("value");
 
-        final String variable = "value_" + nodeId;
-        fragmentShaderBuilder.addMainLine("bool " + variable + " = " + value + ";");
-
-        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Boolean, variable));
+        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Boolean, String.valueOf(value)));
     }
 }
