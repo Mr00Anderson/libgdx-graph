@@ -103,7 +103,7 @@ public class ValueVector3BoxProducer<T extends FieldType> extends ValueGraphBoxP
                         object.put("v3", Float.parseFloat(v3Input.getText()));
                     }
                 });
-        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutput("value"));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutputs().get("value"));
         return colorPart;
     }
 }

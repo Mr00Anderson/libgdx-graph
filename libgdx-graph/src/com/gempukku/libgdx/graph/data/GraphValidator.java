@@ -30,9 +30,9 @@ public class GraphValidator {
         Set<String> validatedFields = new HashSet<>();
         for (U incomingConnection : graph.getIncomingConnections(nodeId)) {
             String fieldTo = incomingConnection.getFieldTo();
-            GraphNodeInput<V> input = thisNode.getInput(fieldTo);
+            GraphNodeInput<V> input = thisNode.getInputs().get(fieldTo);
             T remoteNode = graph.getNodeById(incomingConnection.getNodeFrom());
-            GraphNodeOutput<V> output = remoteNode.getOutput(incomingConnection.getFieldFrom());
+            GraphNodeOutput<V> output = remoteNode.getOutputs().get(incomingConnection.getFieldFrom());
 
             // Validate the actual output is accepted by the input
             List<? extends V> acceptedPropertyTypes = input.getAcceptedPropertyTypes();
@@ -44,7 +44,7 @@ public class GraphValidator {
             validateNode(result, graph, incomingConnection.getNodeFrom());
         }
 
-        for (GraphNodeInput<V> input : thisNode.getInputs()) {
+        for (GraphNodeInput<V> input : thisNode.getInputs().values()) {
             if (input.isRequired() && !validatedFields.contains(input.getFieldId()))
                 result.addErrorConnector(new NodeConnector(nodeId, input.getFieldId()));
         }

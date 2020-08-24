@@ -58,7 +58,7 @@ public class ValueBooleanBoxProducer<T extends FieldType> extends ValueGraphBoxP
                         object.put("v", checkBox.isChecked());
                     }
                 });
-        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutput("value"));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutputs().get("value"));
         return colorPart;
     }
 }

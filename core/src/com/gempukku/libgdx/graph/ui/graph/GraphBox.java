@@ -5,6 +5,8 @@ import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphNode;
 import org.json.simple.JSONObject;
 
+import java.util.Map;
+
 public interface GraphBox<T extends FieldType> extends GraphNode<T> {
     Actor getActor();
 
@@ -14,11 +16,7 @@ public interface GraphBox<T extends FieldType> extends GraphNode<T> {
 
     String getType();
 
-    GraphBoxInputConnector<T> getInput(String fieldId);
+    Map<String, GraphBoxInputConnector<T>> getInputs();
 
-    Iterable<GraphBoxInputConnector<T>> getInputs();
-
-    GraphBoxOutputConnector<T> getOutput(String fieldId);
-
-    Iterable<GraphBoxOutputConnector<T>> getOutputs();
+    Map<String, GraphBoxOutputConnector<T>> getOutputs();
 }

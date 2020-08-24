@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.pipeline;
+package com.gempukku.libgdx.graph;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

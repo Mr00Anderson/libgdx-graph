@@ -41,8 +41,8 @@ public class GraphBoxProducerImpl<T extends FieldType> implements GraphBoxProduc
     @Override
     public GraphBox<T> createDefault(Skin skin, String id) {
         GraphBoxImpl<T> start = new GraphBoxImpl<T>(id, configuration, skin);
-        Iterator<GraphNodeInput<T>> inputIterator = configuration.getNodeInputs().iterator();
-        Iterator<GraphNodeOutput<T>> outputIterator = configuration.getNodeOutputs().iterator();
+        Iterator<GraphNodeInput<T>> inputIterator = configuration.getNodeInputs().values().iterator();
+        Iterator<GraphNodeOutput<T>> outputIterator = configuration.getNodeOutputs().values().iterator();
         while (inputIterator.hasNext() || outputIterator.hasNext()) {
             GraphNodeInput<T> input = null;
             GraphNodeOutput<T> output = null;

@@ -1,8 +1,8 @@
 package com.gempukku.libgdx.graph.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.gempukku.libgdx.graph.GraphLoaderCallback;
 import com.gempukku.libgdx.graph.data.FieldType;
-import com.gempukku.libgdx.graph.pipeline.GraphLoaderCallback;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphDesignTab;
 import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;

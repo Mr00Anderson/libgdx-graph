@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class CommonShaderBuilder {
-    private UniformRegistry uniformRegistry;
+    protected UniformRegistry uniformRegistry;
 
     private Map<String, UniformVariable> uniformVariables = new LinkedHashMap<String, UniformVariable>();
     private Map<String, String> varyingVariables = new LinkedHashMap<String, String>();
@@ -16,6 +16,7 @@ public abstract class CommonShaderBuilder {
     private Map<String, String> functions = new LinkedHashMap<String, String>();
     private Map<String, String> structures = new LinkedHashMap<String, String>();
     private List<String> mainLines = new LinkedList<>();
+    private List<String> initialLines = new LinkedList<>();
 
     public CommonShaderBuilder(UniformRegistry uniformRegistry) {
         this.uniformRegistry = uniformRegistry;
@@ -69,7 +70,11 @@ public abstract class CommonShaderBuilder {
         structures.put(name, structureText);
     }
 
-    public void addMainLin(String mainLine) {
+    public void addInitialLine(String initialLine) {
+        initialLines.add(initialLine);
+    }
+
+    public void addMainLine(String mainLine) {
         mainLines.add(mainLine);
     }
 
@@ -117,10 +122,18 @@ public abstract class CommonShaderBuilder {
             stringBuilder.append('\n');
     }
 
+    protected void appendInitial(StringBuilder stringBuilder) {
+        for (String initialLine : initialLines) {
+            stringBuilder.append(initialLine).append('\n');
+        }
+        if (!initialLines.isEmpty())
+            stringBuilder.append('\n');
+    }
+
     protected void appendMain(StringBuilder stringBuilder) {
         stringBuilder.append("void main() {\n");
         for (String mainLine : mainLines) {
-            stringBuilder.append(mainLine).append('\n');
+            stringBuilder.append("  ").append(mainLine).append('\n');
         }
 
         stringBuilder.append("}\n");

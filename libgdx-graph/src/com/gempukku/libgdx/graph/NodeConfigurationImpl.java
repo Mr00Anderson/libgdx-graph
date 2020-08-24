@@ -37,22 +37,12 @@ public class NodeConfigurationImpl<T extends FieldType> implements NodeConfigura
     }
 
     @Override
-    public Iterable<GraphNodeInput<T>> getNodeInputs() {
-        return nodeInputs.values();
+    public Map<String, GraphNodeInput<T>> getNodeInputs() {
+        return nodeInputs;
     }
 
     @Override
-    public Iterable<GraphNodeOutput<T>> getNodeOutputs() {
-        return nodeOutputs.values();
-    }
-
-    @Override
-    public GraphNodeInput<T> getNodeInput(String name) {
-        return nodeInputs.get(name);
-    }
-
-    @Override
-    public GraphNodeOutput<T> getNodeOutput(String name) {
-        return nodeOutputs.get(name);
+    public Map<String, GraphNodeOutput<T>> getNodeOutputs() {
+        return nodeOutputs;
     }
 }

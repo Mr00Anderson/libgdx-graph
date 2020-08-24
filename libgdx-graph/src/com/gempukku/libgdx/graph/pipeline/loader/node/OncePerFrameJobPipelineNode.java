@@ -31,7 +31,7 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
     }
 
     protected PipelineFieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
-        return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
+        return configuration.getNodeOutputs().get(name).getProducablePropertyTypes().get(0);
     }
 
     protected abstract void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues);

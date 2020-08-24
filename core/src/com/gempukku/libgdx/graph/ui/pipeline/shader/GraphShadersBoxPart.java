@@ -135,7 +135,10 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
             shaderObject.put("tag", shader.getTag());
             GetSerializedGraph event = new GetSerializedGraph(shader.getId());
             fire(event);
-            shaderObject.put("shader", event.getGraph());
+            JSONObject shaderGraph = event.getGraph();
+            if (shaderGraph == null)
+                shaderGraph = shader.getInitialShaderJson();
+            shaderObject.put("shader", shaderGraph);
             shaderArray.add(shaderObject);
         }
 
@@ -144,11 +147,13 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
 
     private class ShaderInfo {
         private String id;
+        private JSONObject initialShaderJson;
         private Table table;
         private TextField textField;
 
-        public ShaderInfo(final String id, String tag, final JSONObject shaderJson) {
+        public ShaderInfo(final String id, String tag, final JSONObject initialShaderJson) {
             this.id = id;
+            this.initialShaderJson = initialShaderJson;
             table = new Table(skin);
             textField = new TextField(tag, skin);
             textField.setMessageText("Shader Tag");
@@ -158,7 +163,7 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
                     new ClickListener(Input.Buttons.LEFT) {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            textButton.fire(new RequestGraphOpen(id, shaderJson));
+                            textButton.fire(new RequestGraphOpen(id, initialShaderJson));
                         }
                     });
             table.add(textButton).width(ACTIONS_WIDTH);
@@ -176,6 +181,10 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
 
         public String getTag() {
             return textField.getText();
+        }
+
+        public JSONObject getInitialShaderJson() {
+            return initialShaderJson;
         }
     }
 }

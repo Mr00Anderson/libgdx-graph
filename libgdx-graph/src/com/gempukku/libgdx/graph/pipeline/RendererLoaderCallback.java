@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.pipeline;
 
+import com.gempukku.libgdx.graph.GraphLoaderCallback;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.pipeline.impl.PipelineRendererImpl;
 import com.gempukku.libgdx.graph.pipeline.impl.WritablePipelineProperty;
@@ -69,7 +70,7 @@ public class RendererLoaderCallback implements GraphLoaderCallback<PipelineRende
         if (nodeProducer == null)
             throw new IllegalStateException("Unable to find node producer for type: " + nodeInfo.type);
         Map<String, PipelineNode.FieldOutput<?>> inputFields = new HashMap<>();
-        for (GraphNodeInput nodeInput : nodeProducer.getConfiguration(nodeInfo.data).getNodeInputs()) {
+        for (GraphNodeInput<PipelineFieldType> nodeInput : nodeProducer.getConfiguration(nodeInfo.data).getNodeInputs().values()) {
             String inputName = nodeInput.getFieldId();
             PipelineVertextInfo vertexInfo = findInputProducer(nodeId, inputName);
             if (vertexInfo == null && nodeInput.isRequired())

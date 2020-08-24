@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.gempukku.libgdx.graph.pipeline.GraphLoader;
+import com.gempukku.libgdx.graph.GraphLoader;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.ui.graph.GetSerializedGraph;

@@ -77,8 +77,8 @@ public class StartPipelineNode extends OncePerFrameJobPipelineNode {
 
     @Override
     public void endFrame() {
-        super.endFrame();
         renderPipeline.ageOutBuffers();
+        super.endFrame();
     }
 
     @Override

@@ -42,16 +42,6 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
     }
 
     @Override
-    public GraphBoxInputConnector<T> getInput(String fieldId) {
-        return inputConnectors.get(fieldId);
-    }
-
-    @Override
-    public GraphBoxOutputConnector<T> getOutput(String fieldId) {
-        return outputConnectors.get(fieldId);
-    }
-
-    @Override
     public boolean isInputField(String fieldId) {
         return inputConnectors.containsKey(fieldId);
     }
@@ -145,13 +135,13 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
     }
 
     @Override
-    public Iterable<GraphBoxInputConnector<T>> getInputs() {
-        return inputConnectors.values();
+    public Map<String, GraphBoxInputConnector<T>> getInputs() {
+        return inputConnectors;
     }
 
     @Override
-    public Iterable<GraphBoxOutputConnector<T>> getOutputs() {
-        return outputConnectors.values();
+    public Map<String, GraphBoxOutputConnector<T>> getOutputs() {
+        return outputConnectors;
     }
 
     @Override

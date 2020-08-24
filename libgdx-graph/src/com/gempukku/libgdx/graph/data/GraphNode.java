@@ -1,13 +1,11 @@
 package com.gempukku.libgdx.graph.data;
 
+import java.util.Map;
+
 public interface GraphNode<T extends FieldType> {
     boolean isInputField(String fieldId);
 
-    GraphNodeInput<T> getInput(String fieldId);
+    Map<String, ? extends GraphNodeInput<T>> getInputs();
 
-    GraphNodeOutput<T> getOutput(String fieldId);
-
-    Iterable<? extends GraphNodeInput<T>> getInputs();
-
-    Iterable<? extends GraphNodeOutput<T>> getOutputs();
+    Map<String, ? extends GraphNodeOutput<T>> getOutputs();
 }

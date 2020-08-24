@@ -42,8 +42,8 @@ public class GraphShaderRendererBoxProducer implements GraphBoxProducer<Pipeline
     }
 
     private void addInputsAndOutputs(GraphBoxImpl<PipelineFieldType> graphBox, Skin skin) {
-        Iterator<GraphNodeInput<PipelineFieldType>> inputIterator = configuration.getNodeInputs().iterator();
-        Iterator<GraphNodeOutput<PipelineFieldType>> outputIterator = configuration.getNodeOutputs().iterator();
+        Iterator<GraphNodeInput<PipelineFieldType>> inputIterator = configuration.getNodeInputs().values().iterator();
+        Iterator<GraphNodeOutput<PipelineFieldType>> outputIterator = configuration.getNodeOutputs().values().iterator();
         while (inputIterator.hasNext() || outputIterator.hasNext()) {
             GraphNodeInput<PipelineFieldType> input = null;
             GraphNodeOutput<PipelineFieldType> output = null;

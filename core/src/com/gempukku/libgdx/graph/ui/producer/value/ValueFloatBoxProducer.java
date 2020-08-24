@@ -67,7 +67,7 @@ public class ValueFloatBoxProducer<T extends FieldType> extends ValueGraphBoxPro
                         object.put("v1", Float.parseFloat(v1Input.getText()));
                     }
                 });
-        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutput("value"));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutputs().get("value"));
         return colorPart;
     }
 }

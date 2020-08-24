@@ -93,7 +93,7 @@ public class ValueColorBoxProducer<T extends FieldType> extends ValueGraphBoxPro
                         object.put("color", image.getColor().toString());
                     }
                 });
-        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutput("value"));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutputs().get("value"));
         return colorPart;
     }
 }

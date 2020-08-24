@@ -233,8 +233,8 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
                     NodeConnector connectorFrom = drawingFromIsInput ? clickedNodeConnector : drawingFromConnector;
                     NodeConnector connectorTo = drawingFromIsInput ? drawingFromConnector : clickedNodeConnector;
 
-                    GraphNodeOutput<T> output = getGraphBoxById(connectorFrom.getNodeId()).getOutput(connectorFrom.getFieldId());
-                    GraphNodeInput<T> input = getGraphBoxById(connectorTo.getNodeId()).getInput(connectorTo.getFieldId());
+                    GraphNodeOutput<T> output = getGraphBoxById(connectorFrom.getNodeId()).getOutputs().get(connectorFrom.getFieldId());
+                    GraphNodeInput<T> input = getGraphBoxById(connectorTo.getNodeId()).getInputs().get(connectorTo.getFieldId());
 
                     if (!connectorsMatch(input, output)) {
                         // Either input-input, output-output, or different property type
@@ -260,7 +260,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
             }
         } else {
             if (clickedNode.isInputField(clickedNodeConnector.getFieldId())
-                    || !clickedNode.getOutput(clickedNodeConnector.getFieldId()).supportsMultiple()) {
+                    || !clickedNode.getOutputs().get(clickedNodeConnector.getFieldId()).supportsMultiple()) {
                 List<GraphConnection> nodeConnections = findNodeConnections(clickedNodeConnector);
                 if (nodeConnections.size() > 0) {
                     GraphConnection oldConnection = nodeConnections.get(0);
@@ -373,7 +373,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
             GraphBox<T> graphBox = graphBoxes.get(nodeId);
             float windowX = window.getX();
             float windowY = window.getY();
-            for (GraphBoxInputConnector<T> connector : graphBox.getInputs()) {
+            for (GraphBoxInputConnector<T> connector : graphBox.getInputs().values()) {
                 switch (connector.getSide()) {
                     case Left:
                         from.set(windowX - CONNECTOR_LENGTH, windowY + connector.getOffset());
@@ -388,7 +388,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
 
                 connectionNodeMap.put(new NodeConnector(nodeId, connector.getFieldId()), rectangle);
             }
-            for (GraphBoxOutputConnector<T> connector : graphBox.getOutputs()) {
+            for (GraphBoxOutputConnector<T> connector : graphBox.getOutputs().values()) {
                 switch (connector.getSide()) {
                     case Right:
                         from.set(windowX + window.getWidth() + CONNECTOR_LENGTH, windowY + connector.getOffset());
@@ -410,11 +410,11 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
         for (GraphConnection graphConnection : graphConnections) {
             NodeConnector fromNode = getNodeInfo(graphConnection.getNodeFrom(), graphConnection.getFieldFrom());
             Window fromWindow = boxWindows.get(fromNode.getNodeId());
-            GraphBoxOutputConnector<T> output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
+            GraphBoxOutputConnector<T> output = getGraphBoxById(fromNode.getNodeId()).getOutputs().get(fromNode.getFieldId());
             calculateConnection(from, fromWindow, output);
             NodeConnector toNode = getNodeInfo(graphConnection.getNodeTo(), graphConnection.getFieldTo());
             Window toWindow = boxWindows.get(toNode.getNodeId());
-            GraphBoxInputConnector<T> input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
+            GraphBoxInputConnector<T> input = getGraphBoxById(toNode.getNodeId()).getInputs().get(toNode.getFieldId());
             calculateConnection(to, toWindow, input);
 
             Shape shape = basicStroke.createStrokedShape(new Line2D.Float(from.x, from.y, to.x, to.y));
@@ -425,7 +425,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
 
     private NodeConnector getNodeInfo(String nodeId, String fieldId) {
         GraphBox<T> graphBox = graphBoxes.get(nodeId);
-        if (graphBox.getInput(fieldId) != null || graphBox.getOutput(fieldId) != null)
+        if (graphBox.getInputs().get(fieldId) != null || graphBox.getOutputs().get(fieldId) != null)
             return new NodeConnector(nodeId, fieldId);
         return null;
     }
@@ -453,7 +453,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
             GraphBox<T> graphBox = graphBoxes.get(nodeId);
-            for (GraphBoxInputConnector<T> connector : graphBox.getInputs()) {
+            for (GraphBoxInputConnector<T> connector : graphBox.getInputs().values()) {
                 if (!connector.isRequired()) {
                     calculateConnector(from, to, window, connector);
                     from.add(x, y);
@@ -464,7 +464,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
                 }
             }
 
-            for (GraphBoxOutputConnector<T> connector : graphBox.getOutputs()) {
+            for (GraphBoxOutputConnector<T> connector : graphBox.getOutputs().values()) {
                 calculateConnector(from, to, window, connector);
                 from.add(x, y);
                 to.add(x, y);
@@ -477,11 +477,11 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
         for (GraphConnection graphConnection : graphConnections) {
             NodeConnector fromNode = getNodeInfo(graphConnection.getNodeFrom(), graphConnection.getFieldFrom());
             Window fromWindow = boxWindows.get(fromNode.getNodeId());
-            GraphBoxOutputConnector<T> output = getGraphBoxById(fromNode.getNodeId()).getOutput(fromNode.getFieldId());
+            GraphBoxOutputConnector<T> output = getGraphBoxById(fromNode.getNodeId()).getOutputs().get(fromNode.getFieldId());
             calculateConnection(from, fromWindow, output);
             NodeConnector toNode = getNodeInfo(graphConnection.getNodeTo(), graphConnection.getFieldTo());
             Window toWindow = boxWindows.get(toNode.getNodeId());
-            GraphBoxInputConnector<T> input = getGraphBoxById(toNode.getNodeId()).getInput(toNode.getFieldId());
+            GraphBoxInputConnector<T> input = getGraphBoxById(toNode.getNodeId()).getInputs().get(toNode.getFieldId());
             calculateConnection(to, toWindow, input);
 
             boolean error = validationResult.getErrorConnections().contains(graphConnection);
@@ -498,11 +498,11 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
             GraphBox<T> drawingFromNode = getGraphBoxById(drawingFromConnector.getNodeId());
             Window fromWindow = getBoxWindow(drawingFromConnector.getNodeId());
             if (drawingFromNode.isInputField(drawingFromConnector.getFieldId())) {
-                GraphBoxInputConnector<T> input = drawingFromNode.getInput(drawingFromConnector.getFieldId());
+                GraphBoxInputConnector<T> input = drawingFromNode.getInputs().get(drawingFromConnector.getFieldId());
                 calculateConnection(from, fromWindow, input);
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             } else {
-                GraphBoxOutputConnector<T> output = drawingFromNode.getOutput(drawingFromConnector.getFieldId());
+                GraphBoxOutputConnector<T> output = drawingFromNode.getOutputs().get(drawingFromConnector.getFieldId());
                 calculateConnection(from, fromWindow, output);
                 shapeRenderer.line(x + from.x, y + from.y, Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
             }
@@ -514,7 +514,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
             GraphBox<T> graphBox = graphBoxes.get(nodeId);
-            for (GraphBoxInputConnector<T> connector : graphBox.getInputs()) {
+            for (GraphBoxInputConnector<T> connector : graphBox.getInputs().values()) {
                 if (connector.isRequired()) {
                     calculateConnector(from, to, window, connector);
                     from.add(x, y);

@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.g3d.Attributes;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -15,13 +14,14 @@ import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class BasicShader implements Shader, UniformRegistry {
+public abstract class BasicShader implements UniformRegistry, Disposable {
     private static class Attribute {
         private final String alias;
         private int location = -1;
@@ -166,23 +166,6 @@ public abstract class BasicShader implements Shader, UniformRegistry {
         return location;
     }
 
-    @Override
-    public void begin(Camera camera, RenderContext context) {
-        this.camera = camera;
-        this.context = context;
-        program.begin();
-        currentMesh = null;
-
-        for (Uniform uniform : uniforms.values()) {
-            if (uniform.global)
-                uniform.setter.set(this, uniform.location, null, null);
-        }
-        for (StructArrayUniform uniform : structArrayUniforms.values()) {
-            if (uniform.global)
-                uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, null, null);
-        }
-    }
-
     private final IntArray tempArray = new IntArray();
 
     private final int[] getAttributeLocations(final VertexAttributes attrs) {
@@ -198,25 +181,29 @@ public abstract class BasicShader implements Shader, UniformRegistry {
         return tempArray.items;
     }
 
-    private Attributes combinedAttributes = new Attributes();
+    public void begin(Camera camera, Environment environment, RenderContext context) {
+        this.camera = camera;
+        this.context = context;
+        program.begin();
 
-    @Override
-    public void render(Renderable renderable) {
-        if (renderable.worldTransform.det3x3() == 0) return;
-        combinedAttributes.clear();
-        if (renderable.environment != null) combinedAttributes.set(renderable.environment);
-        if (renderable.material != null) combinedAttributes.set(renderable.material);
-        render(renderable, combinedAttributes);
+        for (Uniform uniform : uniforms.values()) {
+            if (uniform.global)
+                uniform.setter.set(this, uniform.location, null, null);
+        }
+        for (StructArrayUniform uniform : structArrayUniforms.values()) {
+            if (uniform.global)
+                uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, null, null);
+        }
     }
 
-    protected void render(Renderable renderable, final Attributes combinedAttributes) {
+    public void render(Renderable renderable) {
         for (Uniform uniform : uniforms.values()) {
             if (!uniform.global)
-                uniform.setter.set(this, uniform.location, renderable, combinedAttributes);
+                uniform.setter.set(this, uniform.location, renderable, renderable.material);
         }
         for (StructArrayUniform uniform : structArrayUniforms.values()) {
             if (!uniform.global)
-                uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, renderable, combinedAttributes);
+                uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, renderable, renderable.material);
         }
 
         if (currentMesh != renderable.meshPart.mesh) {
@@ -227,7 +214,6 @@ public abstract class BasicShader implements Shader, UniformRegistry {
         renderable.meshPart.render(program, false);
     }
 
-    @Override
     public void end() {
         if (currentMesh != null) {
             currentMesh.unbind(program, tempArray.items);

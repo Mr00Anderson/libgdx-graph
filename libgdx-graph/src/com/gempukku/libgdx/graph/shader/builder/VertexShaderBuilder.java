@@ -15,6 +15,7 @@ public class VertexShaderBuilder extends CommonShaderBuilder {
     public void addAttributeVariable(String name, String type) {
         if (attributeVariables.containsKey(name))
             throw new IllegalStateException("Already contains vertex attribute of that name");
+        uniformRegistry.registerAttribute(name);
         attributeVariables.put(name, type);
     }
 
@@ -29,6 +30,7 @@ public class VertexShaderBuilder extends CommonShaderBuilder {
     public String buildProgram() {
         StringBuilder result = new StringBuilder();
 
+        appendInitial(result);
         appendStructures(result);
         appendAttributeVariables(result);
         appendUniformVariables(result);

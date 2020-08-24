@@ -86,7 +86,7 @@ public class ValueVector2BoxProducer<T extends FieldType> extends ValueGraphBoxP
                         object.put("v2", Float.parseFloat(v2Input.getText()));
                     }
                 });
-        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutput("value"));
+        colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutputs().get("value"));
         return colorPart;
     }
 }

@@ -23,7 +23,7 @@ public class ValuePipelineNode implements PipelineNode {
         return new FieldOutput<Object>() {
             @Override
             public PipelineFieldType getPropertyType() {
-                return configuration.getNodeOutput(name).getProducablePropertyTypes().get(0);
+                return configuration.getNodeOutputs().get(name).getProducablePropertyTypes().get(0);
             }
 
             @Override
