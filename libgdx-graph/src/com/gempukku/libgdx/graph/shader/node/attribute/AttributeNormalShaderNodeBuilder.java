@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.shader.node.attribute;
 
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformSetters;
@@ -21,7 +22,7 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
 
     @Override
     public Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
-        vertexShaderBuilder.addAttributeVariable("a_normal", "vec3");
+        vertexShaderBuilder.addAttributeVariable(ShaderProgram.NORMAL_ATTRIBUTE, "vec3");
 
         String coordinates = (String) data.get("coordinates");
         if (coordinates.equals("world")) {

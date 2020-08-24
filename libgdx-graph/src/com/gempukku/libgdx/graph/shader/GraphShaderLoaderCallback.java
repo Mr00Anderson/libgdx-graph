@@ -100,7 +100,7 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
         fragmentShaderBuilder.addInitialLine("#define HIGH");
         fragmentShaderBuilder.addInitialLine("#endif");
 
-        vertexShaderBuilder.addAttributeVariable("a_position", "vec3");
+        vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
         vertexShaderBuilder.addUniformVariable("u_projViewWorldTrans", "mat4", false, UniformSetters.projViewWorldTrans);
         vertexShaderBuilder.addMainLine("gl_Position = u_projViewWorldTrans * vec4(a_position, 1.0);");
     }

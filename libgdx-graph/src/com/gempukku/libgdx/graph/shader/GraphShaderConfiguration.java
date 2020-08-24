@@ -4,6 +4,9 @@ import com.gempukku.libgdx.graph.shader.node.EndGraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.PropertyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.part.MergeShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.part.SplitShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueBooleanShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueColorShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueFloatShaderNodeBuilder;
@@ -27,7 +30,11 @@ public class GraphShaderConfiguration {
     static {
         addGraphShaderNodeBuilder(new EndGraphShaderNodeBuilder());
 
+        addGraphShaderNodeBuilder(new MergeShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new SplitShaderNodeBuilder());
+
         addGraphShaderNodeBuilder(new AttributeNormalShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new AttributeUVShaderNodeBuilder());
 
         addGraphShaderNodeBuilder(new ValueBooleanShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ValueColorShaderNodeBuilder());

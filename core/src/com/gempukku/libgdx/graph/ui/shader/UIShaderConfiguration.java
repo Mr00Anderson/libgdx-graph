@@ -2,6 +2,8 @@ package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.config.EndShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.part.MergeShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.part.SplitShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueBooleanShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueColorShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueFloatShaderNodeConfiguration;
@@ -17,6 +19,7 @@ import com.gempukku.libgdx.graph.ui.producer.value.ValueFloatBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeNormalBoxProducer;
+import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeUVBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyFloatBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyVector2BoxProducer;
@@ -36,7 +39,13 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
     static {
         Set<GraphBoxProducer<ShaderFieldType>> modelProducers = new LinkedHashSet<>();
         modelProducers.add(new AttributeNormalBoxProducer());
+        modelProducers.add(new AttributeUVBoxProducer());
         graphBoxProducers.put("Model", modelProducers);
+
+        Set<GraphBoxProducer<ShaderFieldType>> mathProducers = new LinkedHashSet<>();
+        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
+        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));
+        graphBoxProducers.put("Math", mathProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> valueProducers = new LinkedHashSet<>();
         valueProducers.add(new ValueColorBoxProducer<ShaderFieldType>(new ValueColorShaderNodeConfiguration()));

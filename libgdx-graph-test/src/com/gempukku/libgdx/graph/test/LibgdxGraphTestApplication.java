@@ -54,7 +54,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
         camera = new PerspectiveCamera();
-        camera.position.set(5f, 5f, 5f);
+        camera.position.set(5f, -5f, 5f);
         camera.lookAt(0, 0, 0);
         camera.update();
 
