@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.shader.node;
 
+import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
@@ -17,7 +18,7 @@ public class EndGraphShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
 
     @Override
     public Map<String, FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
-                                              VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+                                              VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
         fragmentShaderBuilder.addMainLine("// End Graph Node");
         FieldOutput alphaField = inputs.get("alpha");
         String alpha = (alphaField != null) ? alphaField.getRepresentation() : "1.0";

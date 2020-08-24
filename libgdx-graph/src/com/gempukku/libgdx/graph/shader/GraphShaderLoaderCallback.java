@@ -6,6 +6,7 @@ import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
 import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.property.GraphShaderPropertyProducer;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShader> {
     private Map<String, ShaderNodeInfo> nodes = new HashMap<>();
     private List<ShaderVertextInfo> vertices = new LinkedList<>();
+    private Map<String, PropertySource> propertyMap = new HashMap<>();
 
     private String tag;
     private GraphShader graphShader;
@@ -43,7 +45,10 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
 
     @Override
     public void addPipelineProperty(String type, String name, JSONObject data) {
-        // TODO
+        GraphShaderPropertyProducer propertyProducer = findPropertyProducerByType(type);
+        if (propertyProducer == null)
+            throw new IllegalStateException("Unable to find property producer for type: " + type);
+        propertyMap.put(name, propertyProducer.createProperty(name, data));
     }
 
     @Override
@@ -52,7 +57,9 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
         FragmentShaderBuilder fragmentShaderBuilder = new FragmentShaderBuilder(graphShader);
 
         initializeShaders(vertexShaderBuilder, fragmentShaderBuilder);
-        buildGraph(vertexShaderBuilder, fragmentShaderBuilder);
+
+        GraphShaderContext context = new GraphShaderContextImpl(propertyMap);
+        buildGraph(context, vertexShaderBuilder, fragmentShaderBuilder);
 
         String vertexShader = vertexShaderBuilder.buildProgram();
         String fragmentShader = fragmentShaderBuilder.buildProgram();
@@ -98,12 +105,12 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
         vertexShaderBuilder.addMainLine("gl_Position = u_projViewWorldTrans * vec4(a_position, 1.0);");
     }
 
-    private void buildGraph(VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+    private void buildGraph(GraphShaderContext context, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> graphNodeOutputs = new HashMap<>();
-        buildNode("end", graphNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        buildNode(context, "end", graphNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
     }
 
-    private Map<String, GraphShaderNodeBuilder.FieldOutput> buildNode(String nodeId, Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> nodeOutputs,
+    private Map<String, GraphShaderNodeBuilder.FieldOutput> buildNode(GraphShaderContext context, String nodeId, Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> nodeOutputs,
                                                                       VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         Map<String, GraphShaderNodeBuilder.FieldOutput> nodeOutput = nodeOutputs.get(nodeId);
         if (nodeOutput == null) {
@@ -118,7 +125,7 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
                 if (vertexInfo == null && nodeInput.isRequired())
                     throw new IllegalStateException("Required input not provided");
                 if (vertexInfo != null) {
-                    Map<String, GraphShaderNodeBuilder.FieldOutput> output = buildNode(vertexInfo.fromNode, nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(context, vertexInfo.fromNode, nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
                     GraphShaderNodeBuilder.FieldOutput fieldOutput = output.get(vertexInfo.fromField);
                     ShaderFieldType fieldType = fieldOutput.getFieldType();
                     if (!nodeInput.getAcceptedPropertyTypes().contains(fieldType))
@@ -127,7 +134,7 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
                 }
             }
             Set<String> requiredOutputs = findRequiredOutputs(nodeId);
-            nodeOutput = nodeBuilder.buildNode(nodeId, nodeInfo.data, inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(nodeId, nodeInfo.data, inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context);
             nodeOutputs.put(nodeId, nodeOutput);
         }
 
@@ -147,6 +154,14 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
         for (ShaderVertextInfo vertex : vertices) {
             if (vertex.toNode.equals(nodeId) && vertex.toField.equals(nodeField))
                 return vertex;
+        }
+        return null;
+    }
+
+    private GraphShaderPropertyProducer findPropertyProducerByType(String type) {
+        for (GraphShaderPropertyProducer graphShaderPropertyProducer : GraphShaderConfiguration.graphShaderPropertyProducers) {
+            if (graphShaderPropertyProducer.supportsType(type))
+                return graphShaderPropertyProducer;
         }
         return null;
     }

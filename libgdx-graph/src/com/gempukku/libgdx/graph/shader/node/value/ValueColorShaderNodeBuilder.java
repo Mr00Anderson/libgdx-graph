@@ -1,11 +1,13 @@
 package com.gempukku.libgdx.graph.shader.node.value;
 
 import com.badlogic.gdx.graphics.Color;
+import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
 import com.gempukku.libgdx.graph.shader.config.value.ValueColorShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
 
 import java.text.DecimalFormat;
@@ -22,25 +24,13 @@ public class ValueColorShaderNodeBuilder extends ConfigurationShaderNodeBuilder 
     }
 
     @Override
-    public Map<String, FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+    public Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
         final Color color = Color.valueOf((String) data.get("color"));
 
         final String variable = "value_" + nodeId;
         fragmentShaderBuilder.addMainLine("vec4 " + variable + " = vec4(" + format(color.r) + ", " + format(color.g) + ", " + format(color.b) + ", " + format(color.a) + ");");
 
-        FieldOutput valueOutput = new FieldOutput() {
-            @Override
-            public ShaderFieldType getFieldType() {
-                return ShaderFieldType.Color;
-            }
-
-            @Override
-            public String getRepresentation() {
-                return variable;
-            }
-        };
-
-        return Collections.singletonMap("value", valueOutput);
+        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Color, variable));
     }
 
     private String format(float component) {
