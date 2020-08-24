@@ -262,7 +262,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         pipelineProperties.grow();
         Table headerTable = new Table();
         headerTable.setBackground(skin.getDrawable("vis-blue"));
-        headerTable.add(new Label("Pipeline properties", skin)).growX();
+        headerTable.add(new Label("Properties", skin)).growX();
         final VisTextButton newPropertyButton = new VisTextButton("Add", "menu-bar");
         newPropertyButton.addListener(
                 new ClickListener(Input.Buttons.LEFT) {

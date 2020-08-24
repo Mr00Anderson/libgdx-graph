@@ -64,6 +64,10 @@ public abstract class CommonShaderBuilder {
         functions.put(name, functionText);
     }
 
+    public boolean containsFunction(String name) {
+        return functions.containsKey(name);
+    }
+
     public void addStructure(String name, String structureText) {
         if (structures.containsKey(name))
             throw new IllegalStateException("Already contains structure of that name");

@@ -8,6 +8,7 @@ import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfigur
 import com.gempukku.libgdx.graph.shader.config.math.LerpShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.MultiplyShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.PowerShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.RemapShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.MergeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.SplitShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.texture.Sampler2DShaderNodeConfiguration;
@@ -66,6 +67,7 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LerpShaderNodeConfiguration()));
         mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
         mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new PowerShaderNodeConfiguration()));
+        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RemapShaderNodeConfiguration()));
         graphBoxProducers.put("Math", mathProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> valueProducers = new LinkedHashSet<>();
