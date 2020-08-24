@@ -4,7 +4,7 @@ import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.value.ValueVector2ShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.value.ValueVector3ShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
@@ -19,7 +19,7 @@ public class ValueVector3ShaderNodeBuilder extends ConfigurationShaderNodeBuilde
     private static NumberFormat numberFormat = new DecimalFormat("0.0000");
 
     public ValueVector3ShaderNodeBuilder() {
-        super(new ValueVector2ShaderNodeConfiguration());
+        super(new ValueVector3ShaderNodeConfiguration());
     }
 
     @Override

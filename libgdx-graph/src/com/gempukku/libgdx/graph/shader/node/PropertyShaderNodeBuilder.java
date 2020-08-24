@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.shader.node;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.math.Vector2;
@@ -49,6 +50,8 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
                 return buildVector2PropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
             case Vector3:
                 return buildVector3PropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
+            case TextureRegion:
+                return buildTexturePropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
         }
 
         return null;
@@ -62,7 +65,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
                         GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
-                        Object value = graphShaderAttribute.getVariable(name);
+                        Object value = graphShaderAttribute.getProperty(name);
                         if (!(value instanceof Color))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
                         shader.setUniform(location, (Color) value);
@@ -80,7 +83,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
                         GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
-                        Object value = graphShaderAttribute.getVariable(name);
+                        Object value = graphShaderAttribute.getProperty(name);
                         if (!(value instanceof Number))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
                         shader.setUniform(location, ((Number) value).floatValue());
@@ -98,7 +101,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
                         GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
-                        Object value = graphShaderAttribute.getVariable(name);
+                        Object value = graphShaderAttribute.getProperty(name);
                         if (!(value instanceof Vector2))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
                         shader.setUniform(location, (Vector2) value);
@@ -116,7 +119,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
                         GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
-                        Object value = graphShaderAttribute.getVariable(name);
+                        Object value = graphShaderAttribute.getProperty(name);
                         if (!(value instanceof Vector3))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
                         shader.setUniform(location, (Vector3) value);
@@ -124,5 +127,39 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
                 });
 
         return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Vector3, variableName));
+    }
+
+    private Map<String, DefaultFieldOutput> buildTexturePropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
+                                                                     VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+        String textureVariableName = "u_texture_" + nodeId;
+        String uvTransformVariableName = "u_uvTransform_" + nodeId;
+        fragmentShaderBuilder.addUniformVariable(textureVariableName, "sampler2D", false,
+                new UniformRegistry.UniformSetter() {
+                    @Override
+                    public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
+                        GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
+                        Object value = ShaderFieldType.TextureRegion.convert(graphShaderAttribute.getProperty(name));
+                        if (!(value instanceof TextureRegion))
+                            value = graphShaderContext.getPropertySource(name).getDefaultValue();
+                        shader.setUniform(location, ((TextureRegion) value).getTexture());
+                    }
+                });
+        fragmentShaderBuilder.addUniformVariable(uvTransformVariableName, "vec4", false,
+                new UniformRegistry.UniformSetter() {
+                    @Override
+                    public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
+                        GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
+                        Object value = ShaderFieldType.TextureRegion.convert(graphShaderAttribute.getProperty(name));
+                        if (!(value instanceof TextureRegion))
+                            value = graphShaderContext.getPropertySource(name).getDefaultValue();
+                        TextureRegion region = (TextureRegion) value;
+                        shader.setUniform(location,
+                                region.getU(), region.getV(),
+                                region.getU2() - region.getU(),
+                                region.getV2() - region.getV());
+                    }
+                });
+
+        return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.TextureRegion, uvTransformVariableName, textureVariableName));
     }
 }

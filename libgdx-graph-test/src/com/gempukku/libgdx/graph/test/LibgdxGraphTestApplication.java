@@ -5,13 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.gempukku.libgdx.graph.GraphLoader;
@@ -32,16 +32,20 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private Model sphereModel;
     private Environment environment;
     private Camera camera;
+    private Texture rockTexture;
 
     @Override
     public void create() {
         WhitePixel.initialize();
 
+        rockTexture = new Texture(Gdx.files.internal("image/seamless_rock_face_texture_by_hhh316.jpg"));
+
         ModelBuilder modelBuilder = new ModelBuilder();
         GraphShaderAttribute graphShaderAttribute = new GraphShaderAttribute();
         graphShaderAttribute.addShaderTag("");
-        //graphShaderAttribute.setVariable("Color", new Color(1, 0, 0, 1));
-        Material material = new Material(TextureAttribute.createDiffuse(WhitePixel.texture), graphShaderAttribute);
+        graphShaderAttribute.setProperty("Diffuse", rockTexture);
+        graphShaderAttribute.setProperty("Cover", WhitePixel.textureRegion);
+        Material material = new Material(graphShaderAttribute);
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 material,
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
@@ -54,7 +58,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
         camera = new PerspectiveCamera();
-        camera.position.set(5f, -5f, 5f);
+        camera.position.set(3f, 3f, 3f);
         camera.lookAt(0, 0, 0);
         camera.update();
 
@@ -94,6 +98,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     public void dispose() {
         sphereModel.dispose();
         pipelineRenderer.dispose();
+        rockTexture.dispose();
         WhitePixel.dispose();
     }
 

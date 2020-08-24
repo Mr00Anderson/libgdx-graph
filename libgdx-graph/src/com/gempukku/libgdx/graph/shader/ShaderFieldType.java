@@ -5,8 +5,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.gempukku.libgdx.graph.data.FieldType;
 
 public enum ShaderFieldType implements FieldType {
-    Float, Vector2, Vector3, Color, Boolean,
-    TextureRegion;
+    Float("float"), Vector2("vec2"), Vector3("vec3"), Color("vec4"), Boolean("bool"),
+    TextureRegion("vec4");
+
+    private String shaderType;
+
+    ShaderFieldType(String shaderType) {
+        this.shaderType = shaderType;
+    }
 
     @Override
     public boolean accepts(Object value) {
@@ -25,6 +31,10 @@ public enum ShaderFieldType implements FieldType {
                 return value instanceof com.badlogic.gdx.graphics.Texture || value instanceof TextureRegion;
         }
         return false;
+    }
+
+    public String getShaderType() {
+        return shaderType;
     }
 
     @Override

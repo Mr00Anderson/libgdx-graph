@@ -79,7 +79,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<ShaderField
                 });
 
         final Table table = new Table();
-        table.add(new Label("Color", skin)).growX();
+        table.add(new Label("Default color", skin)).growX();
         table.add(image);
 
         return new PropertyBoxImpl<ShaderFieldType>(skin, "Color",

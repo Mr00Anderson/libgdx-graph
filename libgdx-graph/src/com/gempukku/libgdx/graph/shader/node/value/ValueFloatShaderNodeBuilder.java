@@ -24,7 +24,7 @@ public class ValueFloatShaderNodeBuilder extends ConfigurationShaderNodeBuilder 
 
     @Override
     public Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
-        float value = ((Number) data.get("value")).floatValue();
+        float value = ((Number) data.get("v1")).floatValue();
 
         final String variable = "value_" + nodeId;
         fragmentShaderBuilder.addMainLine("float " + variable + " = " + format(value) + ";");

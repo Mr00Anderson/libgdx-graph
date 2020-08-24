@@ -3,6 +3,10 @@ package com.gempukku.libgdx.graph.ui.shader;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.config.EndShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.material.DiffuseTextureShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.ClampShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.LerpShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.MultiplyShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.MergeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.SplitShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.texture.Sampler2DShaderNodeConfiguration;
@@ -24,6 +28,7 @@ import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeNormalBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeUVBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyFloatBoxProducer;
+import com.gempukku.libgdx.graph.ui.shader.property.PropertyTextureBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyVector3BoxProducer;
 
@@ -55,6 +60,10 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         Set<GraphBoxProducer<ShaderFieldType>> mathProducers = new LinkedHashSet<>();
         mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
         mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));
+        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MultiplyShaderNodeConfiguration()));
+        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DotProductShaderNodeConfiguration()));
+        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LerpShaderNodeConfiguration()));
+        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
         graphBoxProducers.put("Math", mathProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> valueProducers = new LinkedHashSet<>();
@@ -81,6 +90,7 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         propertyProducers.put("Vector2", new PropertyVector2BoxProducer());
         propertyProducers.put("Vector3", new PropertyVector3BoxProducer());
         propertyProducers.put("Color", new PropertyColorBoxProducer());
+        propertyProducers.put("Texture", new PropertyTextureBoxProducer());
     }
 
     @Override
