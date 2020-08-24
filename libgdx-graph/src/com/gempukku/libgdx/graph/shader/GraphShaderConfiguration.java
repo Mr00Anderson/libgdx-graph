@@ -3,6 +3,7 @@ package com.gempukku.libgdx.graph.shader;
 import com.gempukku.libgdx.graph.shader.node.EndGraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.PropertyShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueBooleanShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueColorShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueFloatShaderNodeBuilder;
@@ -25,6 +26,8 @@ public class GraphShaderConfiguration {
 
     static {
         addGraphShaderNodeBuilder(new EndGraphShaderNodeBuilder());
+
+        addGraphShaderNodeBuilder(new AttributeNormalShaderNodeBuilder());
 
         addGraphShaderNodeBuilder(new ValueBooleanShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ValueColorShaderNodeBuilder());

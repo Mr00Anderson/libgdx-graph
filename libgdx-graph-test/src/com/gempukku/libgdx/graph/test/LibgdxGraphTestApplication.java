@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -41,7 +40,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         ModelBuilder modelBuilder = new ModelBuilder();
         GraphShaderAttribute graphShaderAttribute = new GraphShaderAttribute();
         graphShaderAttribute.addShaderTag("");
-        graphShaderAttribute.setVariable("Color", new Color(1, 0, 0, 1));
+        //graphShaderAttribute.setVariable("Color", new Color(1, 0, 0, 1));
         Material material = new Material(TextureAttribute.createDiffuse(WhitePixel.texture), graphShaderAttribute);
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 material,
