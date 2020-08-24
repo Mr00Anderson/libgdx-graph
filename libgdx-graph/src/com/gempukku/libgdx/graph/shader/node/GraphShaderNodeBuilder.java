@@ -22,5 +22,7 @@ public interface GraphShaderNodeBuilder {
         ShaderFieldType getFieldType();
 
         String getRepresentation();
+
+        String getSamplerRepresentation();
     }
 }

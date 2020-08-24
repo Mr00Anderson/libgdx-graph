@@ -2,8 +2,10 @@ package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.config.EndShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.material.DiffuseTextureShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.MergeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.SplitShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.texture.Sampler2DShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueBooleanShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueColorShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueFloatShaderNodeConfiguration;
@@ -41,6 +43,14 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         modelProducers.add(new AttributeNormalBoxProducer());
         modelProducers.add(new AttributeUVBoxProducer());
         graphBoxProducers.put("Model", modelProducers);
+
+        Set<GraphBoxProducer<ShaderFieldType>> materialProducers = new LinkedHashSet<>();
+        materialProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DiffuseTextureShaderNodeConfiguration()));
+        graphBoxProducers.put("Material", materialProducers);
+
+        Set<GraphBoxProducer<ShaderFieldType>> textureProducers = new LinkedHashSet<>();
+        textureProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new Sampler2DShaderNodeConfiguration()));
+        graphBoxProducers.put("Texture", textureProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> mathProducers = new LinkedHashSet<>();
         mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));

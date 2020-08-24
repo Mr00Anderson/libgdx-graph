@@ -5,8 +5,10 @@ import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.PropertyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.material.DiffuseTextureShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.MergeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.SplitShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.texture.Sampler2DShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueBooleanShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueColorShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueFloatShaderNodeBuilder;
@@ -28,20 +30,31 @@ public class GraphShaderConfiguration {
     public static List<GraphShaderPropertyProducer> graphShaderPropertyProducers = new LinkedList<>();
 
     static {
+        // End
         addGraphShaderNodeBuilder(new EndGraphShaderNodeBuilder());
 
+        // Math
         addGraphShaderNodeBuilder(new MergeShaderNodeBuilder());
         addGraphShaderNodeBuilder(new SplitShaderNodeBuilder());
 
+        // Attributes
         addGraphShaderNodeBuilder(new AttributeNormalShaderNodeBuilder());
         addGraphShaderNodeBuilder(new AttributeUVShaderNodeBuilder());
 
+        // Material
+        addGraphShaderNodeBuilder(new DiffuseTextureShaderNodeBuilder());
+
+        // Texture
+        addGraphShaderNodeBuilder(new Sampler2DShaderNodeBuilder());
+
+        // Values
         addGraphShaderNodeBuilder(new ValueBooleanShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ValueColorShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ValueFloatShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ValueVector2ShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ValueVector3ShaderNodeBuilder());
 
+        // Property
         addGraphShaderNodeBuilder(new PropertyShaderNodeBuilder());
 
         graphShaderPropertyProducers.add(new ColorShaderPropertyProducer());
