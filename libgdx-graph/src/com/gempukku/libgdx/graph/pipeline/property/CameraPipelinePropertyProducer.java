@@ -8,8 +8,8 @@ import org.json.simple.JSONObject;
 
 public class CameraPipelinePropertyProducer implements PipelinePropertyProducer {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Camera");
+    public PipelineFieldType getType() {
+        return PipelineFieldType.Camera;
     }
 
     @Override

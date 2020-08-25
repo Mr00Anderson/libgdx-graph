@@ -17,9 +17,9 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.gempukku.libgdx.graph.GraphLoader;
 import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
+import com.gempukku.libgdx.graph.pipeline.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
-import com.gempukku.libgdx.graph.pipeline.RendererLoaderCallback;
 import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 
 import java.io.IOException;
@@ -107,7 +107,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         try {
             InputStream stream = Gdx.files.local("test.json").read();
             try {
-                PipelineRenderer pipelineRenderer = GraphLoader.loadGraph(stream, new RendererLoaderCallback());
+                PipelineRenderer pipelineRenderer = GraphLoader.loadGraph(stream, new PipelineLoaderCallback());
                 setupPipeline(pipelineRenderer);
                 return pipelineRenderer;
             } finally {

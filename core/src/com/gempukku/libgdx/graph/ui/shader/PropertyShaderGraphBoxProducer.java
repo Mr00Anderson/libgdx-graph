@@ -29,7 +29,7 @@ public class PropertyShaderGraphBoxProducer implements GraphBoxProducer<ShaderFi
     public GraphBox<ShaderFieldType> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         final String name = (String) data.get("name");
         final ShaderFieldType propertyType = ShaderFieldType.valueOf((String) data.get("type"));
-        GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, new PropertyNodeConfiguration<>("Property", name, propertyType), skin) {
+        GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, new PropertyNodeConfiguration<>(name, propertyType), skin) {
             @Override
             public JSONObject serializeData() {
                 JSONObject result = new JSONObject();

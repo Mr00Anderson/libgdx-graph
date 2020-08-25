@@ -1,8 +1,10 @@
 package com.gempukku.libgdx.graph.shader;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.gempukku.libgdx.graph.GraphLoaderCallback;
+import com.gempukku.libgdx.graph.GraphDataLoaderCallback;
+import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
+import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
 import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
@@ -11,48 +13,36 @@ import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShader> {
-    private Map<String, ShaderNodeInfo> nodes = new HashMap<>();
-    private List<ShaderVertextInfo> vertices = new LinkedList<>();
-    private Map<String, PropertySource> propertyMap = new HashMap<>();
-
+public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, ShaderFieldType> {
     private String tag;
     private GraphShader graphShader;
 
-    public GraphShaderLoaderCallback(String tag) {
+    public ShaderLoaderCallback(String tag) {
         this.tag = tag;
     }
 
     @Override
     public void start() {
-        graphShader = new GraphShader(tag);
-    }
 
-    @Override
-    public void addPipelineNode(String id, String type, float x, float y, JSONObject data) {
-        nodes.put(id, new ShaderNodeInfo(id, type, data));
-    }
-
-    @Override
-    public void addPipelineVertex(String fromNode, String fromField, String toNode, String toField) {
-        vertices.add(new ShaderVertextInfo(fromNode, fromField, toNode, toField));
-    }
-
-    @Override
-    public void addPipelineProperty(String type, String name, JSONObject data) {
-        GraphShaderPropertyProducer propertyProducer = findPropertyProducerByType(type);
-        if (propertyProducer == null)
-            throw new IllegalStateException("Unable to find property producer for type: " + type);
-        propertyMap.put(name, propertyProducer.createProperty(name, data));
     }
 
     @Override
     public GraphShader end() {
+        GraphValidator.ValidationResult<GraphNodeData<ShaderFieldType>, GraphConnectionData, GraphPropertyData<ShaderFieldType>, ShaderFieldType> result = GraphValidator.validateGraph(this, "end");
+        if (result.hasErrors())
+            throw new IllegalStateException("The graph contains errors, open it in the graph designer and correct them");
+
+        graphShader = new GraphShader(tag);
+
+        Map<String, PropertySource> propertyMap = new HashMap<>();
+        for (GraphPropertyData<ShaderFieldType> property : getProperties()) {
+            String name = property.getName();
+            propertyMap.put(name, findPropertyProducerByType(property.getType()).createProperty(name, property.getData()));
+        }
+
         VertexShaderBuilder vertexShaderBuilder = new VertexShaderBuilder(graphShader);
         FragmentShaderBuilder fragmentShaderBuilder = new FragmentShaderBuilder(graphShader);
 
@@ -80,6 +70,16 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
         graphShader.setProgram(shaderProgram);
         graphShader.init();
         return graphShader;
+    }
+
+    @Override
+    protected ShaderFieldType getFieldType(String type) {
+        return ShaderFieldType.valueOf(type);
+    }
+
+    @Override
+    protected NodeConfiguration<ShaderFieldType> getNodeConfiguration(String type, JSONObject data) {
+        return GraphShaderConfiguration.graphShaderNodeBuilders.get(type).getConfiguration(data);
     }
 
     private void initializeShaders(VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
@@ -115,19 +115,20 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
                                                                       VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         Map<String, GraphShaderNodeBuilder.FieldOutput> nodeOutput = nodeOutputs.get(nodeId);
         if (nodeOutput == null) {
-            ShaderNodeInfo nodeInfo = nodes.get(nodeId);
-            GraphShaderNodeBuilder nodeBuilder = GraphShaderConfiguration.graphShaderNodeBuilders.get(nodeInfo.type);
+            GraphNodeData<ShaderFieldType> nodeInfo = getNodeById(nodeId);
+            String nodeInfoType = nodeInfo.getConfiguration().getType();
+            GraphShaderNodeBuilder nodeBuilder = GraphShaderConfiguration.graphShaderNodeBuilders.get(nodeInfoType);
             if (nodeBuilder == null)
-                throw new IllegalStateException("Unable to find graph shader node builder for type: " + nodeInfo.type);
+                throw new IllegalStateException("Unable to find graph shader node builder for type: " + nodeInfoType);
             Map<String, GraphShaderNodeBuilder.FieldOutput> inputFields = new HashMap<>();
-            for (GraphNodeInput<ShaderFieldType> nodeInput : nodeBuilder.getConfiguration(nodeInfo.data).getNodeInputs().values()) {
+            for (GraphNodeInput<ShaderFieldType> nodeInput : nodeBuilder.getConfiguration(nodeInfo.getData()).getNodeInputs().values()) {
                 String fieldId = nodeInput.getFieldId();
-                ShaderVertextInfo vertexInfo = findInputVertex(nodeId, fieldId);
+                GraphConnectionData vertexInfo = findInputVertex(nodeId, fieldId);
                 if (vertexInfo == null && nodeInput.isRequired())
                     throw new IllegalStateException("Required input not provided");
                 if (vertexInfo != null) {
-                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(context, vertexInfo.fromNode, nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
-                    GraphShaderNodeBuilder.FieldOutput fieldOutput = output.get(vertexInfo.fromField);
+                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(context, vertexInfo.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+                    GraphShaderNodeBuilder.FieldOutput fieldOutput = output.get(vertexInfo.getFieldFrom());
                     ShaderFieldType fieldType = fieldOutput.getFieldType();
                     if (!nodeInput.getAcceptedPropertyTypes().contains(fieldType))
                         throw new IllegalStateException("Producer produces a field of value not compatible with consumer");
@@ -135,7 +136,7 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
                 }
             }
             Set<String> requiredOutputs = findRequiredOutputs(nodeId);
-            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(nodeId, nodeInfo.data, inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context);
+            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context);
             nodeOutputs.put(nodeId, nodeOutput);
         }
 
@@ -144,52 +145,26 @@ public class GraphShaderLoaderCallback implements GraphLoaderCallback<GraphShade
 
     private Set<String> findRequiredOutputs(String nodeId) {
         Set<String> result = new HashSet<>();
-        for (ShaderVertextInfo vertex : vertices) {
-            if (vertex.fromNode.equals(nodeId))
-                result.add(vertex.fromField);
+        for (GraphConnectionData vertex : getConnections()) {
+            if (vertex.getNodeFrom().equals(nodeId))
+                result.add(vertex.getFieldFrom());
         }
         return result;
     }
 
-    private ShaderVertextInfo findInputVertex(String nodeId, String nodeField) {
-        for (ShaderVertextInfo vertex : vertices) {
-            if (vertex.toNode.equals(nodeId) && vertex.toField.equals(nodeField))
+    private GraphConnectionData findInputVertex(String nodeId, String nodeField) {
+        for (GraphConnectionData vertex : getConnections()) {
+            if (vertex.getNodeTo().equals(nodeId) && vertex.getFieldTo().equals(nodeField))
                 return vertex;
         }
         return null;
     }
 
-    private GraphShaderPropertyProducer findPropertyProducerByType(String type) {
+    private GraphShaderPropertyProducer findPropertyProducerByType(ShaderFieldType type) {
         for (GraphShaderPropertyProducer graphShaderPropertyProducer : GraphShaderConfiguration.graphShaderPropertyProducers) {
-            if (graphShaderPropertyProducer.supportsType(type))
+            if (graphShaderPropertyProducer.getType() == type)
                 return graphShaderPropertyProducer;
         }
         return null;
-    }
-
-    private class ShaderNodeInfo {
-        private String id;
-        private String type;
-        private JSONObject data;
-
-        public ShaderNodeInfo(String id, String type, JSONObject data) {
-            this.id = id;
-            this.type = type;
-            this.data = data;
-        }
-    }
-
-    private class ShaderVertextInfo {
-        private String fromNode;
-        private String fromField;
-        private String toNode;
-        private String toField;
-
-        public ShaderVertextInfo(String fromNode, String fromField, String toNode, String toField) {
-            this.fromNode = fromNode;
-            this.fromField = fromField;
-            this.toNode = toNode;
-            this.toField = toField;
-        }
     }
 }

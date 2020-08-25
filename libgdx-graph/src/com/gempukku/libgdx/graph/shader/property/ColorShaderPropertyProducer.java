@@ -7,8 +7,8 @@ import org.json.simple.JSONObject;
 
 public class ColorShaderPropertyProducer implements GraphShaderPropertyProducer {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Color");
+    public ShaderFieldType getType() {
+        return ShaderFieldType.Color;
     }
 
     @Override

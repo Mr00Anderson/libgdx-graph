@@ -8,8 +8,8 @@ import org.json.simple.JSONObject;
 
 public class ModelsPipelinePropertyProducer implements PipelinePropertyProducer {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Models");
+    public PipelineFieldType getType() {
+        return PipelineFieldType.Models;
     }
 
     @Override

@@ -19,7 +19,7 @@ import com.gempukku.libgdx.graph.pipeline.loader.node.PipelineNode;
 import com.gempukku.libgdx.graph.pipeline.loader.node.PipelineNodeProducerImpl;
 import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
-import com.gempukku.libgdx.graph.shader.GraphShaderLoaderCallback;
+import com.gempukku.libgdx.graph.shader.ShaderLoaderCallback;
 import org.json.simple.JSONObject;
 
 import java.util.LinkedList;
@@ -98,7 +98,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
     private GraphShader createShader(JSONObject shaderDefinition) {
         String tag = (String) shaderDefinition.get("tag");
         JSONObject shaderGraph = (JSONObject) shaderDefinition.get("shader");
-        return GraphLoader.loadGraph(shaderGraph, new GraphShaderLoaderCallback(tag));
+        return GraphLoader.loadGraph(shaderGraph, new ShaderLoaderCallback(tag));
     }
 
     private static class RenderablePool extends FlushablePool<Renderable> {

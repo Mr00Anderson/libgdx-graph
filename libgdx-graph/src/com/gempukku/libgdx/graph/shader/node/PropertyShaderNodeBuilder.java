@@ -32,7 +32,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
         final String name = (String) data.get("name");
         final ShaderFieldType propertyType = ShaderFieldType.valueOf((String) data.get("type"));
 
-        return new PropertyNodeConfiguration<ShaderFieldType>(propertyType.name(), name, propertyType);
+        return new PropertyNodeConfiguration<ShaderFieldType>(name, propertyType);
     }
 
     @Override

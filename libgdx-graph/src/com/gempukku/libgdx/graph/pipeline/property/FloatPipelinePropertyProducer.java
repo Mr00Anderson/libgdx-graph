@@ -7,8 +7,8 @@ import org.json.simple.JSONObject;
 
 public class FloatPipelinePropertyProducer implements PipelinePropertyProducer {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Float");
+    public PipelineFieldType getType() {
+        return PipelineFieldType.Float;
     }
 
     @Override

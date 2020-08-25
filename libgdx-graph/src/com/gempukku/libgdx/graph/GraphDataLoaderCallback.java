@@ -14,14 +14,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements GraphLoaderCallback<T>, Graph<GraphNode<U>, GraphConnection, GraphProperty<U>, U> {
-    private Map<String, GraphNodeData> graphNodes = new HashMap<>();
+public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements GraphLoaderCallback<T>, Graph<GraphDataLoaderCallback.GraphNodeData<U>, GraphDataLoaderCallback.GraphConnectionData, GraphDataLoaderCallback.GraphPropertyData<U>, U> {
+    private Map<String, GraphNodeData<U>> graphNodes = new HashMap<>();
     private List<GraphConnectionData> graphConnections = new LinkedList<>();
-    private Map<String, GraphPropertyData> graphProperties = new HashMap<>();
+    private Map<String, GraphPropertyData<U>> graphProperties = new HashMap<>();
 
     @Override
     public void addPipelineNode(String id, String type, float x, float y, JSONObject data) {
-        graphNodes.put(id, new GraphNodeData(id, getNodeConfiguration(type, data), data));
+        graphNodes.put(id, new GraphNodeData<U>(id, getNodeConfiguration(type, data), data));
     }
 
     @Override
@@ -31,31 +31,31 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
 
     @Override
     public void addPipelineProperty(String type, String name, JSONObject data) {
-        graphProperties.put(name, new GraphPropertyData(name, getFieldType(type), data));
+        graphProperties.put(name, new GraphPropertyData<U>(name, getFieldType(type), data));
     }
 
     @Override
-    public GraphNode<U> getNodeById(String id) {
+    public GraphNodeData<U> getNodeById(String id) {
         return graphNodes.get(id);
     }
 
     @Override
-    public GraphProperty<U> getPropertyByName(String name) {
+    public GraphPropertyData<U> getPropertyByName(String name) {
         return graphProperties.get(name);
     }
 
     @Override
-    public Iterable<? extends GraphConnection> getConnections() {
+    public Iterable<? extends GraphConnectionData> getConnections() {
         return graphConnections;
     }
 
     @Override
-    public Iterable<? extends GraphNode<U>> getNodes() {
+    public Iterable<? extends GraphNodeData<U>> getNodes() {
         return graphNodes.values();
     }
 
     @Override
-    public Iterable<? extends GraphProperty<U>> getProperties() {
+    public Iterable<? extends GraphPropertyData<U>> getProperties() {
         return graphProperties.values();
     }
 
@@ -63,12 +63,12 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
 
     protected abstract NodeConfiguration<U> getNodeConfiguration(String type, JSONObject data);
 
-    protected class GraphNodeData implements GraphNode<U> {
+    protected static class GraphNodeData<T extends FieldType> implements GraphNode<T> {
         private String id;
-        private NodeConfiguration<U> configuration;
+        private NodeConfiguration<T> configuration;
         private JSONObject data;
 
-        public GraphNodeData(String id, NodeConfiguration<U> configuration, JSONObject data) {
+        public GraphNodeData(String id, NodeConfiguration<T> configuration, JSONObject data) {
             this.id = id;
             this.configuration = configuration;
             this.data = data;
@@ -85,13 +85,17 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
         }
 
         @Override
-        public Map<String, ? extends GraphNodeInput<U>> getInputs() {
+        public Map<String, ? extends GraphNodeInput<T>> getInputs() {
             return configuration.getNodeInputs();
         }
 
         @Override
-        public Map<String, ? extends GraphNodeOutput<U>> getOutputs() {
+        public Map<String, ? extends GraphNodeOutput<T>> getOutputs() {
             return configuration.getNodeOutputs();
+        }
+
+        public NodeConfiguration<T> getConfiguration() {
+            return configuration;
         }
 
         public JSONObject getData() {
@@ -99,12 +103,12 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
         }
     }
 
-    protected class GraphPropertyData implements GraphProperty<U> {
+    protected static class GraphPropertyData<T extends FieldType> implements GraphProperty<T> {
         private String name;
-        private U type;
+        private T type;
         private JSONObject data;
 
-        public GraphPropertyData(String name, U type, JSONObject data) {
+        public GraphPropertyData(String name, T type, JSONObject data) {
             this.name = name;
             this.type = type;
             this.data = data;
@@ -116,7 +120,7 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
         }
 
         @Override
-        public U getType() {
+        public T getType() {
             return type;
         }
 
@@ -125,7 +129,7 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
         }
     }
 
-    protected class GraphConnectionData implements GraphConnection {
+    protected static class GraphConnectionData implements GraphConnection {
         private String nodeFrom;
         private String fieldFrom;
         private String nodeTo;

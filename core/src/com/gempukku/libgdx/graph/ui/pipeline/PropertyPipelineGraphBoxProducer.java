@@ -29,7 +29,7 @@ public class PropertyPipelineGraphBoxProducer implements GraphBoxProducer<Pipeli
     public GraphBox<PipelineFieldType> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         final String name = (String) data.get("name");
         final PipelineFieldType propertyType = PipelineFieldType.valueOf((String) data.get("type"));
-        GraphBoxImpl<PipelineFieldType> result = new GraphBoxImpl<PipelineFieldType>(id, new PropertyNodeConfiguration<>("Property", name, propertyType), skin) {
+        GraphBoxImpl<PipelineFieldType> result = new GraphBoxImpl<PipelineFieldType>(id, new PropertyNodeConfiguration<>(name, propertyType), skin) {
             @Override
             public JSONObject serializeData() {
                 JSONObject result = new JSONObject();

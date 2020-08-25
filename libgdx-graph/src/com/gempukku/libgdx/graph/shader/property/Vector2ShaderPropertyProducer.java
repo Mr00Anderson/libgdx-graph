@@ -7,8 +7,8 @@ import org.json.simple.JSONObject;
 
 public class Vector2ShaderPropertyProducer implements GraphShaderPropertyProducer {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Vector2");
+    public ShaderFieldType getType() {
+        return ShaderFieldType.Vector2;
     }
 
     @Override

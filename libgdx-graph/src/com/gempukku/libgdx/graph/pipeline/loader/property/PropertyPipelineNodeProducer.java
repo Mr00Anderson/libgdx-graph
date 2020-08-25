@@ -18,8 +18,9 @@ public class PropertyPipelineNodeProducer implements PipelineNodeProducer {
 
     @Override
     public NodeConfiguration<PipelineFieldType> getConfiguration(JSONObject data) {
+        final String name = (String) data.get("name");
         final PipelineFieldType fieldType = PipelineFieldType.valueOf((String) data.get("type"));
-        return new PropertyNodeConfiguration<PipelineFieldType>("Property", "Property", fieldType);
+        return new PropertyNodeConfiguration<PipelineFieldType>(name, fieldType);
     }
 
     @Override

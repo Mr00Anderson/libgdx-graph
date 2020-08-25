@@ -6,8 +6,8 @@ import org.json.simple.JSONObject;
 
 public class TextureShaderPropertyProducer implements GraphShaderPropertyProducer {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("TextureRegion");
+    public ShaderFieldType getType() {
+        return ShaderFieldType.TextureRegion;
     }
 
     @Override
