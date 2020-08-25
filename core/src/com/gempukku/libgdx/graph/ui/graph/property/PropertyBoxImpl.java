@@ -45,8 +45,8 @@ public class PropertyBoxImpl<T extends FieldType> extends Table implements Prope
     }
 
     @Override
-    public String getType() {
-        return type;
+    public T getType() {
+        return propertyType;
     }
 
     @Override

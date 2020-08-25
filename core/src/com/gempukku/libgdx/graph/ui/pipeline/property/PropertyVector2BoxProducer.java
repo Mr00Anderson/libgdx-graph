@@ -17,8 +17,8 @@ import org.json.simple.JSONObject;
 
 public class PropertyVector2BoxProducer implements PropertyBoxProducer<PipelineFieldType> {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Vector2");
+    public PipelineFieldType getType() {
+        return PipelineFieldType.Vector2;
     }
 
     @Override

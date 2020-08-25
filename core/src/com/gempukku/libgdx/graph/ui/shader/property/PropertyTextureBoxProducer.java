@@ -12,8 +12,8 @@ import org.json.simple.JSONObject;
 
 public class PropertyTextureBoxProducer implements PropertyBoxProducer<ShaderFieldType> {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Texture");
+    public ShaderFieldType getType() {
+        return ShaderFieldType.TextureRegion;
     }
 
     @Override

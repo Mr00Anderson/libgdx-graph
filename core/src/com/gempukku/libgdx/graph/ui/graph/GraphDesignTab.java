@@ -26,11 +26,8 @@ import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.ui.UIGraphConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;
 import com.gempukku.libgdx.graph.ui.graph.property.PropertyBoxProducer;
-import com.gempukku.libgdx.graph.ui.graph.property.PropertyProducer;
 import com.gempukku.libgdx.graph.ui.preview.PreviewWidget;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -39,14 +36,13 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<GraphBox<T>, GraphConnection, T> {
+public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<GraphBox<T>, GraphConnection, PropertyBox<T>, T> {
     private List<PropertyBox<T>> propertyBoxes = new LinkedList<>();
     private final GraphContainer<T> graphContainer;
 
@@ -126,6 +122,25 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     }
 
     @Override
+    public PropertyBox<T> getPropertyByName(String name) {
+        for (PropertyBox<T> propertyBox : propertyBoxes) {
+            if (propertyBox.getName().equals(name))
+                return propertyBox;
+        }
+        return null;
+    }
+
+    @Override
+    public Iterable<? extends GraphConnection> getConnections() {
+        return graphContainer.getConnections();
+    }
+
+    @Override
+    public Iterable<? extends PropertyBox<T>> getProperties() {
+        return propertyBoxes;
+    }
+
+    @Override
     public boolean save() {
         super.save();
 
@@ -148,7 +163,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         if (!propertyBoxes.isEmpty()) {
             MenuItem propertyMenuItem = new MenuItem("Property");
             PopupMenu propertyMenu = new PopupMenu();
-            for (final PropertyProducer<T> propertyProducer : propertyBoxes) {
+            for (final PropertyBox<T> propertyProducer : propertyBoxes) {
                 final String name = propertyProducer.getName();
                 MenuItem valueMenuItem = new MenuItem(name);
                 valueMenuItem.addListener(
@@ -223,19 +238,8 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     }
 
     @Override
-    public Iterable<? extends GraphConnection> getIncomingConnections(String nodeId) {
-        return graphContainer.getIncomingConnections(getNodeById(nodeId));
-    }
-
-    @Override
-    public Iterable<String> getAllGraphNodes() {
-        return Iterables.transform(graphContainer.getGraphBoxes(),
-                new Function<GraphBox<T>, String>() {
-                    @Override
-                    public String apply(@Nullable GraphBox graphBox) {
-                        return graphBox.getId();
-                    }
-                });
+    public Iterable<? extends GraphBox<T>> getNodes() {
+        return graphContainer.getGraphBoxes();
     }
 
     public GraphContainer<T> getGraphContainer() {
@@ -243,7 +247,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     }
 
     private void updatePipelineValidation() {
-        GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, T> validationResult = GraphValidator.validateGraph(this, "end");
+        GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> validationResult = GraphValidator.validateGraph(this, "end");
         graphContainer.setValidationResult(validationResult);
         if (validationResult.hasErrors()) {
             validationLabel.setColor(Color.RED);
@@ -371,7 +375,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         for (PropertyBox propertyBox : propertyBoxes) {
             JSONObject property = new JSONObject();
             property.put("name", propertyBox.getName());
-            property.put("type", propertyBox.getType());
+            property.put("type", propertyBox.getType().name());
 
             JSONObject data = propertyBox.serializeData();
             if (data != null)

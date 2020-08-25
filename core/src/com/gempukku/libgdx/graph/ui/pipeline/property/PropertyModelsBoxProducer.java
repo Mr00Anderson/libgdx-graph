@@ -9,8 +9,8 @@ import org.json.simple.JSONObject;
 
 public class PropertyModelsBoxProducer implements PropertyBoxProducer<PipelineFieldType> {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Models");
+    public PipelineFieldType getType() {
+        return PipelineFieldType.Models;
     }
 
     @Override

@@ -17,8 +17,8 @@ import org.json.simple.JSONObject;
 
 public class PropertyFloatBoxProducer implements PropertyBoxProducer<ShaderFieldType> {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Float");
+    public ShaderFieldType getType() {
+        return ShaderFieldType.Float;
     }
 
     @Override

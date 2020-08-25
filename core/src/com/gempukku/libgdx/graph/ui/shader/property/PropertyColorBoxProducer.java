@@ -25,8 +25,8 @@ import org.json.simple.JSONObject;
 
 public class PropertyColorBoxProducer implements PropertyBoxProducer<ShaderFieldType> {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Color");
+    public ShaderFieldType getType() {
+        return ShaderFieldType.Color;
     }
 
     @Override

@@ -17,8 +17,8 @@ import org.json.simple.JSONObject;
 
 public class PropertyVector2BoxProducer implements PropertyBoxProducer<ShaderFieldType> {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Vector2");
+    public ShaderFieldType getType() {
+        return ShaderFieldType.Vector2;
     }
 
     @Override

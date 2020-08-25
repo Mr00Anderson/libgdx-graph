@@ -5,7 +5,7 @@ import com.gempukku.libgdx.graph.data.FieldType;
 import org.json.simple.JSONObject;
 
 public interface PropertyBoxProducer<T extends FieldType> {
-    boolean supportsType(String type);
+    T getType();
 
     PropertyBox<T> createPropertyBox(Skin skin, String name, JSONObject jsonObject);
 

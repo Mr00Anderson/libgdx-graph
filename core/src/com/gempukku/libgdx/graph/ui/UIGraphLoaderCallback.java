@@ -58,7 +58,7 @@ public class UIGraphLoaderCallback<T extends FieldType> implements GraphLoaderCa
 
     private PropertyBoxProducer<T> findPropertyProducerByType(String type) {
         for (PropertyBoxProducer<T> producer : uiGraphConfiguration.getPropertyBoxProducers().values()) {
-            if (producer.supportsType(type))
+            if (producer.getType().name().equals(type))
                 return producer;
         }
         return null;

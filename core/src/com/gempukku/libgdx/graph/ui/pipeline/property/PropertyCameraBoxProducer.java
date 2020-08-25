@@ -9,8 +9,8 @@ import org.json.simple.JSONObject;
 
 public class PropertyCameraBoxProducer implements PropertyBoxProducer<PipelineFieldType> {
     @Override
-    public boolean supportsType(String type) {
-        return type.equals("Camera");
+    public PipelineFieldType getType() {
+        return PipelineFieldType.Camera;
     }
 
     @Override

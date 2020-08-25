@@ -19,6 +19,7 @@ import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.data.NodeConnector;
+import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;
 import com.gempukku.libgdx.graph.ui.preview.NavigableCanvas;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisWindow;
@@ -54,7 +55,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
     private ShapeRenderer shapeRenderer;
 
     private NodeConnector drawingFromConnector;
-    private GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, T> validationResult = new GraphValidator.ValidationResult<>();
+    private GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> validationResult = new GraphValidator.ValidationResult<>();
 
     public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
@@ -164,7 +165,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
         updateCanvas(true);
     }
 
-    public void setValidationResult(GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, T> validationResult) {
+    public void setValidationResult(GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> validationResult) {
         this.validationResult = validationResult;
         for (GraphBox<T> value : graphBoxes.values()) {
             VisWindow window = boxWindows.get(value.getId());
