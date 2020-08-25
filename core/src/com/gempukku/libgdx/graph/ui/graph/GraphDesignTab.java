@@ -57,6 +57,8 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     private Table contentTable;
     private Label validationLabel;
 
+    private boolean finishedLoading = false;
+
     public GraphDesignTab(boolean closeable, String id, String title, Skin skin,
                           UIGraphConfiguration<T> uiGraphConfiguration, SaveCallback<T> saveCallback) {
         super(true, closeable);
@@ -80,9 +82,16 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
                 new GraphChangedListener() {
                     @Override
                     protected boolean graphChanged(GraphChangedEvent event) {
-                        setDirty(true);
-                        if (event.isStructural())
-                            updatePipelineValidation();
+                        if (finishedLoading) {
+                            setDirty(true);
+                            if (event.isStructural())
+                                updatePipelineValidation();
+                            for (GraphBox<T> graphBox : graphContainer.getGraphBoxes()) {
+                                graphBox.graphChanged(event.isStructural(), graphContainer.getValidationResult().hasErrors(),
+                                        GraphDesignTab.this);
+                            }
+                        }
+
                         event.stop();
                         return true;
                     }
@@ -138,6 +147,12 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     @Override
     public Iterable<? extends PropertyBox<T>> getProperties() {
         return propertyBoxes;
+    }
+
+    public void finishedLoading() {
+        finishedLoading = true;
+        contentTable.fire(new GraphChangedEvent(true));
+        graphContainer.adjustCanvas();
     }
 
     @Override

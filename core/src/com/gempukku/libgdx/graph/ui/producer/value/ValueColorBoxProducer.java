@@ -11,9 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.gempukku.libgdx.WhitePixel;
 import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.FieldType;
-import com.gempukku.libgdx.graph.ui.WhitePixel;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
@@ -50,7 +50,7 @@ public class ValueColorBoxProducer<T extends FieldType> extends ValueGraphBoxPro
     private GraphBoxPartImpl<T> createValuePart(Skin skin, String value) {
         Color color = Color.valueOf(value);
 
-        final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.texture);
+        final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.sharedInstance.texture);
         BaseDrawable baseDrawable = new BaseDrawable(drawable) {
             @Override
             public void draw(Batch batch, float x, float y, float width, float height) {

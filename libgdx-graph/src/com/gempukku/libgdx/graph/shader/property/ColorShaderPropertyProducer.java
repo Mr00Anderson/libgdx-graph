@@ -12,7 +12,7 @@ public class ColorShaderPropertyProducer implements GraphShaderPropertyProducer 
     }
 
     @Override
-    public PropertySource createProperty(String name, JSONObject data) {
+    public PropertySource createProperty(String name, JSONObject data, Object propertyDefaultFallback) {
         final Color color = Color.valueOf((String) data.get("color"));
         return new PropertySource(name, ShaderFieldType.Color, color);
     }

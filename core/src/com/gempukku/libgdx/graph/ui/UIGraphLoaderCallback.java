@@ -52,7 +52,8 @@ public class UIGraphLoaderCallback<T extends FieldType> implements GraphLoaderCa
 
     @Override
     public GraphDesignTab<T> end() {
-        graphDesignTab.getGraphContainer().adjustCanvas();
+        graphDesignTab.finishedLoading();
+        ;
         return graphDesignTab;
     }
 

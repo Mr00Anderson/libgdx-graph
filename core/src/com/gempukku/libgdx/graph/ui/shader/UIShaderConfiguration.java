@@ -1,7 +1,6 @@
 package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-import com.gempukku.libgdx.graph.shader.config.EndShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.material.DiffuseTextureShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.ClampShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfiguration;
@@ -80,12 +79,7 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         notAddableProducers.add(propertyProducer);
         valueProducers.add(propertyProducer);
         // Put it wherever...
-        GraphBoxProducer<ShaderFieldType> endProducer = new GraphBoxProducerImpl<ShaderFieldType>(new EndShaderNodeConfiguration()) {
-            @Override
-            public boolean isCloseable() {
-                return false;
-            }
-        };
+        GraphBoxProducer<ShaderFieldType> endProducer = new EndShaderBoxProducer();
         notAddableProducers.add(endProducer);
         valueProducers.add(endProducer);
         graphBoxProducers.put("Value", valueProducers);

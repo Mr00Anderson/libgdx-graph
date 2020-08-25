@@ -12,7 +12,7 @@ public class Vector2ShaderPropertyProducer implements GraphShaderPropertyProduce
     }
 
     @Override
-    public PropertySource createProperty(String name, JSONObject data) {
+    public PropertySource createProperty(String name, JSONObject data, Object propertyDefaultFallback) {
         final float x = ((Number) data.get("x")).floatValue();
         final float y = ((Number) data.get("y")).floatValue();
         return new PropertySource(name, ShaderFieldType.Vector2, new Vector2(x, y));

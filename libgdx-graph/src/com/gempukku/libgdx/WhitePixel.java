@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.ui;
+package com.gempukku.libgdx;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -6,10 +6,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class WhitePixel {
-    public static Texture texture;
-    public static TextureRegion textureRegion;
+    public static WhitePixel sharedInstance;
 
-    public static void initialize() {
+    public static void initializeShared() {
+        sharedInstance = new WhitePixel();
+    }
+
+    public static void disposeShared() {
+        sharedInstance.dispose();
+    }
+
+    public Texture texture;
+    public TextureRegion textureRegion;
+
+    public WhitePixel() {
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
         pixmap.setColor(Color.WHITE);
         pixmap.fill();
@@ -18,11 +28,9 @@ public class WhitePixel {
         textureRegion = new TextureRegion(texture);
     }
 
-    public static void dispose() {
+    public void dispose() {
         texture.dispose();
-    }
-
-    private WhitePixel() {
-
+        texture = null;
+        textureRegion = null;
     }
 }

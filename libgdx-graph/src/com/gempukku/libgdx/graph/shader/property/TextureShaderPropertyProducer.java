@@ -11,7 +11,7 @@ public class TextureShaderPropertyProducer implements GraphShaderPropertyProduce
     }
 
     @Override
-    public PropertySource createProperty(String name, JSONObject data) {
-        return new PropertySource(name, ShaderFieldType.TextureRegion, null);
+    public PropertySource createProperty(String name, JSONObject data, Object propertyDefaultFallback) {
+        return new PropertySource(name, ShaderFieldType.TextureRegion, propertyDefaultFallback);
     }
 }

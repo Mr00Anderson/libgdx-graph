@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.gempukku.libgdx.WhitePixel;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 
@@ -18,7 +19,8 @@ public class LibgdxGraphApplication extends ApplicationAdapter {
     @Override
     public void create() {
         VisUI.load();
-        WhitePixel.initialize();
+        WhitePixel.initializeShared();
+        ;
         FileChooser.setDefaultPrefsName("com.gempukku.libgdx.graph.ui.filechooser");
 
         skin = new Skin(VisUI.SkinScale.X1.getSkinFile());//Gdx.files.internal("uiskin.json"));
@@ -51,7 +53,7 @@ public class LibgdxGraphApplication extends ApplicationAdapter {
         skin.dispose();
         stage.dispose();
 
-        WhitePixel.dispose();
+        WhitePixel.disposeShared();
         VisUI.dispose();
     }
 }

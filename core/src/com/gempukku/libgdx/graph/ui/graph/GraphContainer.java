@@ -179,6 +179,10 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
         }
     }
 
+    public GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> getValidationResult() {
+        return validationResult;
+    }
+
     private void processLeftClick(float x, float y) {
         if (containedInWindow(x, y))
             return;

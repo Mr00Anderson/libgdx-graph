@@ -7,8 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.Graph;
+import com.gempukku.libgdx.graph.data.GraphConnection;
+import com.gempukku.libgdx.graph.data.GraphNode;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
+import com.gempukku.libgdx.graph.data.GraphProperty;
 import com.google.common.base.Supplier;
 import org.json.simple.JSONObject;
 
@@ -44,6 +48,11 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
     @Override
     public boolean isInputField(String fieldId) {
         return inputConnectors.containsKey(fieldId);
+    }
+
+    @Override
+    public void graphChanged(boolean structural, boolean hasErrors, Graph<? extends GraphNode<T>, ? extends GraphConnection, ? extends GraphProperty<T>, T> graph) {
+
     }
 
     public void addTopConnector(GraphNodeInput<T> graphNodeInput) {

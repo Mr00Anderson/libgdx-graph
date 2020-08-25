@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.gempukku.libgdx.graph.ui.WhitePixel;
+import com.gempukku.libgdx.WhitePixel;
 
 public class PreviewWidget extends Widget {
     private Rectangle viewRectangle = new Rectangle();
@@ -70,7 +70,7 @@ public class PreviewWidget extends Widget {
 
         if (clipBegin(x, y, width, height)) {
             batch.setColor(Color.DARK_GRAY);
-            batch.draw(WhitePixel.texture, x + originX, y + originY, canvasWidth * viewScale, canvasHeight * viewScale);
+            batch.draw(WhitePixel.sharedInstance.texture, x + originX, y + originY, canvasWidth * viewScale, canvasHeight * viewScale);
 
             batch.setColor(Color.LIGHT_GRAY);
             for (Actor child : navigableCanvas.getElements()) {
@@ -79,13 +79,13 @@ public class PreviewWidget extends Widget {
                 float childWidth = child.getWidth();
                 float childHeight = child.getHeight();
 
-                batch.draw(WhitePixel.texture, x + originX + (childX + canvasX) * viewScale, y + originY + (childY + canvasY) * viewScale,
+                batch.draw(WhitePixel.sharedInstance.texture, x + originX + (childX + canvasX) * viewScale, y + originY + (childY + canvasY) * viewScale,
                         childWidth * viewScale, childHeight * viewScale);
             }
 
             navigableCanvas.getVisibleSize(tmp);
             batch.setColor(new Color(1f, 1f, 1f, 0.5f));
-            batch.draw(WhitePixel.texture, x + originX + canvasX * viewScale, y + originY + canvasY * viewScale,
+            batch.draw(WhitePixel.sharedInstance.texture, x + originX + canvasX * viewScale, y + originY + canvasY * viewScale,
                     tmp.x * viewScale, tmp.y * viewScale);
             batch.flush();
             clipEnd();

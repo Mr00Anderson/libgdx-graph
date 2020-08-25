@@ -7,5 +7,5 @@ import org.json.simple.JSONObject;
 public interface GraphShaderPropertyProducer {
     ShaderFieldType getType();
 
-    PropertySource createProperty(String name, JSONObject data);
+    PropertySource createProperty(String name, JSONObject data, Object propertyDefaultFallback);
 }

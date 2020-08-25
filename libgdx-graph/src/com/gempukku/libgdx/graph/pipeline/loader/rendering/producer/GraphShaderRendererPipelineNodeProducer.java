@@ -38,6 +38,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
         for (JSONObject shaderDefinition : shaderDefinitions) {
             shaders.add(createShader(shaderDefinition));
         }
+
         final PipelineNode.FieldOutput<PipelineRendererModels> modelsInput = (PipelineNode.FieldOutput<PipelineRendererModels>) inputFields.get("models");
         final PipelineNode.FieldOutput<Environment> lightsInput = (PipelineNode.FieldOutput<Environment>) inputFields.get("lights");
         final PipelineNode.FieldOutput<Camera> cameraInput = (PipelineNode.FieldOutput<Camera>) inputFields.get("camera");
@@ -91,6 +92,13 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                         shader.render(renderable);
                 }
                 shader.end();
+            }
+
+            @Override
+            public void dispose() {
+                for (GraphShader shader : shaders) {
+                    shader.dispose();
+                }
             }
         };
     }

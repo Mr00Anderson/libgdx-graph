@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.BaseDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.gempukku.libgdx.WhitePixel;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
-import com.gempukku.libgdx.graph.ui.WhitePixel;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;
 import com.gempukku.libgdx.graph.ui.graph.property.PropertyBoxImpl;
@@ -43,7 +43,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<PipelineFie
     private PropertyBox<PipelineFieldType> createPropertyBoxDefault(Skin skin, String name, String colorStr) {
         Color color = Color.valueOf(colorStr);
 
-        final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.texture);
+        final TextureRegionDrawable drawable = new TextureRegionDrawable(WhitePixel.sharedInstance.texture);
         final BaseDrawable baseDrawable = new BaseDrawable(drawable) {
             @Override
             public void draw(Batch batch, float x, float y, float width, float height) {
