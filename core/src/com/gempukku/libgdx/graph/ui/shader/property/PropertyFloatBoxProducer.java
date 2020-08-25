@@ -44,7 +44,7 @@ public class PropertyFloatBoxProducer implements PropertyBoxProducer<ShaderField
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v1Input.fire(new GraphChangedEvent(false));
+                        v1Input.fire(new GraphChangedEvent(false, true));
                     }
                 });
 

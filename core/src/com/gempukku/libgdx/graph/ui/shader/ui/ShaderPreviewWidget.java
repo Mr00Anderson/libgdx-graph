@@ -71,12 +71,16 @@ public class ShaderPreviewWidget extends Widget {
 
     private void createShader(Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
         System.out.println("Create shader");
-        graphShader = new GraphShader("");
-        GraphShaderBuilder.buildShader(graphShader, graph, true);
-        frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
-        createModel();
+        try {
+            graphShader = new GraphShader("");
+            GraphShaderBuilder.buildShader(graphShader, graph, true);
+            frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
+            createModel();
 
-        shaderInitialized = true;
+            shaderInitialized = true;
+        } catch (Exception exp) {
+            graphShader.dispose();
+        }
     }
 
     private void createModel() {
@@ -124,7 +128,7 @@ public class ShaderPreviewWidget extends Widget {
                 Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
 
             batch.begin();
-            batch.draw(frameBuffer.getColorBufferTexture(), getX(), getY(), width, height);
+            batch.draw(frameBuffer.getColorBufferTexture(), getX(), getY() + height, width, -height);
         }
     }
 
@@ -132,6 +136,9 @@ public class ShaderPreviewWidget extends Widget {
         if (hasErrors && shaderInitialized) {
             destroyShader();
         } else if (!hasErrors && !shaderInitialized) {
+            createShader(graph);
+        } else if (!hasErrors && shaderInitialized) {
+            destroyShader();
             createShader(graph);
         }
     }

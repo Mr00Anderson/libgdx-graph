@@ -221,7 +221,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
 
     private void removeConnection(GraphConnection connection) {
         graphConnections.remove(connection);
-        fire(new GraphChangedEvent(true));
+        fire(new GraphChangedEvent(true, false));
         invalidate();
     }
 
@@ -314,7 +314,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
             protected void positionChanged() {
                 recreateClickableShapes();
                 updateCanvas(true);
-                fire(new GraphChangedEvent(false));
+                fire(new GraphChangedEvent(false, false));
             }
 
             @Override
@@ -332,7 +332,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
         addActor(window);
         window.setSize(Math.max(150, window.getPrefWidth()), window.getPrefHeight());
         boxWindows.put(graphBox.getId(), window);
-        fire(new GraphChangedEvent(true));
+        fire(new GraphChangedEvent(true, false));
     }
 
     private void removeGraphBox(GraphBox<T> graphBox) {
@@ -346,7 +346,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
 
         boxWindows.remove(graphBox.getId());
         graphBoxes.remove(graphBox.getId());
-        fire(new GraphChangedEvent(true));
+        fire(new GraphChangedEvent(true, false));
     }
 
     public void addGraphConnection(String fromNode, String fromField, String toNode, String toField) {
@@ -355,7 +355,7 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
         if (nodeFrom == null || nodeTo == null)
             throw new IllegalArgumentException("Can't find node");
         graphConnections.add(new GraphConnectionImpl(fromNode, fromField, toNode, toField));
-        fire(new GraphChangedEvent(true));
+        fire(new GraphChangedEvent(true, false));
         invalidate();
     }
 

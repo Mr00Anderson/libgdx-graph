@@ -84,10 +84,10 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
                     protected boolean graphChanged(GraphChangedEvent event) {
                         if (finishedLoading) {
                             setDirty(true);
-                            if (event.isStructural())
+                            if (event.isStructure())
                                 updatePipelineValidation();
                             for (GraphBox<T> graphBox : graphContainer.getGraphBoxes()) {
-                                graphBox.graphChanged(event.isStructural(), graphContainer.getValidationResult().hasErrors(),
+                                graphBox.graphChanged(event, graphContainer.getValidationResult().hasErrors(),
                                         GraphDesignTab.this);
                             }
                         }
@@ -151,7 +151,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
 
     public void finishedLoading() {
         finishedLoading = true;
-        contentTable.fire(new GraphChangedEvent(true));
+        contentTable.fire(new GraphChangedEvent(true, false));
         graphContainer.adjustCanvas();
     }
 
@@ -327,7 +327,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         table.row();
         pipelineProperties.addActor(table);
 
-        contentTable.fire(new GraphChangedEvent(true));
+        contentTable.fire(new GraphChangedEvent(true, false));
     }
 
     private void removePropertyBox(PropertyBox<T> propertyBox) {
@@ -335,7 +335,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         propertyBoxes.remove(propertyBox);
         pipelineProperties.removeActor(actor.getParent());
 
-        contentTable.fire(new GraphChangedEvent(true));
+        contentTable.fire(new GraphChangedEvent(true, false));
     }
 
     @Override

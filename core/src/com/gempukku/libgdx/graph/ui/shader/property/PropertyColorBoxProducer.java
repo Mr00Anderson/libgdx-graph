@@ -64,7 +64,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<ShaderField
             @Override
             public void finished(Color newColor) {
                 image.setColor(newColor);
-                image.fire(new GraphChangedEvent(false));
+                image.fire(new GraphChangedEvent(false, true));
             }
         });
         picker.setColor(color);

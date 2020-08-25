@@ -45,7 +45,7 @@ public class ValueBooleanBoxProducer<T extends FieldType> extends ValueGraphBoxP
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        checkBox.fire(new GraphChangedEvent(false));
+                        checkBox.fire(new GraphChangedEvent(false, true));
                     }
                 });
         checkBox.setChecked(v);

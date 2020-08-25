@@ -1,7 +1,6 @@
 package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-import com.gempukku.libgdx.graph.shader.config.material.DiffuseTextureShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.ClampShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.LerpShaderNodeConfiguration;
@@ -27,6 +26,7 @@ import com.gempukku.libgdx.graph.ui.producer.value.ValueVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeNormalBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeUVBoxProducer;
+import com.gempukku.libgdx.graph.ui.shader.material.DiffuseTextureBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyFloatBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyTextureBoxProducer;
@@ -51,7 +51,7 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.put("Model", modelProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> materialProducers = new LinkedHashSet<>();
-        materialProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DiffuseTextureShaderNodeConfiguration()));
+        materialProducers.add(new DiffuseTextureBoxProducer());
         graphBoxProducers.put("Material", materialProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> textureProducers = new LinkedHashSet<>();

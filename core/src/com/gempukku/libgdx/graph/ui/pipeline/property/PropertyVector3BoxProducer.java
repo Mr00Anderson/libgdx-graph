@@ -46,7 +46,7 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer<PipelineF
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v1Input.fire(new GraphChangedEvent(false));
+                        v1Input.fire(new GraphChangedEvent(false, true));
                     }
                 });
         final VisValidatableTextField v2Input = new VisValidatableTextField(new Validators.FloatValidator()) {
@@ -60,7 +60,7 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer<PipelineF
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v2Input.fire(new GraphChangedEvent(false));
+                        v2Input.fire(new GraphChangedEvent(false, true));
                     }
                 });
         final VisValidatableTextField v3Input = new VisValidatableTextField(new Validators.FloatValidator()) {
@@ -74,7 +74,7 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer<PipelineF
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v3Input.fire(new GraphChangedEvent(false));
+                        v3Input.fire(new GraphChangedEvent(false, true));
                     }
                 });
 

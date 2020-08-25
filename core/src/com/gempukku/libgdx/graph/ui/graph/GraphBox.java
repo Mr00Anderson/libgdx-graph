@@ -16,5 +16,5 @@ public interface GraphBox<T extends FieldType> extends GraphNode<T> {
 
     Map<String, GraphBoxOutputConnector<T>> getOutputs();
 
-    void graphChanged(boolean structural, boolean hasErrors, Graph<? extends GraphNode<T>, ? extends GraphConnection, ? extends GraphProperty<T>, T> graph);
+    void graphChanged(GraphChangedEvent event, boolean hasErrors, Graph<? extends GraphNode<T>, ? extends GraphConnection, ? extends GraphProperty<T>, T> graph);
 }

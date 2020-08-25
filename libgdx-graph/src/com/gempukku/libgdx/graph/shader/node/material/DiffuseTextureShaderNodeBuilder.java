@@ -1,7 +1,10 @@
 package com.gempukku.libgdx.graph.shader.node.material;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.gempukku.libgdx.WhitePixel;
 import com.gempukku.libgdx.graph.shader.BasicShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
@@ -25,20 +28,39 @@ public class DiffuseTextureShaderNodeBuilder extends ConfigurationShaderNodeBuil
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
+    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
+                                                        VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
         if (designTime) {
+            Texture texture = null;
+            if (data != null) {
+                String previewPath = (String) data.get("previewPath");
+                if (previewPath != null) {
+                    try {
+                        texture = new Texture(Gdx.files.absolute(previewPath));
+                        graphShaderContext.addManagedResource(texture);
+                    } catch (Exception exp) {
+                        // Ignore
+                    }
+                }
+            }
+            if (texture == null)
+                texture = WhitePixel.sharedInstance.texture;
+
+            final TextureDescriptor<Texture> textureDescription = new TextureDescriptor<>();
+            textureDescription.texture = texture;
+
             fragmentShaderBuilder.addUniformVariable("u_diffuseTexture", "sampler2D", false,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
-                            shader.setUniform(location, WhitePixel.sharedInstance.texture);
+                            shader.setUniform(location, textureDescription);
                         }
                     });
             fragmentShaderBuilder.addUniformVariable("u_diffuseUVTransform", "vec4", false,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
-                            shader.setUniform(location, 0, 0, 1, 1);
+                            shader.setUniform(location, 0f, 0f, 1f, 1f);
                         }
                     });
         } else {

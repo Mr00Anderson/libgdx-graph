@@ -34,7 +34,8 @@ public class GraphShaderBuilder {
 
         initializeShaders(vertexShaderBuilder, fragmentShaderBuilder);
 
-        GraphShaderContext context = new GraphShaderContextImpl(propertyMap);
+        GraphShaderContextImpl context = new GraphShaderContextImpl(propertyMap);
+        graphShader.addDisposable(context);
         buildGraph(designTime, graph, context, vertexShaderBuilder, fragmentShaderBuilder);
 
         vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");

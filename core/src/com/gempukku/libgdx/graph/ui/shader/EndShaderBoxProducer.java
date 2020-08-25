@@ -17,6 +17,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxInputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPart;
+import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.ui.ShaderPreviewWidget;
 import org.json.simple.JSONObject;
@@ -47,8 +48,8 @@ public class EndShaderBoxProducer implements GraphBoxProducer<ShaderFieldType> {
 
         GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, configuration, skin) {
             @Override
-            public void graphChanged(boolean structural, boolean hasErrors, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-                if (structural) {
+            public void graphChanged(GraphChangedEvent event, boolean hasErrors, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
+                if (event.isData() || event.isStructure()) {
                     previewBoxPart.graphChanged(hasErrors, graph);
                 }
             }
@@ -65,8 +66,8 @@ public class EndShaderBoxProducer implements GraphBoxProducer<ShaderFieldType> {
 
         GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, configuration, skin) {
             @Override
-            public void graphChanged(boolean structural, boolean hasErrors, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-                if (structural) {
+            public void graphChanged(GraphChangedEvent event, boolean hasErrors, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
+                if (event.isData() || event.isStructure()) {
                     previewBoxPart.graphChanged(hasErrors, graph);
                 }
             }

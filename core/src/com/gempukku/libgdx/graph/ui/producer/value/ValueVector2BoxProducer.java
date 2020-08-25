@@ -53,7 +53,7 @@ public class ValueVector2BoxProducer<T extends FieldType> extends ValueGraphBoxP
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v1Input.fire(new GraphChangedEvent(false));
+                        v1Input.fire(new GraphChangedEvent(false, true));
                     }
                 });
 
@@ -68,7 +68,7 @@ public class ValueVector2BoxProducer<T extends FieldType> extends ValueGraphBoxP
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        v2Input.fire(new GraphChangedEvent(false));
+                        v2Input.fire(new GraphChangedEvent(false, true));
                     }
                 });
 

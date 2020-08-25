@@ -35,7 +35,7 @@ public class PropertyBoxImpl<T extends FieldType> extends Table implements Prope
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        fire(new GraphChangedEvent(true));
+                        fire(new GraphChangedEvent(true, true));
                     }
                 });
         headerTable.row();
