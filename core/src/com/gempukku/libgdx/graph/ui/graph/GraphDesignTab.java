@@ -352,7 +352,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
             object.put("x", tmp.x + window.getX());
             object.put("y", tmp.y + window.getY());
 
-            JSONObject data = graphBox.serializeData();
+            JSONObject data = graphBox.getData();
             if (data != null)
                 object.put("data", data);
 
@@ -377,7 +377,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
             property.put("name", propertyBox.getName());
             property.put("type", propertyBox.getType().name());
 
-            JSONObject data = propertyBox.serializeData();
+            JSONObject data = propertyBox.getData();
             if (data != null)
                 property.put("data", data);
 

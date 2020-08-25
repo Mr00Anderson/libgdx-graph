@@ -14,14 +14,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements GraphLoaderCallback<T>, Graph<GraphDataLoaderCallback.GraphNodeData<U>, GraphDataLoaderCallback.GraphConnectionData, GraphDataLoaderCallback.GraphPropertyData<U>, U> {
+public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements GraphLoaderCallback<T>, Graph<GraphNode<U>, GraphConnection, GraphProperty<U>, U> {
     private Map<String, GraphNodeData<U>> graphNodes = new HashMap<>();
     private List<GraphConnectionData> graphConnections = new LinkedList<>();
     private Map<String, GraphPropertyData<U>> graphProperties = new HashMap<>();
 
     @Override
     public void addPipelineNode(String id, String type, float x, float y, JSONObject data) {
-        graphNodes.put(id, new GraphNodeData<U>(id, getNodeConfiguration(type, data), data));
+        graphNodes.put(id, new GraphNodeData<U>(id, type, getNodeConfiguration(type, data), data));
     }
 
     @Override
@@ -63,13 +63,15 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
 
     protected abstract NodeConfiguration<U> getNodeConfiguration(String type, JSONObject data);
 
-    protected static class GraphNodeData<T extends FieldType> implements GraphNode<T> {
+    private static class GraphNodeData<T extends FieldType> implements GraphNode<T> {
         private String id;
+        private String type;
         private NodeConfiguration<T> configuration;
         private JSONObject data;
 
-        public GraphNodeData(String id, NodeConfiguration<T> configuration, JSONObject data) {
+        public GraphNodeData(String id, String type, NodeConfiguration<T> configuration, JSONObject data) {
             this.id = id;
+            this.type = type;
             this.configuration = configuration;
             this.data = data;
         }
@@ -77,6 +79,11 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
         @Override
         public String getId() {
             return id;
+        }
+
+        @Override
+        public String getType() {
+            return type;
         }
 
         @Override
@@ -94,16 +101,13 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
             return configuration.getNodeOutputs();
         }
 
-        public NodeConfiguration<T> getConfiguration() {
-            return configuration;
-        }
-
+        @Override
         public JSONObject getData() {
             return data;
         }
     }
 
-    protected static class GraphPropertyData<T extends FieldType> implements GraphProperty<T> {
+    private static class GraphPropertyData<T extends FieldType> implements GraphProperty<T> {
         private String name;
         private T type;
         private JSONObject data;
@@ -124,12 +128,13 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
             return type;
         }
 
+        @Override
         public JSONObject getData() {
             return data;
         }
     }
 
-    protected static class GraphConnectionData implements GraphConnection {
+    private static class GraphConnectionData implements GraphConnection {
         private String nodeFrom;
         private String fieldFrom;
         private String nodeTo;

@@ -150,7 +150,7 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
     }
 
     @Override
-    public JSONObject serializeData() {
+    public JSONObject getData() {
         JSONObject result = new JSONObject();
 
         for (GraphBoxPart<T> graphBoxPart : graphBoxParts)

@@ -55,7 +55,7 @@ public class PropertyBoxImpl<T extends FieldType> extends Table implements Prope
     }
 
     @Override
-    public JSONObject serializeData() {
+    public JSONObject getData() {
         if (propertyDefaultBox != null) {
             JSONObject data = propertyDefaultBox.serializeData();
             if (data == null)
@@ -76,7 +76,7 @@ public class PropertyBoxImpl<T extends FieldType> extends Table implements Prope
         final String name = getName();
         GraphBoxImpl<T> result = new GraphBoxImpl<T>(id, new PropertyNodeConfiguration<T>(name, propertyType), skin) {
             @Override
-            public JSONObject serializeData() {
+            public JSONObject getData() {
                 JSONObject result = new JSONObject();
                 result.put("name", name);
                 result.put("type", propertyType.name());

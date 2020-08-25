@@ -3,7 +3,10 @@ package com.gempukku.libgdx.graph.shader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.gempukku.libgdx.graph.GraphDataLoaderCallback;
 import com.gempukku.libgdx.graph.NodeConfiguration;
+import com.gempukku.libgdx.graph.data.GraphConnection;
+import com.gempukku.libgdx.graph.data.GraphNode;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
+import com.gempukku.libgdx.graph.data.GraphProperty;
 import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
@@ -31,14 +34,14 @@ public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, S
 
     @Override
     public GraphShader end() {
-        GraphValidator.ValidationResult<GraphNodeData<ShaderFieldType>, GraphConnectionData, GraphPropertyData<ShaderFieldType>, ShaderFieldType> result = GraphValidator.validateGraph(this, "end");
+        GraphValidator.ValidationResult<GraphNode<ShaderFieldType>, GraphConnection, GraphProperty<ShaderFieldType>, ShaderFieldType> result = GraphValidator.validateGraph(this, "end");
         if (result.hasErrors())
             throw new IllegalStateException("The graph contains errors, open it in the graph designer and correct them");
 
         graphShader = new GraphShader(tag);
 
         Map<String, PropertySource> propertyMap = new HashMap<>();
-        for (GraphPropertyData<ShaderFieldType> property : getProperties()) {
+        for (GraphProperty<ShaderFieldType> property : getProperties()) {
             String name = property.getName();
             propertyMap.put(name, findPropertyProducerByType(property.getType()).createProperty(name, property.getData()));
         }
@@ -115,15 +118,15 @@ public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, S
                                                                       VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         Map<String, GraphShaderNodeBuilder.FieldOutput> nodeOutput = nodeOutputs.get(nodeId);
         if (nodeOutput == null) {
-            GraphNodeData<ShaderFieldType> nodeInfo = getNodeById(nodeId);
-            String nodeInfoType = nodeInfo.getConfiguration().getType();
+            GraphNode<ShaderFieldType> nodeInfo = getNodeById(nodeId);
+            String nodeInfoType = nodeInfo.getType();
             GraphShaderNodeBuilder nodeBuilder = GraphShaderConfiguration.graphShaderNodeBuilders.get(nodeInfoType);
             if (nodeBuilder == null)
                 throw new IllegalStateException("Unable to find graph shader node builder for type: " + nodeInfoType);
             Map<String, GraphShaderNodeBuilder.FieldOutput> inputFields = new HashMap<>();
             for (GraphNodeInput<ShaderFieldType> nodeInput : nodeBuilder.getConfiguration(nodeInfo.getData()).getNodeInputs().values()) {
                 String fieldId = nodeInput.getFieldId();
-                GraphConnectionData vertexInfo = findInputVertex(nodeId, fieldId);
+                GraphConnection vertexInfo = findInputVertex(nodeId, fieldId);
                 if (vertexInfo == null && nodeInput.isRequired())
                     throw new IllegalStateException("Required input not provided");
                 if (vertexInfo != null) {
@@ -145,15 +148,15 @@ public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, S
 
     private Set<String> findRequiredOutputs(String nodeId) {
         Set<String> result = new HashSet<>();
-        for (GraphConnectionData vertex : getConnections()) {
+        for (GraphConnection vertex : getConnections()) {
             if (vertex.getNodeFrom().equals(nodeId))
                 result.add(vertex.getFieldFrom());
         }
         return result;
     }
 
-    private GraphConnectionData findInputVertex(String nodeId, String nodeField) {
-        for (GraphConnectionData vertex : getConnections()) {
+    private GraphConnection findInputVertex(String nodeId, String nodeField) {
+        for (GraphConnection vertex : getConnections()) {
             if (vertex.getNodeTo().equals(nodeId) && vertex.getFieldTo().equals(nodeField))
                 return vertex;
         }

@@ -31,7 +31,7 @@ public class PropertyShaderGraphBoxProducer implements GraphBoxProducer<ShaderFi
         final ShaderFieldType propertyType = ShaderFieldType.valueOf((String) data.get("type"));
         GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, new PropertyNodeConfiguration<>(name, propertyType), skin) {
             @Override
-            public JSONObject serializeData() {
+            public JSONObject getData() {
                 JSONObject result = new JSONObject();
                 result.put("name", name);
                 result.put("type", propertyType.name());
