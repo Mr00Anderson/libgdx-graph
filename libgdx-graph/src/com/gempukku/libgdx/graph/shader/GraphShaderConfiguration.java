@@ -5,7 +5,7 @@ import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.PropertyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.material.DiffuseTextureShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.ClampShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.DotProductShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.LerpShaderNodeBuilder;
@@ -55,7 +55,13 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new AttributeUVShaderNodeBuilder());
 
         // Material
-        addGraphShaderNodeBuilder(new DiffuseTextureShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new TextureAttributeShaderNodeBuilder("AmbientTexture", "Ambient texture", "ambient"));
+        addGraphShaderNodeBuilder(new TextureAttributeShaderNodeBuilder("BumpTexture", "Bump texture", "bump"));
+        addGraphShaderNodeBuilder(new TextureAttributeShaderNodeBuilder("DiffuseTexture", "Diffuse texture", "diffuse"));
+        addGraphShaderNodeBuilder(new TextureAttributeShaderNodeBuilder("EmissiveTexture", "Emissive texture", "emissive"));
+        addGraphShaderNodeBuilder(new TextureAttributeShaderNodeBuilder("NormalTexture", "Normal texture", "normal"));
+        addGraphShaderNodeBuilder(new TextureAttributeShaderNodeBuilder("ReflectionTexture", "Reflection texture", "reflection"));
+        addGraphShaderNodeBuilder(new TextureAttributeShaderNodeBuilder("SpecularTexture", "Specular texture", "specular"));
 
         // Texture
         addGraphShaderNodeBuilder(new Sampler2DShaderNodeBuilder());

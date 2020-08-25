@@ -20,7 +20,7 @@ import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-import com.gempukku.libgdx.graph.shader.config.material.DiffuseTextureShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.material.TextureAttributeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxInputConnector;
@@ -33,8 +33,12 @@ import org.json.simple.JSONObject;
 
 import java.util.Iterator;
 
-public class DiffuseTextureBoxProducer implements GraphBoxProducer<ShaderFieldType> {
-    private NodeConfiguration<ShaderFieldType> configuration = new DiffuseTextureShaderNodeConfiguration();
+public class TextureAttributeBoxProducer implements GraphBoxProducer<ShaderFieldType> {
+    private NodeConfiguration<ShaderFieldType> configuration;
+
+    public TextureAttributeBoxProducer(String type, String name) {
+        configuration = new TextureAttributeShaderNodeConfiguration(type, name);
+    }
 
     @Override
     public String getType() {

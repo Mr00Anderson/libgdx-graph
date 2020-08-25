@@ -26,7 +26,7 @@ import com.gempukku.libgdx.graph.ui.producer.value.ValueVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeNormalBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeUVBoxProducer;
-import com.gempukku.libgdx.graph.ui.shader.material.DiffuseTextureBoxProducer;
+import com.gempukku.libgdx.graph.ui.shader.material.TextureAttributeBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyColorBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyFloatBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyTextureBoxProducer;
@@ -51,7 +51,13 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.put("Model", modelProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> materialProducers = new LinkedHashSet<>();
-        materialProducers.add(new DiffuseTextureBoxProducer());
+        materialProducers.add(new TextureAttributeBoxProducer("AmbientTexture", "Ambient texture"));
+        materialProducers.add(new TextureAttributeBoxProducer("BumpTexture", "Bump texture"));
+        materialProducers.add(new TextureAttributeBoxProducer("DiffuseTexture", "Diffuse texture"));
+        materialProducers.add(new TextureAttributeBoxProducer("EmissiveTexture", "Emissive texture"));
+        materialProducers.add(new TextureAttributeBoxProducer("NormalTexture", "Normal texture"));
+        materialProducers.add(new TextureAttributeBoxProducer("ReflectionTexture", "Reflection texture"));
+        materialProducers.add(new TextureAttributeBoxProducer("SpecularTexture", "Specular texture"));
         graphBoxProducers.put("Material", materialProducers);
 
         Set<GraphBoxProducer<ShaderFieldType>> textureProducers = new LinkedHashSet<>();
