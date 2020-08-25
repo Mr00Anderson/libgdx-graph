@@ -19,7 +19,7 @@ public class MergeShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
+    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
         FieldOutput xValue = inputs.get("x");
         FieldOutput yValue = inputs.get("y");
         FieldOutput zValue = inputs.get("z");

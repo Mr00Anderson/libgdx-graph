@@ -23,7 +23,7 @@ public class ValueVector2ShaderNodeBuilder extends ConfigurationShaderNodeBuilde
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
+    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
         float v1 = ((Number) data.get("v1")).floatValue();
         float v2 = ((Number) data.get("v2")).floatValue();
 

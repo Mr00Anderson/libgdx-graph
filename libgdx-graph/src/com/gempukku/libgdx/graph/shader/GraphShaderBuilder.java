@@ -11,7 +11,6 @@ import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
 import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.property.GraphShaderPropertyProducer;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,15 +18,15 @@ import java.util.Set;
 
 public class GraphShaderBuilder {
     public static void buildShader(GraphShader graphShader, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-        buildShader(graphShader, graph, Collections.<ShaderFieldType, Object>emptyMap());
+        buildShader(graphShader, graph, false);
     }
 
     public static void buildShader(GraphShader graphShader, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
-                                   Map<ShaderFieldType, Object> propertyDefaultFallback) {
+                                   boolean designTime) {
         Map<String, PropertySource> propertyMap = new HashMap<>();
         for (GraphProperty<ShaderFieldType> property : graph.getProperties()) {
             String name = property.getName();
-            propertyMap.put(name, findPropertyProducerByType(property.getType()).createProperty(name, property.getData(), propertyDefaultFallback.get(property.getType())));
+            propertyMap.put(name, findPropertyProducerByType(property.getType()).createProperty(name, property.getData(), designTime));
         }
 
         VertexShaderBuilder vertexShaderBuilder = new VertexShaderBuilder(graphShader);
@@ -36,7 +35,7 @@ public class GraphShaderBuilder {
         initializeShaders(vertexShaderBuilder, fragmentShaderBuilder);
 
         GraphShaderContext context = new GraphShaderContextImpl(propertyMap);
-        buildGraph(graph, context, vertexShaderBuilder, fragmentShaderBuilder);
+        buildGraph(designTime, graph, context, vertexShaderBuilder, fragmentShaderBuilder);
 
         vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
         vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
@@ -82,13 +81,14 @@ public class GraphShaderBuilder {
         fragmentShaderBuilder.addInitialLine("#endif");
     }
 
-    private static void buildGraph(Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
+    private static void buildGraph(boolean designTime, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
                                    GraphShaderContext context, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> graphNodeOutputs = new HashMap<>();
-        buildNode(graph, context, "end", graphNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        buildNode(designTime, graph, context, "end", graphNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
     }
 
     private static Map<String, GraphShaderNodeBuilder.FieldOutput> buildNode(
+            boolean designTime,
             Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
             GraphShaderContext context, String nodeId, Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> nodeOutputs,
             VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
@@ -106,7 +106,7 @@ public class GraphShaderBuilder {
                 if (vertexInfo == null && nodeInput.isRequired())
                     throw new IllegalStateException("Required input not provided");
                 if (vertexInfo != null) {
-                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(graph, context, vertexInfo.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(designTime, graph, context, vertexInfo.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
                     GraphShaderNodeBuilder.FieldOutput fieldOutput = output.get(vertexInfo.getFieldFrom());
                     ShaderFieldType fieldType = fieldOutput.getFieldType();
                     if (!nodeInput.getAcceptedPropertyTypes().contains(fieldType))
@@ -115,7 +115,7 @@ public class GraphShaderBuilder {
                 }
             }
             Set<String> requiredOutputs = findRequiredOutputs(graph, nodeId);
-            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context);
+            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(designTime, nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context);
             nodeOutputs.put(nodeId, nodeOutput);
         }
 

@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
-import com.gempukku.libgdx.WhitePixel;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNode;
@@ -28,8 +26,6 @@ import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.GraphShaderBuilder;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-
-import java.util.Collections;
 
 public class ShaderPreviewWidget extends Widget {
     private boolean shaderInitialized;
@@ -76,7 +72,7 @@ public class ShaderPreviewWidget extends Widget {
     private void createShader(Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
         System.out.println("Create shader");
         graphShader = new GraphShader("");
-        GraphShaderBuilder.buildShader(graphShader, graph, Collections.<ShaderFieldType, Object>singletonMap(ShaderFieldType.TextureRegion, WhitePixel.sharedInstance.textureRegion));
+        GraphShaderBuilder.buildShader(graphShader, graph, true);
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
         createModel();
 
@@ -85,8 +81,7 @@ public class ShaderPreviewWidget extends Widget {
 
     private void createModel() {
         ModelBuilder modelBuilder = new ModelBuilder();
-        GraphShaderAttribute graphShaderAttribute = new GraphShaderAttribute();
-        Material material = new Material(TextureAttribute.createDiffuse(WhitePixel.sharedInstance.textureRegion), graphShaderAttribute);
+        Material material = new Material(new GraphShaderAttribute());
         model = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 material,
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);

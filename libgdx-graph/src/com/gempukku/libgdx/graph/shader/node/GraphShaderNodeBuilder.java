@@ -15,7 +15,7 @@ public interface GraphShaderNodeBuilder {
 
     NodeConfiguration<ShaderFieldType> getConfiguration(JSONObject data);
 
-    Map<String, ? extends FieldOutput> buildNode(String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
+    Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
                                                  VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext);
 
     interface FieldOutput {
