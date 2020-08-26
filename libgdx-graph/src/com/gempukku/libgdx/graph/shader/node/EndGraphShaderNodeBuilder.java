@@ -1,6 +1,8 @@
 package com.gempukku.libgdx.graph.shader.node;
 
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.gempukku.libgdx.graph.shader.BasicShader;
+import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformSetters;
@@ -20,7 +22,11 @@ public class EndGraphShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
 
     @Override
     public Map<String, FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
-                                              VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
+                                              VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+        graphShader.setCulling(BasicShader.Culling.valueOf((String) data.get("culling")));
+        graphShader.setTransparency(BasicShader.Transparency.valueOf((String) data.get("transparency")));
+        graphShader.setBlending(BasicShader.Blending.valueOf((String) data.get("blending")));
+
         vertexShaderBuilder.addMainLine("// End Graph Node");
         vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
         vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);

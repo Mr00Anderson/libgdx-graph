@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g3d.Attributes;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.gempukku.libgdx.WhitePixel;
 import com.gempukku.libgdx.graph.shader.BasicShader;
+import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformRegistry;
@@ -31,7 +32,7 @@ public class TextureAttributeShaderNodeBuilder extends ConfigurationShaderNodeBu
 
     @Override
     public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
-                                                        VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
+                                                        VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         String textureName = "u_" + symbol + "Texture";
         String transformName = "u_" + symbol + "UVTransform";
         if (designTime) {

@@ -10,6 +10,7 @@ import com.gempukku.libgdx.graph.data.GraphNode;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.gempukku.libgdx.graph.data.GraphProperty;
+import com.gempukku.libgdx.graph.shader.BasicShader;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.config.EndShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;
@@ -19,6 +20,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPart;
 import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
+import com.gempukku.libgdx.graph.ui.shader.ui.SelectBoxPart;
 import com.gempukku.libgdx.graph.ui.shader.ui.ShaderPreviewWidget;
 import org.json.simple.JSONObject;
 
@@ -45,6 +47,7 @@ public class EndShaderBoxProducer implements GraphBoxProducer<ShaderFieldType> {
     @Override
     public GraphBox<ShaderFieldType> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         final ShaderPreviewBoxPart previewBoxPart = new ShaderPreviewBoxPart(skin);
+        previewBoxPart.initialize(data);
 
         GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, configuration, skin) {
             @Override
@@ -54,27 +57,25 @@ public class EndShaderBoxProducer implements GraphBoxProducer<ShaderFieldType> {
                 }
             }
         };
+
         addInputsAndOutputs(result, skin);
-        previewBoxPart.initialize(data);
+        SelectBoxPart<ShaderFieldType> cullingBox = new SelectBoxPart<>(skin, "Culling", "culling", BasicShader.Culling.values());
+        cullingBox.initialize(data);
+        result.addGraphBoxPart(cullingBox);
+        SelectBoxPart<ShaderFieldType> transparencyBox = new SelectBoxPart<>(skin, "Transparency", "transparency", BasicShader.Transparency.values());
+        transparencyBox.initialize(data);
+        result.addGraphBoxPart(transparencyBox);
+        SelectBoxPart<ShaderFieldType> blendingBox = new SelectBoxPart<>(skin, "Blending", "blending", BasicShader.Blending.values());
+        blendingBox.initialize(data);
+        result.addGraphBoxPart(blendingBox);
+
         result.addGraphBoxPart(previewBoxPart);
         return result;
     }
 
     @Override
     public GraphBox<ShaderFieldType> createDefault(Skin skin, String id) {
-        final ShaderPreviewBoxPart previewBoxPart = new ShaderPreviewBoxPart(skin);
-
-        GraphBoxImpl<ShaderFieldType> result = new GraphBoxImpl<ShaderFieldType>(id, configuration, skin) {
-            @Override
-            public void graphChanged(GraphChangedEvent event, boolean hasErrors, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-                if (event.isData() || event.isStructure()) {
-                    previewBoxPart.graphChanged(hasErrors, graph);
-                }
-            }
-        };
-        addInputsAndOutputs(result, skin);
-        result.addGraphBoxPart(previewBoxPart);
-        return result;
+        return createPipelineGraphBox(skin, id, null);
     }
 
     private void addInputsAndOutputs(GraphBoxImpl<ShaderFieldType> graphBox, Skin skin) {

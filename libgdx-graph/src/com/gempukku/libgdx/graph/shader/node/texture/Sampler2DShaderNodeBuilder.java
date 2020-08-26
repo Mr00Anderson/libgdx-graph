@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.shader.node.texture;
 
+import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
@@ -19,7 +20,7 @@ public class Sampler2DShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
+    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         FieldOutput textureValue = inputs.get("texture");
         FieldOutput uvValue = inputs.get("uv");
 

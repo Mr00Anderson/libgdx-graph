@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.PropertyNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.BasicShader;
+import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
@@ -37,7 +38,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
 
     @Override
     public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
-                                                        VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext) {
+                                                        VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         final String name = (String) data.get("name");
         final ShaderFieldType propertyType = ShaderFieldType.valueOf((String) data.get("type"));
 

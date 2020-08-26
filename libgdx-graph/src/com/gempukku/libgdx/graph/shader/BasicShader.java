@@ -22,7 +22,51 @@ import com.badlogic.gdx.utils.IntArray;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.badlogic.gdx.graphics.GL20.GL_BACK;
+import static com.badlogic.gdx.graphics.GL20.GL_FRONT;
+import static com.badlogic.gdx.graphics.GL20.GL_NONE;
+
 public abstract class BasicShader implements UniformRegistry, Disposable {
+    public enum Culling {
+        back(GL_BACK), none(GL_NONE), front(GL_FRONT);
+
+        private int cullFace;
+
+        Culling(int cullFace) {
+            this.cullFace = cullFace;
+        }
+
+        public void run(RenderContext renderContext) {
+            renderContext.setCullFace(cullFace);
+        }
+    }
+
+    public enum Transparency {
+        opaque, transparent;
+    }
+
+    public enum Blending {
+        alpha(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA),
+        additive(GL20.GL_SRC_ALPHA, GL20.GL_ONE),
+        none(GL20.GL_ZERO, GL20.GL_ONE);
+
+        private int sourceFactor;
+        private int destinationFactor;
+
+        Blending(int sourceFactor, int destinationFactor) {
+            this.sourceFactor = sourceFactor;
+            this.destinationFactor = destinationFactor;
+        }
+
+        public int getSourceFactor() {
+            return sourceFactor;
+        }
+
+        public int getDestinationFactor() {
+            return destinationFactor;
+        }
+    }
+
     private static class Attribute {
         private final String alias;
         private int location = -1;
@@ -85,6 +129,9 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
     private RenderContext context;
     private Camera camera;
     private Mesh currentMesh;
+    private Culling culling = Culling.back;
+    private Transparency transparency = Transparency.opaque;
+    private Blending blending = Blending.alpha;
 
     private boolean initialized = false;
 
@@ -182,18 +229,28 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
         return tempArray.items;
     }
 
+    public void setCulling(Culling culling) {
+        this.culling = culling;
+    }
+
+    public void setTransparency(Transparency transparency) {
+        this.transparency = transparency;
+    }
+
+    public void setBlending(Blending blending) {
+        this.blending = blending;
+    }
+
     public void begin(Camera camera, Environment environment, RenderContext context) {
         this.camera = camera;
         this.context = context;
         program.begin();
 
-        int cullFace = GL20.GL_BACK;
-        int depthFunc = GL20.GL_LEQUAL;
-        boolean depthMask = true;
-
-        context.setCullFace(cullFace);
-        context.setDepthTest(depthFunc, camera.near, camera.far);
-        context.setDepthMask(depthMask);
+        // Enable depth testing
+        context.setDepthMask(true);
+        context.setDepthTest(GL20.GL_LEQUAL, camera.near, camera.far);
+        culling.run(context);
+        setBlending(context, transparency, blending);
 
         for (Uniform uniform : uniforms.values()) {
             if (uniform.global)
@@ -203,6 +260,11 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
             if (uniform.global)
                 uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, null, null);
         }
+    }
+
+    private static void setBlending(RenderContext context, Transparency transparency, Blending blending) {
+        boolean enabled = transparency == Transparency.transparent;
+        context.setBlending(enabled, blending.getSourceFactor(), blending.getDestinationFactor());
     }
 
     public void render(Renderable renderable) {

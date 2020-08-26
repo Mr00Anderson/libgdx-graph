@@ -37,7 +37,7 @@ public class GraphShaderBuilder {
 
         GraphShaderContextImpl context = new GraphShaderContextImpl(propertyMap);
         graphShader.addDisposable(context);
-        buildGraph(designTime, graph, context, vertexShaderBuilder, fragmentShaderBuilder);
+        buildGraph(designTime, graph, context, graphShader, vertexShaderBuilder, fragmentShaderBuilder);
 
         String vertexShader = vertexShaderBuilder.buildProgram();
         String fragmentShader = fragmentShaderBuilder.buildProgram();
@@ -81,15 +81,15 @@ public class GraphShaderBuilder {
     }
 
     private static void buildGraph(boolean designTime, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
-                                   GraphShaderContext context, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+                                   GraphShaderContext context, GraphShader graphShader, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> graphNodeOutputs = new HashMap<>();
-        buildNode(designTime, graph, context, "end", graphNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        buildNode(designTime, graph, context, graphShader, "end", graphNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
     }
 
     private static Map<String, GraphShaderNodeBuilder.FieldOutput> buildNode(
             boolean designTime,
             Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
-            GraphShaderContext context, String nodeId, Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> nodeOutputs,
+            GraphShaderContext context, GraphShader graphShader, String nodeId, Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> nodeOutputs,
             VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         Map<String, GraphShaderNodeBuilder.FieldOutput> nodeOutput = nodeOutputs.get(nodeId);
         if (nodeOutput == null) {
@@ -105,7 +105,7 @@ public class GraphShaderBuilder {
                 if (vertexInfo == null && nodeInput.isRequired())
                     throw new IllegalStateException("Required input not provided");
                 if (vertexInfo != null) {
-                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(designTime, graph, context, vertexInfo.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(designTime, graph, context, graphShader, vertexInfo.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
                     GraphShaderNodeBuilder.FieldOutput fieldOutput = output.get(vertexInfo.getFieldFrom());
                     ShaderFieldType fieldType = fieldOutput.getFieldType();
                     if (!nodeInput.getAcceptedPropertyTypes().contains(fieldType))
@@ -114,7 +114,7 @@ public class GraphShaderBuilder {
                 }
             }
             Set<String> requiredOutputs = findRequiredOutputs(graph, nodeId);
-            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(designTime, nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context);
+            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(designTime, nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context, graphShader);
             nodeOutputs.put(nodeId, nodeOutput);
         }
 

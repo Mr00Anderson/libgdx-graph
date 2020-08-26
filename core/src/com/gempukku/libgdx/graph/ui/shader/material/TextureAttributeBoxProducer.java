@@ -26,6 +26,7 @@ import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxInputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxOutputConnector;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxPart;
+import com.gempukku.libgdx.graph.ui.graph.GraphChangedEvent;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
@@ -170,6 +171,7 @@ public class TextureAttributeBoxProducer implements GraphBoxProducer<ShaderField
             drawable = new TextureRegionDrawable(texture);
             drawable.setMinSize(200, 200);
             image.setDrawable(drawable);
+            fire(new GraphChangedEvent(false, true));
         }
 
         @Override
