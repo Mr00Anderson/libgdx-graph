@@ -6,7 +6,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class AttributeUVShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public AttributeUVShaderNodeConfiguration() {
-        super("AttributeUV", "UV attribute");
+        super("AttributeUV", "UV attribute", "Attribute");
         addNodeOutput(
                 new GraphNodeOutputImpl<ShaderFieldType>("uv", "UV", ShaderFieldType.Vector2));
     }

@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class DotProductShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public DotProductShaderNodeConfiguration() {
-        super("DotProduct", "Dot product");
+        super("DotProduct", "Dot product", "Math/Advanced");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("a", "A", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2));
         addNodeInput(

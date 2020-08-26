@@ -10,8 +10,6 @@ import com.gempukku.libgdx.graph.ui.graph.property.PropertyBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 import org.json.simple.JSONObject;
 
-import java.util.Set;
-
 public class UIGraphLoaderCallback<T extends FieldType> implements GraphLoaderCallback<GraphDesignTab<T>> {
     private Skin skin;
     private GraphDesignTab<T> graphDesignTab;
@@ -33,7 +31,7 @@ public class UIGraphLoaderCallback<T extends FieldType> implements GraphLoaderCa
         if (producer == null)
             throw new IllegalArgumentException("Unable to find pipeline producer for type: " + type);
         GraphBox<T> graphBox = producer.createPipelineGraphBox(skin, id, data);
-        graphDesignTab.getGraphContainer().addGraphBox(graphBox, producer.getTitle(), producer.isCloseable(), x, y);
+        graphDesignTab.getGraphContainer().addGraphBox(graphBox, producer.getName(), producer.isCloseable(), x, y);
     }
 
     @Override
@@ -66,13 +64,10 @@ public class UIGraphLoaderCallback<T extends FieldType> implements GraphLoaderCa
     }
 
     private GraphBoxProducer<T> findProducerByType(String type) {
-        for (Set<GraphBoxProducer<T>> producers : uiGraphConfiguration.getGraphBoxProducers().values()) {
-            for (GraphBoxProducer<T> producer : producers) {
-                if (producer.getType().equals(type))
-                    return producer;
-            }
+        for (GraphBoxProducer<T> graphBoxProducer : uiGraphConfiguration.getGraphBoxProducers()) {
+            if (graphBoxProducer.getType().equals(type))
+                return graphBoxProducer;
         }
-
         return null;
     }
 }

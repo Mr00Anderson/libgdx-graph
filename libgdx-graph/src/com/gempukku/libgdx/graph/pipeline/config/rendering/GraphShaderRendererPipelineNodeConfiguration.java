@@ -12,7 +12,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.RenderPipelin
 
 public class GraphShaderRendererPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public GraphShaderRendererPipelineNodeConfiguration() {
-        super("GraphShaderRenderer", "Graph Shaders");
+        super("GraphShaderRenderer", "Graph Shaders", "Pipeline");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("models", "Models", true, Models));
         addNodeInput(

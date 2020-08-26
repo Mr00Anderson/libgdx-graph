@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class PowerShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public PowerShaderNodeConfiguration() {
-        super("Power", "Power");
+        super("Power", "Power", "Math/Arithmetic");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("a", "A", true, ShaderFieldType.Float));
         addNodeInput(

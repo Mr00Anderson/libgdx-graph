@@ -28,8 +28,13 @@ public class AttributeNormalBoxProducer implements GraphBoxProducer<ShaderFieldT
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return configuration.getName();
+    }
+
+    @Override
+    public String getMenuLocation() {
+        return configuration.getMenuLocation();
     }
 
     @Override

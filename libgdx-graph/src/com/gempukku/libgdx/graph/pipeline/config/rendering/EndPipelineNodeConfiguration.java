@@ -8,7 +8,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.RenderPipelin
 
 public class EndPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public EndPipelineNodeConfiguration() {
-        super("PipelineEnd", "Pipeline end");
+        super("PipelineEnd", "Pipeline end", null);
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, true, RenderPipeline));
     }

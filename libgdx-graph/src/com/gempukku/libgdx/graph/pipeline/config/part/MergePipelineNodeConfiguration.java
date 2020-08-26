@@ -12,7 +12,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector3;
 
 public class MergePipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public MergePipelineNodeConfiguration() {
-        super("Merge", "Merge");
+        super("Merge", "Merge", "Math");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("x", "X", Float));
         addNodeInput(

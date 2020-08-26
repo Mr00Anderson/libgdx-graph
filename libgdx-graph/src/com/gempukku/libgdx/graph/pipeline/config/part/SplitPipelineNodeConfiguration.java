@@ -12,7 +12,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector3;
 
 public class SplitPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public SplitPipelineNodeConfiguration() {
-        super("Split", "Split");
+        super("Split", "Split", "Math");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, Color, Vector3, Vector2));
         addNodeOutput(

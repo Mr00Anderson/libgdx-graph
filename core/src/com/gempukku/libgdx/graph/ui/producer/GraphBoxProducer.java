@@ -10,7 +10,9 @@ public interface GraphBoxProducer<T extends FieldType> {
 
     boolean isCloseable();
 
-    String getTitle();
+    String getName();
+
+    String getMenuLocation();
 
     GraphBox<T> createPipelineGraphBox(Skin skin, String id, JSONObject data);
 

@@ -12,7 +12,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector3;
 
 public class MultiplyPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public MultiplyPipelineNodeConfiguration() {
-        super("Multiply", "Multiply");
+        super("Multiply", "Multiply", "Math");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("inputA", "A", true,
                         Color, Vector3, Vector2, Float));

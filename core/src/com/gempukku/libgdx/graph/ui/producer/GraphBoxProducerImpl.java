@@ -29,8 +29,13 @@ public class GraphBoxProducerImpl<T extends FieldType> implements GraphBoxProduc
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return configuration.getName();
+    }
+
+    @Override
+    public String getMenuLocation() {
+        return configuration.getMenuLocation();
     }
 
     @Override

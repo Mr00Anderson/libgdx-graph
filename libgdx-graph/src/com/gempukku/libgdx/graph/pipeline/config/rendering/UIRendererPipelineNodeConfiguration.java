@@ -10,7 +10,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Stage;
 
 public class UIRendererPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public UIRendererPipelineNodeConfiguration() {
-        super("UIRenderer", "UI renderer");
+        super("UIRenderer", "UI renderer", "Pipeline");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, true, RenderPipeline));
         addNodeInput(

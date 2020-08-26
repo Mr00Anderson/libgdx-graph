@@ -12,7 +12,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector3;
 
 public class AddPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public AddPipelineNodeConfiguration() {
-        super("Add", "Add");
+        super("Add", "Add", "Math");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("inputA", "A", true,
                         Color, Vector3, Vector2, Float));

@@ -10,7 +10,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.RenderPipelin
 
 public class GammaCorrectionPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public GammaCorrectionPipelineNodeConfiguration() {
-        super("GammaCorrection", "Gamma correction");
+        super("GammaCorrection", "Gamma correction", "Post-processing");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("gamma", "Gamma", Float));
         addNodeInput(

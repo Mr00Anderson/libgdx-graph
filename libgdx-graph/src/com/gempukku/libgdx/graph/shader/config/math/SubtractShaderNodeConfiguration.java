@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class SubtractShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public SubtractShaderNodeConfiguration() {
-        super("Subtract", "Subtract");
+        super("Subtract", "Subtract", "Math/Arithmetic");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("a", "A", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeInput(

@@ -10,12 +10,14 @@ import java.util.Map;
 public class NodeConfigurationImpl<T extends FieldType> implements NodeConfiguration<T> {
     private String type;
     private String name;
+    private String menuLocation;
     private Map<String, GraphNodeInput<T>> nodeInputs = new LinkedHashMap<>();
     private Map<String, GraphNodeOutput<T>> nodeOutputs = new LinkedHashMap<>();
 
-    public NodeConfigurationImpl(String type, String name) {
+    public NodeConfigurationImpl(String type, String name, String menuLocation) {
         this.type = type;
         this.name = name;
+        this.menuLocation = menuLocation;
     }
 
     public void addNodeInput(GraphNodeInput<T> input) {
@@ -34,6 +36,11 @@ public class NodeConfigurationImpl<T extends FieldType> implements NodeConfigura
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String getMenuLocation() {
+        return menuLocation;
     }
 
     @Override

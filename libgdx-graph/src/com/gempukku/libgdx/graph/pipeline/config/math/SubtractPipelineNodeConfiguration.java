@@ -12,7 +12,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector3;
 
 public class SubtractPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public SubtractPipelineNodeConfiguration() {
-        super("Subtract", "Subtract");
+        super("Subtract", "Subtract", "Math");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("inputA", "A", true,
                         Color, Vector3, Vector2, Float));

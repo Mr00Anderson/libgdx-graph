@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class RemapShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public RemapShaderNodeConfiguration() {
-        super("Remap", "Remap");
+        super("Remap", "Remap", "Math/Advanced");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("input", "Input", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeInput(

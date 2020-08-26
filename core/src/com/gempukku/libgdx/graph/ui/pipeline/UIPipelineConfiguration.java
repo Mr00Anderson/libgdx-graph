@@ -40,63 +40,50 @@ import com.gempukku.libgdx.graph.ui.producer.value.ValueFloatBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector3BoxProducer;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class UIPipelineConfiguration implements UIGraphConfiguration<PipelineFieldType> {
-    public static Set<GraphBoxProducer<PipelineFieldType>> notAddableProducers = new HashSet<>();
-    public static Map<String, Set<GraphBoxProducer<PipelineFieldType>>> graphBoxProducers = new LinkedHashMap<>();
-    public static Map<String, PropertyBoxProducer<PipelineFieldType>> propertyProducers = new LinkedHashMap<>();
+    private static Set<GraphBoxProducer<PipelineFieldType>> graphBoxProducers = new LinkedHashSet<>();
+    private static Map<String, PropertyBoxProducer<PipelineFieldType>> propertyProducers = new LinkedHashMap<>();
 
     static {
-        Set<GraphBoxProducer<PipelineFieldType>> valueProducers = new LinkedHashSet<>();
-        valueProducers.add(new ValueColorBoxProducer<PipelineFieldType>(new ValueColorPipelineNodeConfiguration()));
-        valueProducers.add(new ValueFloatBoxProducer<PipelineFieldType>(new ValueFloatPipelineNodeConfiguration()));
-        valueProducers.add(new ValueVector2BoxProducer<PipelineFieldType>(new ValueVector2PipelineNodeConfiguration()));
-        valueProducers.add(new ValueVector3BoxProducer<PipelineFieldType>(new ValueVector3PipelineNodeConfiguration()));
-        valueProducers.add(new ValueBooleanBoxProducer<PipelineFieldType>(new ValueBooleanPipelineNodeConfiguration()));
-        PropertyPipelineGraphBoxProducer propertyProducer = new PropertyPipelineGraphBoxProducer();
-        notAddableProducers.add(propertyProducer);
-        valueProducers.add(propertyProducer);
-        graphBoxProducers.put("Value", valueProducers);
-
-        Set<GraphBoxProducer<PipelineFieldType>> providedProducers = new LinkedHashSet<>();
-        providedProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new TimePipelineNodeConfiguration()));
-        providedProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new RenderSizePipelineNodeConfiguration()));
-        graphBoxProducers.put("Provided", providedProducers);
-
-        Set<GraphBoxProducer<PipelineFieldType>> mathProducers = new LinkedHashSet<>();
-        mathProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new AddPipelineNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new SubtractPipelineNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new MultiplyPipelineNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new SplitPipelineNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new MergePipelineNodeConfiguration()));
-        graphBoxProducers.put("Math", mathProducers);
-
-        Set<GraphBoxProducer<PipelineFieldType>> renderingProducers = new LinkedHashSet<>();
-        renderingProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new StartPipelineNodeConfiguration()));
         GraphBoxProducer<PipelineFieldType> endProducer = new GraphBoxProducerImpl<PipelineFieldType>(new EndPipelineNodeConfiguration()) {
             @Override
             public boolean isCloseable() {
                 return false;
             }
         };
-        notAddableProducers.add(endProducer);
-        renderingProducers.add(endProducer);
-        renderingProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new DefaultRendererPipelineNodeConfiguration()));
-        renderingProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new UIRendererPipelineNodeConfiguration()));
-        renderingProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new PipelineRendererNodeConfiguration()));
-        renderingProducers.add(new GraphShaderRendererBoxProducer());
-        graphBoxProducers.put("Rendering", renderingProducers);
+        graphBoxProducers.add(endProducer);
 
-        Set<GraphBoxProducer<PipelineFieldType>> postProcessorProducers = new LinkedHashSet<>();
-        postProcessorProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new BloomPipelineNodeConfiguration()));
-        postProcessorProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new GaussianBlurPipelineNodeConfiguration()));
-        postProcessorProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new GammaCorrectionPipelineNodeConfiguration()));
-        graphBoxProducers.put("Post Processor", postProcessorProducers);
+        graphBoxProducers.add(new PropertyPipelineGraphBoxProducer());
+
+        graphBoxProducers.add(new ValueColorBoxProducer<PipelineFieldType>(new ValueColorPipelineNodeConfiguration()));
+        graphBoxProducers.add(new ValueFloatBoxProducer<PipelineFieldType>(new ValueFloatPipelineNodeConfiguration()));
+        graphBoxProducers.add(new ValueVector2BoxProducer<PipelineFieldType>(new ValueVector2PipelineNodeConfiguration()));
+        graphBoxProducers.add(new ValueVector3BoxProducer<PipelineFieldType>(new ValueVector3PipelineNodeConfiguration()));
+        graphBoxProducers.add(new ValueBooleanBoxProducer<PipelineFieldType>(new ValueBooleanPipelineNodeConfiguration()));
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new TimePipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new RenderSizePipelineNodeConfiguration()));
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new AddPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new SubtractPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new MultiplyPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new SplitPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new MergePipelineNodeConfiguration()));
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new StartPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new DefaultRendererPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new UIRendererPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new PipelineRendererNodeConfiguration()));
+        graphBoxProducers.add(new GraphShaderRendererBoxProducer());
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new BloomPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new GaussianBlurPipelineNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<PipelineFieldType>(new GammaCorrectionPipelineNodeConfiguration()));
 
         propertyProducers.put("Float", new PropertyFloatBoxProducer());
         propertyProducers.put("Vector2", new PropertyVector2BoxProducer());
@@ -109,17 +96,12 @@ public class UIPipelineConfiguration implements UIGraphConfiguration<PipelineFie
     }
 
     @Override
-    public Map<String, Set<GraphBoxProducer<PipelineFieldType>>> getGraphBoxProducers() {
+    public Set<GraphBoxProducer<PipelineFieldType>> getGraphBoxProducers() {
         return graphBoxProducers;
     }
 
     @Override
     public Map<String, PropertyBoxProducer<PipelineFieldType>> getPropertyBoxProducers() {
         return propertyProducers;
-    }
-
-    @Override
-    public boolean isAddableGraphBox(GraphBoxProducer<PipelineFieldType> graphBoxProducer) {
-        return !notAddableProducers.contains(graphBoxProducer);
     }
 }

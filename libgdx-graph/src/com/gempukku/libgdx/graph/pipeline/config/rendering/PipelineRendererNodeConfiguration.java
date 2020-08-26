@@ -10,7 +10,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector2;
 
 public class PipelineRendererNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public PipelineRendererNodeConfiguration() {
-        super("PipelineRenderer", "Pipeline renderer");
+        super("PipelineRenderer", "Pipeline renderer", "Pipeline");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("pipeline", "Pipeline", true, RenderPipeline));
         addNodeInput(

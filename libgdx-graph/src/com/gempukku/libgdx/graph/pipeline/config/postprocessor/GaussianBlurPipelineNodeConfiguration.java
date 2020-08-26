@@ -10,7 +10,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.RenderPipelin
 
 public class GaussianBlurPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public GaussianBlurPipelineNodeConfiguration() {
-        super("GaussianBlur", "Gaussian blur");
+        super("GaussianBlur", "Gaussian blur", "Post-processing");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("blurRadius", "Radius", Float));
         addNodeInput(

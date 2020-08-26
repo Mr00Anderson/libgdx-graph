@@ -39,7 +39,6 @@ import org.json.simple.JSONObject;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<GraphBox<T>, GraphConnection, PropertyBox<T>, T> {
@@ -169,10 +168,24 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     private PopupMenu createGraphPopupMenu(final float popupX, final float popupY) {
         PopupMenu popupMenu = new PopupMenu();
 
-        for (Map.Entry<String, Set<GraphBoxProducer<T>>> producersEntry : uiGraphConfiguration.getGraphBoxProducers().entrySet()) {
-            String menuName = producersEntry.getKey();
-            Set<GraphBoxProducer<T>> producer = producersEntry.getValue();
-            createSubMenu(popupX, popupY, popupMenu, menuName, producer);
+        for (final GraphBoxProducer<T> producer : uiGraphConfiguration.getGraphBoxProducers()) {
+            String menuLocation = producer.getMenuLocation();
+            if (menuLocation != null) {
+                String[] menuSplit = menuLocation.split("/");
+                PopupMenu targetMenu = findOrCreatePopupMenu(popupMenu, menuSplit, 0);
+                final String title = producer.getName();
+                MenuItem valueMenuItem = new MenuItem(title);
+                valueMenuItem.addListener(
+                        new ClickListener(Input.Buttons.LEFT) {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                String id = UUID.randomUUID().toString().replace("-", "");
+                                GraphBox<T> graphBox = producer.createDefault(skin, id);
+                                graphContainer.addGraphBox(graphBox, title, true, popupX, popupY);
+                            }
+                        });
+                targetMenu.addItem(valueMenuItem);
+            }
         }
 
         if (!propertyBoxes.isEmpty()) {
@@ -199,28 +212,27 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         return popupMenu;
     }
 
-    private void createSubMenu(final float popupX, final float popupY, PopupMenu popupMenu, String menuName,
-                               Set<GraphBoxProducer<T>> producers) {
-        MenuItem valuesMenuItem = new MenuItem(menuName);
-        PopupMenu valuesMenu = new PopupMenu();
-        for (final GraphBoxProducer<T> producer : producers) {
-            final String name = producer.getTitle();
-            if (uiGraphConfiguration.isAddableGraphBox(producer)) {
-                MenuItem valueMenuItem = new MenuItem(name);
-                valueMenuItem.addListener(
-                        new ClickListener(Input.Buttons.LEFT) {
-                            @Override
-                            public void clicked(InputEvent event, float x, float y) {
-                                String id = UUID.randomUUID().toString().replace("-", "");
-                                GraphBox<T> graphBox = producer.createDefault(skin, id);
-                                graphContainer.addGraphBox(graphBox, name, true, popupX, popupY);
-                            }
-                        });
-                valuesMenu.addItem(valueMenuItem);
+    private PopupMenu findOrCreatePopupMenu(PopupMenu popupMenu, String[] menuSplit, int startIndex) {
+        for (Actor child : popupMenu.getChildren()) {
+            MenuItem childMenuItem = (MenuItem) child;
+            if (childMenuItem.getLabel().getText().toString().equals(menuSplit[startIndex]) && childMenuItem.getSubMenu() != null) {
+                if (startIndex + 1 < menuSplit.length) {
+                    return findOrCreatePopupMenu(childMenuItem.getSubMenu(), menuSplit, startIndex + 1);
+                } else {
+                    return childMenuItem.getSubMenu();
+                }
             }
         }
-        valuesMenuItem.setSubMenu(valuesMenu);
-        popupMenu.addItem(valuesMenuItem);
+
+        PopupMenu createdPopup = new PopupMenu();
+        MenuItem createdMenuItem = new MenuItem(menuSplit[startIndex]);
+        createdMenuItem.setSubMenu(createdPopup);
+        popupMenu.addItem(createdMenuItem);
+        if (startIndex + 1 < menuSplit.length) {
+            return findOrCreatePopupMenu(createdPopup, menuSplit, startIndex + 1);
+        } else {
+            return createdPopup;
+        }
     }
 
     private PopupMenu createPropertyPopupMenu(float x, float y) {

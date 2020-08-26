@@ -9,7 +9,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector2;
 
 public class RenderSizePipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public RenderSizePipelineNodeConfiguration() {
-        super("RenderSize", "Render size");
+        super("RenderSize", "Render size", "Provided");
         addNodeOutput(
                 new GraphNodeOutputImpl<PipelineFieldType>("size", "Size", Vector2));
         addNodeOutput(

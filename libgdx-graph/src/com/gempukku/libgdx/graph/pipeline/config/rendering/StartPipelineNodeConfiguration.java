@@ -11,7 +11,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector2;
 
 public class StartPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public StartPipelineNodeConfiguration() {
-        super("PipelineStart", "Pipeline start");
+        super("PipelineStart", "Pipeline start", "Pipeline");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("background", "Background color", Color));
         addNodeInput(

@@ -8,7 +8,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Color;
 
 public class ValueColorPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public ValueColorPipelineNodeConfiguration() {
-        super("ValueColor", "Color value");
+        super("ValueColor", "Color", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<PipelineFieldType>("value", "Value", Color));
     }

@@ -8,7 +8,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Vector2;
 
 public class ValueVector2PipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public ValueVector2PipelineNodeConfiguration() {
-        super("ValueVector2", "Vector2 value");
+        super("ValueVector2", "Vector2", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<PipelineFieldType>("value", "Value", Vector2));
     }

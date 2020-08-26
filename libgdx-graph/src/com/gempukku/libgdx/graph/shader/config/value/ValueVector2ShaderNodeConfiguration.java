@@ -8,7 +8,7 @@ import static com.gempukku.libgdx.graph.shader.ShaderFieldType.Vector2;
 
 public class ValueVector2ShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public ValueVector2ShaderNodeConfiguration() {
-        super("ValueVector2", "Vector2 value");
+        super("ValueVector2", "Vector2", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<ShaderFieldType>("value", "Value", Vector2));
     }

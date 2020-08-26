@@ -9,7 +9,7 @@ import static com.gempukku.libgdx.graph.shader.ShaderFieldType.Color;
 
 public class ValueColorShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public ValueColorShaderNodeConfiguration() {
-        super("ValueColor", "Color value");
+        super("ValueColor", "Color", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<ShaderFieldType>("value", "Value", Color));
     }

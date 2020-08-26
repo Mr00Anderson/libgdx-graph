@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class ClampShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public ClampShaderNodeConfiguration() {
-        super("Clamp", "Clamp");
+        super("Clamp", "Clamp", "Math/Limit");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("input", "Input", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeInput(

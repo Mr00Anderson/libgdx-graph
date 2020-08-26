@@ -11,6 +11,8 @@ public interface NodeConfiguration<T extends FieldType> {
 
     String getName();
 
+    String getMenuLocation();
+
     Map<String, GraphNodeInput<T>> getNodeInputs();
 
     Map<String, GraphNodeOutput<T>> getNodeOutputs();

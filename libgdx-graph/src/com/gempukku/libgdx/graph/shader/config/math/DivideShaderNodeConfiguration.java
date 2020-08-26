@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class DivideShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public DivideShaderNodeConfiguration() {
-        super("Divide", "Divide");
+        super("Divide", "Divide", "Math/Arithmetic");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("a", "A", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeInput(

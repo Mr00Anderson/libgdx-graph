@@ -10,7 +10,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.RenderPipelin
 
 public class BloomPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public BloomPipelineNodeConfiguration() {
-        super("Bloom", "Bloom post-processor");
+        super("Bloom", "Bloom post-processor", "Post-processing");
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("bloomRadius", "Radius", Float));
         addNodeInput(

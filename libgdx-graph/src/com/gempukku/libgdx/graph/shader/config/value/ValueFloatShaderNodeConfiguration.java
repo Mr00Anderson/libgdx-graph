@@ -6,7 +6,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class ValueFloatShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public ValueFloatShaderNodeConfiguration() {
-        super("ValueFloat", "Float value");
+        super("ValueFloat", "Float", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<ShaderFieldType>("value", "Value", ShaderFieldType.Float));
     }

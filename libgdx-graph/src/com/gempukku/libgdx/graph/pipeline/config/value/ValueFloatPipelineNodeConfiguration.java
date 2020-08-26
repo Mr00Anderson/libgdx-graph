@@ -8,7 +8,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Float;
 
 public class ValueFloatPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public ValueFloatPipelineNodeConfiguration() {
-        super("ValueFloat", "Float value");
+        super("ValueFloat", "Float", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<PipelineFieldType>("value", "Value", Float));
     }

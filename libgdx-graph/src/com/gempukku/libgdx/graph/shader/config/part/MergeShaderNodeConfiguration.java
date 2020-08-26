@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class MergeShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public MergeShaderNodeConfiguration() {
-        super("Merge", "Merge");
+        super("Merge", "Merge", "Math/Advanced");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("x", "X", ShaderFieldType.Float));
         addNodeInput(

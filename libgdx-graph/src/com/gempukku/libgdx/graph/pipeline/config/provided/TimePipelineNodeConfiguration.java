@@ -8,7 +8,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Float;
 
 public class TimePipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public TimePipelineNodeConfiguration() {
-        super("Time", "Time");
+        super("Time", "Time", "Provided");
         addNodeOutput(
                 new GraphNodeOutputImpl<PipelineFieldType>("time", "Time", Float));
         addNodeOutput(

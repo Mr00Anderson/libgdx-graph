@@ -6,7 +6,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class ValueBooleanShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public ValueBooleanShaderNodeConfiguration() {
-        super("ValueBoolean", "Boolean value");
+        super("ValueBoolean", "Boolean", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<ShaderFieldType>("value", "Value", ShaderFieldType.Boolean));
     }

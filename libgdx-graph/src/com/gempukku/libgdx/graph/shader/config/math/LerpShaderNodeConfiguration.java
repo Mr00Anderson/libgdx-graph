@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class LerpShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public LerpShaderNodeConfiguration() {
-        super("Mix", "Mix (lerp)");
+        super("Mix", "Mix (lerp)", "Math/Advanced");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("a", "A", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeInput(

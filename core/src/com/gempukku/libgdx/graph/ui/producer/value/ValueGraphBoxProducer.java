@@ -22,7 +22,12 @@ public abstract class ValueGraphBoxProducer<T extends FieldType> implements Grap
     }
 
     @Override
-    public final String getTitle() {
+    public final String getName() {
         return configuration.getName();
+    }
+
+    @Override
+    public String getMenuLocation() {
+        return configuration.getMenuLocation();
     }
 }

@@ -6,7 +6,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class EndShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public EndShaderNodeConfiguration() {
-        super("ShaderEnd", "Shader output");
+        super("ShaderEnd", "Shader output", null);
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("color", "Color", false, false, ShaderFieldType.Color, ShaderFieldType.Vector3));
         addNodeInput(

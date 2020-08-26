@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class Sampler2DShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public Sampler2DShaderNodeConfiguration() {
-        super("Sampler2D", "Sampler 2D");
+        super("Sampler2D", "Sampler 2D", "Texture");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("texture", "Texture", true, ShaderFieldType.TextureRegion));
         addNodeInput(

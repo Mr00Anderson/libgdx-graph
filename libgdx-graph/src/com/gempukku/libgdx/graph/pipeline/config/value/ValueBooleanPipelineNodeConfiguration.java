@@ -8,7 +8,7 @@ import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Boolean;
 
 public class ValueBooleanPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
     public ValueBooleanPipelineNodeConfiguration() {
-        super("ValueBoolean", "Boolean value");
+        super("ValueBoolean", "Boolean", "Constant");
         addNodeOutput(
                 new GraphNodeOutputImpl<PipelineFieldType>("value", "Value", Boolean));
     }

@@ -6,7 +6,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class TextureAttributeShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public TextureAttributeShaderNodeConfiguration(String type, String name) {
-        super(type, name);
+        super(type, name, "Material");
         addNodeOutput(
                 new GraphNodeOutputImpl<ShaderFieldType>("texture", "Texture", ShaderFieldType.TextureRegion));
     }

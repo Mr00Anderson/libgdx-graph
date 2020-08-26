@@ -21,8 +21,13 @@ public class PropertyPipelineGraphBoxProducer implements GraphBoxProducer<Pipeli
     }
 
     @Override
-    public String getTitle() {
+    public String getName() {
         return "Property";
+    }
+
+    @Override
+    public String getMenuLocation() {
+        return null;
     }
 
     @Override

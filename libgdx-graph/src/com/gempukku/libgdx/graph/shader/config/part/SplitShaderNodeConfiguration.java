@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class SplitShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public SplitShaderNodeConfiguration() {
-        super("Split", "Split");
+        super("Split", "Split", "Math/Advanced");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("input", "Input", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2));
         addNodeOutput(

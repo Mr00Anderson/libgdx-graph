@@ -8,9 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 public interface UIGraphConfiguration<T extends FieldType> {
-    Map<String, Set<GraphBoxProducer<T>>> getGraphBoxProducers();
+    Set<GraphBoxProducer<T>> getGraphBoxProducers();
 
     Map<String, PropertyBoxProducer<T>> getPropertyBoxProducers();
-
-    boolean isAddableGraphBox(GraphBoxProducer<T> graphBoxProducer);
 }

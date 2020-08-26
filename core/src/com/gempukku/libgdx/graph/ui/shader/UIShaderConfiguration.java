@@ -37,66 +37,52 @@ import com.gempukku.libgdx.graph.ui.shader.property.PropertyTextureBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyVector3BoxProducer;
 
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldType> {
-    public static Set<GraphBoxProducer<ShaderFieldType>> notAddableProducers = new HashSet<>();
-    public static Map<String, Set<GraphBoxProducer<ShaderFieldType>>> graphBoxProducers = new LinkedHashMap<>();
+    public static Set<GraphBoxProducer<ShaderFieldType>> graphBoxProducers = new LinkedHashSet<>();
     public static Map<String, PropertyBoxProducer<ShaderFieldType>> propertyProducers = new LinkedHashMap<>();
 
     static {
-        Set<GraphBoxProducer<ShaderFieldType>> modelProducers = new LinkedHashSet<>();
-        modelProducers.add(new AttributePositionBoxProducer());
-        modelProducers.add(new AttributeNormalBoxProducer());
-        modelProducers.add(new AttributeUVBoxProducer());
-        graphBoxProducers.put("Model", modelProducers);
+        graphBoxProducers.add(new EndShaderBoxProducer());
+        graphBoxProducers.add(new PropertyShaderGraphBoxProducer());
 
-        Set<GraphBoxProducer<ShaderFieldType>> materialProducers = new LinkedHashSet<>();
-        materialProducers.add(new TextureAttributeBoxProducer("AmbientTexture", "Ambient texture"));
-        materialProducers.add(new TextureAttributeBoxProducer("BumpTexture", "Bump texture"));
-        materialProducers.add(new TextureAttributeBoxProducer("DiffuseTexture", "Diffuse texture"));
-        materialProducers.add(new TextureAttributeBoxProducer("EmissiveTexture", "Emissive texture"));
-        materialProducers.add(new TextureAttributeBoxProducer("NormalTexture", "Normal texture"));
-        materialProducers.add(new TextureAttributeBoxProducer("ReflectionTexture", "Reflection texture"));
-        materialProducers.add(new TextureAttributeBoxProducer("SpecularTexture", "Specular texture"));
-        graphBoxProducers.put("Material", materialProducers);
+        graphBoxProducers.add(new AttributePositionBoxProducer());
+        graphBoxProducers.add(new AttributeNormalBoxProducer());
+        graphBoxProducers.add(new AttributeUVBoxProducer());
 
-        Set<GraphBoxProducer<ShaderFieldType>> textureProducers = new LinkedHashSet<>();
-        textureProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new Sampler2DShaderNodeConfiguration()));
-        graphBoxProducers.put("Texture", textureProducers);
+        graphBoxProducers.add(new TextureAttributeBoxProducer("AmbientTexture", "Ambient texture"));
+        graphBoxProducers.add(new TextureAttributeBoxProducer("BumpTexture", "Bump texture"));
+        graphBoxProducers.add(new TextureAttributeBoxProducer("DiffuseTexture", "Diffuse texture"));
+        graphBoxProducers.add(new TextureAttributeBoxProducer("EmissiveTexture", "Emissive texture"));
+        graphBoxProducers.add(new TextureAttributeBoxProducer("NormalTexture", "Normal texture"));
+        graphBoxProducers.add(new TextureAttributeBoxProducer("ReflectionTexture", "Reflection texture"));
+        graphBoxProducers.add(new TextureAttributeBoxProducer("SpecularTexture", "Specular texture"));
 
-        Set<GraphBoxProducer<ShaderFieldType>> mathProducers = new LinkedHashSet<>();
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new AddShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SubtractShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MultiplyShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DivideShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DotProductShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LerpShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new PowerShaderNodeConfiguration()));
-        mathProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RemapShaderNodeConfiguration()));
-        graphBoxProducers.put("Math", mathProducers);
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new Sampler2DShaderNodeConfiguration()));
 
-        Set<GraphBoxProducer<ShaderFieldType>> valueProducers = new LinkedHashSet<>();
-        valueProducers.add(new ValueColorBoxProducer<ShaderFieldType>(new ValueColorShaderNodeConfiguration()));
-        valueProducers.add(new ValueFloatBoxProducer<ShaderFieldType>(new ValueFloatShaderNodeConfiguration()));
-        valueProducers.add(new ValueVector2BoxProducer<ShaderFieldType>(new ValueVector2ShaderNodeConfiguration()));
-        valueProducers.add(new ValueVector3BoxProducer<ShaderFieldType>(new ValueVector3ShaderNodeConfiguration()));
-        valueProducers.add(new ValueBooleanBoxProducer<ShaderFieldType>(new ValueBooleanShaderNodeConfiguration()));
-        PropertyShaderGraphBoxProducer propertyProducer = new PropertyShaderGraphBoxProducer();
-        notAddableProducers.add(propertyProducer);
-        valueProducers.add(propertyProducer);
-        // Put it wherever...
-        GraphBoxProducer<ShaderFieldType> endProducer = new EndShaderBoxProducer();
-        notAddableProducers.add(endProducer);
-        valueProducers.add(endProducer);
-        graphBoxProducers.put("Value", valueProducers);
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new AddShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SubtractShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MultiplyShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DivideShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new PowerShaderNodeConfiguration()));
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DotProductShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LerpShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RemapShaderNodeConfiguration()));
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
+
+        graphBoxProducers.add(new ValueColorBoxProducer<ShaderFieldType>(new ValueColorShaderNodeConfiguration()));
+        graphBoxProducers.add(new ValueFloatBoxProducer<ShaderFieldType>(new ValueFloatShaderNodeConfiguration()));
+        graphBoxProducers.add(new ValueVector2BoxProducer<ShaderFieldType>(new ValueVector2ShaderNodeConfiguration()));
+        graphBoxProducers.add(new ValueVector3BoxProducer<ShaderFieldType>(new ValueVector3ShaderNodeConfiguration()));
+        graphBoxProducers.add(new ValueBooleanBoxProducer<ShaderFieldType>(new ValueBooleanShaderNodeConfiguration()));
 
         propertyProducers.put("Float", new PropertyFloatBoxProducer());
         propertyProducers.put("Vector2", new PropertyVector2BoxProducer());
@@ -106,17 +92,12 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
     }
 
     @Override
-    public Map<String, Set<GraphBoxProducer<ShaderFieldType>>> getGraphBoxProducers() {
+    public Set<GraphBoxProducer<ShaderFieldType>> getGraphBoxProducers() {
         return graphBoxProducers;
     }
 
     @Override
     public Map<String, PropertyBoxProducer<ShaderFieldType>> getPropertyBoxProducers() {
         return propertyProducers;
-    }
-
-    @Override
-    public boolean isAddableGraphBox(GraphBoxProducer<ShaderFieldType> graphBoxProducer) {
-        return !notAddableProducers.contains(graphBoxProducer);
     }
 }
