@@ -27,6 +27,7 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
         String coordinates = (String) data.get("coordinates");
         if (coordinates.equals("world")) {
             if (!vertexShaderBuilder.hasVaryingVariable("v_normal_world")) {
+                vertexShaderBuilder.addMainLine("// Attribute Normal Node");
                 vertexShaderBuilder.addUniformVariable("u_normalMatrix", "mat3", false, UniformSetters.normalMatrix);
                 vertexShaderBuilder.addVaryingVariable("v_normal_world", "vec3");
                 vertexShaderBuilder.addMainLine("v_normal_world = normalize(u_normalMatrix * a_normal);");
@@ -37,6 +38,7 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
             return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, "v_normal_world"));
         } else if (coordinates.equals("object")) {
             if (!vertexShaderBuilder.hasVaryingVariable("v_normal_object")) {
+                vertexShaderBuilder.addMainLine("// Attribute Normal Node");
                 vertexShaderBuilder.addVaryingVariable("v_normal_object", "vec3");
                 vertexShaderBuilder.addMainLine("v_normal_object = a_normal;");
 

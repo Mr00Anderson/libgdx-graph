@@ -33,6 +33,7 @@ public class AttributeUVShaderNodeBuilder extends ConfigurationShaderNodeBuilder
 
         String name = "v_uv_" + unit;
         if (!vertexShaderBuilder.hasVaryingVariable(name)) {
+            vertexShaderBuilder.addMainLine("// Attribute UV Node");
             vertexShaderBuilder.addVaryingVariable(name, "vec2");
             vertexShaderBuilder.addMainLine(name + " = " + attributeName + ";");
 

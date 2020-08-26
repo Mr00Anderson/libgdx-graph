@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.shader;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
@@ -38,20 +39,17 @@ public class GraphShaderBuilder {
         graphShader.addDisposable(context);
         buildGraph(designTime, graph, context, vertexShaderBuilder, fragmentShaderBuilder);
 
-        vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
-        vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
-        vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
-        vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * (u_worldTrans * vec4(a_position, 1.0));");
-
         String vertexShader = vertexShaderBuilder.buildProgram();
         String fragmentShader = fragmentShaderBuilder.buildProgram();
 
-        System.out.println("--------------");
-        System.out.println("Vertex shader:");
-        System.out.println(vertexShader);
-        System.out.println("----------------");
-        System.out.println("Fragment shader:");
-        System.out.println(fragmentShader);
+        Gdx.app.debug("Shader", "--------------");
+        Gdx.app.debug("Shader", "Vertex shader:");
+        Gdx.app.debug("Shader", "--------------");
+        Gdx.app.debug("Shader", "\n" + vertexShader);
+        Gdx.app.debug("Shader", "----------------");
+        Gdx.app.debug("Shader", "Fragment shader:");
+        Gdx.app.debug("Shader", "----------------");
+        Gdx.app.debug("Shader", "\n" + fragmentShader);
 
         ShaderProgram shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
         graphShader.setProgram(shaderProgram);

@@ -71,7 +71,6 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
     }
 
     private void createShader(Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-        System.out.println("Create shader");
         try {
             graphShader = new GraphShader("");
             GraphShaderBuilder.buildShader(graphShader, graph, true);
@@ -94,7 +93,6 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
     }
 
     private void destroyShader() {
-        System.out.println("Destroy shader");
         model.dispose();
         frameBuffer.dispose();
         frameBuffer = null;
@@ -116,23 +114,28 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
             batch.end();
 
             Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
-            frameBuffer.begin();
-            camera.viewportWidth = width;
-            camera.viewportHeight = height;
-            camera.update();
+            try {
+                frameBuffer.begin();
+                camera.viewportWidth = width;
+                camera.viewportHeight = height;
+                camera.update();
 
-            modelInstance.getRenderable(renderable);
+                modelInstance.getRenderable(renderable);
 
-            renderContext.begin();
-            Gdx.gl.glClearColor(0, 0, 0, 1);
-            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-            graphShader.begin(camera, null, renderContext);
-            graphShader.render(renderable);
-            graphShader.end();
-            frameBuffer.end();
-            renderContext.end();
-            if (ScissorStack.peekScissors() != null)
-                Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
+                renderContext.begin();
+                Gdx.gl.glClearColor(0, 0, 0, 1);
+                Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+                graphShader.begin(camera, null, renderContext);
+                graphShader.render(renderable);
+                graphShader.end();
+                frameBuffer.end();
+                renderContext.end();
+            } catch (Exception exp) {
+                // Ignore
+            } finally {
+                if (ScissorStack.peekScissors() != null)
+                    Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
+            }
 
             batch.begin();
             batch.draw(frameBuffer.getColorBufferTexture(), getX(), getY() + height, width, -height);

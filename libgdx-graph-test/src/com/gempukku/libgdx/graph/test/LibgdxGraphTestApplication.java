@@ -7,13 +7,10 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
-import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.gempukku.libgdx.graph.GraphLoader;
 import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
@@ -31,7 +28,6 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private PipelineRenderer pipelineRenderer;
     private LibGDXModels models;
     private Model sphereModel;
-    private Environment environment;
     private Camera camera;
     private Texture rockTexture;
 
@@ -52,10 +48,6 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
         models = new LibGDXModels();
         models.addRenderableProvider(new ModelInstance(sphereModel));
-
-        environment = new Environment();
-        environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.2f, 0.2f, 0.2f, 1f));
-        environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
         camera = new PerspectiveCamera();
         camera.position.set(1.5f, 0f, 0f);
@@ -119,10 +111,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     }
 
     private void setupPipeline(PipelineRenderer pipelineRenderer) {
-        //pipelineRenderer.setPipelineProperty("Background Color", Color.RED);
-//        pipelineRenderer.setPipelineProperty("Stage", stage);
         pipelineRenderer.setPipelineProperty("Models", models);
-//        pipelineRenderer.setPipelineProperty("Lights", environment);
         pipelineRenderer.setPipelineProperty("Camera", camera);
     }
 }

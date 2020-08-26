@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
@@ -28,6 +27,7 @@ import java.awt.BasicStroke;
 import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -116,8 +116,8 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
     }
 
     @Override
-    public Array<Actor> getElements() {
-        return getChildren();
+    public Iterable<? extends Actor> getElements() {
+        return boxWindows.values();
     }
 
     private void updateCanvas(boolean adjustPosition) {
@@ -127,8 +127,8 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
             float maxX = Float.MIN_VALUE;
             float maxY = Float.MIN_VALUE;
 
-            Array<Actor> children = getElements();
-            if (children.size == 0) {
+            Collection<VisWindow> children = boxWindows.values();
+            if (children.size() == 0) {
                 minX = 0;
                 minY = 0;
                 maxX = 0;
