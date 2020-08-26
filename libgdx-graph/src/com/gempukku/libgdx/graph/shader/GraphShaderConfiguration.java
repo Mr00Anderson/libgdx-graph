@@ -7,12 +7,15 @@ import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNode
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.AddShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.ClampShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.DivideShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.DotProductShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.LerpShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.MultiplyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.PowerShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.RemapShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.SubtractShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.MergeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.SplitShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.texture.Sampler2DShaderNodeBuilder;
@@ -44,7 +47,10 @@ public class GraphShaderConfiguration {
         // Math
         addGraphShaderNodeBuilder(new MergeShaderNodeBuilder());
         addGraphShaderNodeBuilder(new SplitShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new AddShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new SubtractShaderNodeBuilder());
         addGraphShaderNodeBuilder(new MultiplyShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new DivideShaderNodeBuilder());
         addGraphShaderNodeBuilder(new DotProductShaderNodeBuilder());
         addGraphShaderNodeBuilder(new LerpShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ClampShaderNodeBuilder());
