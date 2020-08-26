@@ -25,6 +25,7 @@ import com.gempukku.libgdx.graph.ui.producer.value.ValueFloatBoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeNormalBoxProducer;
+import com.gempukku.libgdx.graph.ui.shader.attribute.AttributePositionBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeUVBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.material.TextureAttributeBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyColorBoxProducer;
@@ -46,6 +47,7 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
 
     static {
         Set<GraphBoxProducer<ShaderFieldType>> modelProducers = new LinkedHashSet<>();
+        modelProducers.add(new AttributePositionBoxProducer());
         modelProducers.add(new AttributeNormalBoxProducer());
         modelProducers.add(new AttributeUVBoxProducer());
         graphBoxProducers.put("Model", modelProducers);

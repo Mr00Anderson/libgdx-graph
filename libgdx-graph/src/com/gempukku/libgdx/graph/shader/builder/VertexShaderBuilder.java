@@ -13,10 +13,13 @@ public class VertexShaderBuilder extends CommonShaderBuilder {
     }
 
     public void addAttributeVariable(String name, String type) {
-        if (attributeVariables.containsKey(name))
-            throw new IllegalStateException("Already contains vertex attribute of that name");
-        uniformRegistry.registerAttribute(name);
-        attributeVariables.put(name, type);
+        String existingType = attributeVariables.get(name);
+        if (existingType != null && !existingType.equals(type))
+            throw new IllegalStateException("Already contains vertex attribute of that name with different type");
+        if (existingType == null) {
+            uniformRegistry.registerAttribute(name);
+            attributeVariables.put(name, type);
+        }
     }
 
     private void appendAttributeVariables(StringBuilder stringBuilder) {
