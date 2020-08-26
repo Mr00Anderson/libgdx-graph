@@ -30,8 +30,7 @@ public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeB
             if (!vertexShaderBuilder.hasVaryingVariable("v_position_world")) {
                 vertexShaderBuilder.addMainLine("// Attribute Position Node");
                 vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
-                vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
-                vertexShaderBuilder.addMainLine("v_position_world = u_projViewTrans * (u_worldTrans * vec4(a_position, 1.0));");
+                vertexShaderBuilder.addMainLine("v_position_world = (u_worldTrans * vec4(a_position, 1.0)).xyz;");
 
                 fragmentShaderBuilder.addVaryingVariable("v_position_world", "vec3");
             }
