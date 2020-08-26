@@ -79,6 +79,7 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
 
             shaderInitialized = true;
         } catch (Exception exp) {
+            exp.printStackTrace();
             graphShader.dispose();
         }
     }
@@ -132,6 +133,7 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
                 renderContext.end();
             } catch (Exception exp) {
                 // Ignore
+                exp.printStackTrace();
             } finally {
                 if (ScissorStack.peekScissors() != null)
                     Gdx.gl.glEnable(GL20.GL_SCISSOR_TEST);
