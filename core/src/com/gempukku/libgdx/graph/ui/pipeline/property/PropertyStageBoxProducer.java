@@ -24,7 +24,7 @@ public class PropertyStageBoxProducer implements PropertyBoxProducer<PipelineFie
     }
 
     private PropertyBox createPropertyBoxDefault(Skin skin, String name) {
-        return new PropertyBoxImpl<PipelineFieldType>(skin, "Stage",
+        return new PropertyBoxImpl<PipelineFieldType>(skin,
                 name,
                 PipelineFieldType.Stage, null);
     }

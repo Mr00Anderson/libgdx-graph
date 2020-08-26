@@ -92,7 +92,12 @@ public class ValueColorBoxProducer<T extends FieldType> extends ValueGraphBoxPro
                     public void serialize(JSONObject object) {
                         object.put("color", image.getColor().toString());
                     }
-                });
+                }) {
+            @Override
+            public void dispose() {
+                picker.dispose();
+            }
+        };
         colorPart.setOutputConnector(GraphBoxOutputConnector.Side.Right, configuration.getNodeOutputs().get("value"));
         return colorPart;
     }

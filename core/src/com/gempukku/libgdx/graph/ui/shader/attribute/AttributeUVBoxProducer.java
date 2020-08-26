@@ -126,5 +126,10 @@ public class AttributeUVBoxProducer implements GraphBoxProducer<ShaderFieldType>
         public void serializePart(JSONObject object) {
             object.put("channel", selectBox.getSelected());
         }
+
+        @Override
+        public void dispose() {
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Disposable;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
@@ -9,7 +10,7 @@ import com.gempukku.libgdx.graph.data.GraphProperty;
 
 import java.util.Map;
 
-public interface GraphBox<T extends FieldType> extends GraphNode<T> {
+public interface GraphBox<T extends FieldType> extends GraphNode<T>, Disposable {
     Actor getActor();
 
     Map<String, GraphBoxInputConnector<T>> getInputs();

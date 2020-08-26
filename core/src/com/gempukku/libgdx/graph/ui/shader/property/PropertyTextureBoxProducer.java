@@ -29,7 +29,7 @@ public class PropertyTextureBoxProducer implements PropertyBoxProducer<ShaderFie
     private PropertyBox<ShaderFieldType> createPropertyBoxDefault(Skin skin, String name) {
         final Table table = new Table();
 
-        return new PropertyBoxImpl<ShaderFieldType>(skin, "Texture",
+        return new PropertyBoxImpl<ShaderFieldType>(skin,
                 name,
                 ShaderFieldType.TextureRegion,
                 new PropertyDefaultBox() {

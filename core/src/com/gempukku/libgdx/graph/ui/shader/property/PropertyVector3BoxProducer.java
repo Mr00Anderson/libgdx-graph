@@ -86,7 +86,7 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer<ShaderFie
         table.add(new Label("Z ", skin));
         table.add(v3Input).grow();
 
-        return new PropertyBoxImpl<ShaderFieldType>(skin, "Vector3",
+        return new PropertyBoxImpl<ShaderFieldType>(skin,
                 name,
                 ShaderFieldType.Vector3,
                 new PropertyDefaultBox() {

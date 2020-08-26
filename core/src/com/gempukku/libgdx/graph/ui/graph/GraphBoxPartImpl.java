@@ -46,6 +46,11 @@ public class GraphBoxPartImpl<T extends FieldType> implements GraphBoxPart<T> {
             callback.serialize(object);
     }
 
+    @Override
+    public void dispose() {
+
+    }
+
     public interface Callback {
         void serialize(JSONObject object);
     }

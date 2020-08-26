@@ -197,9 +197,16 @@ public class TextureAttributeBoxProducer implements GraphBoxProducer<ShaderField
             super.setStage(stage);
             if (stage == null && texture != null) {
                 texture.dispose();
+                texture = null;
             } else if (stage != null && path != null) {
                 attemptToLoadTexture(Gdx.files.absolute(path));
             }
+        }
+
+        @Override
+        public void dispose() {
+            if (texture != null)
+                texture.dispose();
         }
     }
 }

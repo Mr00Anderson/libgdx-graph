@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
+import com.badlogic.gdx.utils.Disposable;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNode;
@@ -27,7 +28,7 @@ import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.GraphShaderBuilder;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
-public class ShaderPreviewWidget extends Widget {
+public class ShaderPreviewWidget extends Widget implements Disposable {
     private boolean shaderInitialized;
     private int width;
     private int height;
@@ -99,6 +100,12 @@ public class ShaderPreviewWidget extends Widget {
         frameBuffer = null;
         graphShader.dispose();
         shaderInitialized = false;
+    }
+
+    @Override
+    public void dispose() {
+        if (shaderInitialized)
+            destroyShader();
     }
 
     @Override

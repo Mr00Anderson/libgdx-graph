@@ -126,5 +126,10 @@ public class AttributeNormalBoxProducer implements GraphBoxProducer<ShaderFieldT
         public void serializePart(JSONObject object) {
             object.put("coordinates", selectBox.getSelected());
         }
+
+        @Override
+        public void dispose() {
+
+        }
     }
 }

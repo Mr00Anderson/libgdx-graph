@@ -52,7 +52,7 @@ public class PropertyFloatBoxProducer implements PropertyBoxProducer<ShaderField
         table.add(new Label("X ", skin));
         table.add(v1Input).grow();
 
-        return new PropertyBoxImpl<ShaderFieldType>(skin, "Float",
+        return new PropertyBoxImpl<ShaderFieldType>(skin,
                 name,
                 ShaderFieldType.Float,
                 new PropertyDefaultBox() {

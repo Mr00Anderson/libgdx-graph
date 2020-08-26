@@ -52,7 +52,7 @@ public class PropertyFloatBoxProducer implements PropertyBoxProducer<PipelineFie
         table.add(new Label("X ", skin));
         table.add(v1Input).grow();
 
-        return new PropertyBoxImpl<PipelineFieldType>(skin, "Float",
+        return new PropertyBoxImpl<PipelineFieldType>(skin,
                 name,
                 PipelineFieldType.Float,
                 new PropertyDefaultBox() {

@@ -69,7 +69,7 @@ public class PropertyVector2BoxProducer implements PropertyBoxProducer<ShaderFie
         table.add(new Label("Y ", skin));
         table.add(v2Input).grow();
 
-        return new PropertyBoxImpl<ShaderFieldType>(skin, "Vector2",
+        return new PropertyBoxImpl<ShaderFieldType>(skin,
                 name,
                 ShaderFieldType.Vector2,
                 new PropertyDefaultBox() {

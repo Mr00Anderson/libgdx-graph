@@ -82,7 +82,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<ShaderField
         table.add(new Label("Default color", skin)).growX();
         table.add(image);
 
-        return new PropertyBoxImpl<ShaderFieldType>(skin, "Color",
+        return new PropertyBoxImpl<ShaderFieldType>(skin,
                 name,
                 ShaderFieldType.Color,
                 new PropertyDefaultBox() {
@@ -97,6 +97,11 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<ShaderField
                         result.put("color", image.getColor().toString());
                         return result;
                     }
-                });
+                }) {
+            @Override
+            public void dispose() {
+                picker.dispose();
+            }
+        };
     }
 }

@@ -15,15 +15,13 @@ import com.gempukku.libgdx.graph.ui.producer.ValueGraphNodeOutput;
 import org.json.simple.JSONObject;
 
 public class PropertyBoxImpl<T extends FieldType> extends Table implements PropertyBox<T> {
-    private String type;
     private T propertyType;
     private PropertyDefaultBox propertyDefaultBox;
     private TextField textField;
 
-    public PropertyBoxImpl(Skin skin, String type, String name, T propertyType,
+    public PropertyBoxImpl(Skin skin, String name, T propertyType,
                            PropertyDefaultBox propertyDefaultBox) {
         super(skin);
-        this.type = type;
         this.propertyType = propertyType;
         this.propertyDefaultBox = propertyDefaultBox;
 
@@ -85,5 +83,10 @@ public class PropertyBoxImpl<T extends FieldType> extends Table implements Prope
         };
         result.addOutputGraphPart(skin, new ValueGraphNodeOutput<T>(name, propertyType));
         return result;
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

@@ -24,7 +24,7 @@ public class PropertyLightsBoxProducer implements PropertyBoxProducer<PipelineFi
     }
 
     private PropertyBox<PipelineFieldType> createPropertyBoxDefault(Skin skin, String name) {
-        return new PropertyBoxImpl<PipelineFieldType>(skin, "Lights",
+        return new PropertyBoxImpl<PipelineFieldType>(skin,
                 name,
                 PipelineFieldType.Lights, null);
     }

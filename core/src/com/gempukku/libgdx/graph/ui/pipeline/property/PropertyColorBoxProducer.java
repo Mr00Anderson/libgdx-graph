@@ -82,7 +82,7 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<PipelineFie
         table.add(new Label("Color", skin)).growX();
         table.add(image);
 
-        return new PropertyBoxImpl<PipelineFieldType>(skin, "Color",
+        return new PropertyBoxImpl<PipelineFieldType>(skin,
                 name,
                 PipelineFieldType.Color,
                 new PropertyDefaultBox() {
@@ -97,6 +97,11 @@ public class PropertyColorBoxProducer implements PropertyBoxProducer<PipelineFie
                         result.put("color", image.getColor().toString());
                         return result;
                     }
-                });
+                }) {
+            @Override
+            public void dispose() {
+                picker.dispose();
+            }
+        };
     }
 }

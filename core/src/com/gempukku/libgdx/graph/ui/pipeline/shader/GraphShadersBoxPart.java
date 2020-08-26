@@ -145,6 +145,11 @@ public class GraphShadersBoxPart extends Table implements GraphBoxPart<PipelineF
         object.put("shaders", shaderArray);
     }
 
+    @Override
+    public void dispose() {
+
+    }
+
     private class ShaderInfo {
         private String id;
         private JSONObject initialShaderJson;

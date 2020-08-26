@@ -145,5 +145,10 @@ public class EndShaderBoxProducer implements GraphBoxProducer<ShaderFieldType> {
         public void graphChanged(boolean hasErrors, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
             shaderPreviewWidget.graphChanged(hasErrors, graph);
         }
+
+        @Override
+        public void dispose() {
+            shaderPreviewWidget.dispose();
+        }
     }
 }

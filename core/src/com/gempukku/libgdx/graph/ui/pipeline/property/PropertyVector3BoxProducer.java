@@ -86,7 +86,7 @@ public class PropertyVector3BoxProducer implements PropertyBoxProducer<PipelineF
         table.add(new Label("Z ", skin));
         table.add(v3Input).grow();
 
-        return new PropertyBoxImpl<PipelineFieldType>(skin, "Vector3",
+        return new PropertyBoxImpl<PipelineFieldType>(skin,
                 name,
                 PipelineFieldType.Vector3,
                 new PropertyDefaultBox() {

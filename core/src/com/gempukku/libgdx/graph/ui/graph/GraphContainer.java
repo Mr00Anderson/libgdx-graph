@@ -346,6 +346,8 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
 
         boxWindows.remove(graphBox.getId());
         graphBoxes.remove(graphBox.getId());
+        graphBox.dispose();
+
         fire(new GraphChangedEvent(true, false));
     }
 
@@ -626,6 +628,9 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
 
     public void dispose() {
         shapeRenderer.dispose();
+        for (GraphBox<T> graphBox : graphBoxes.values()) {
+            graphBox.dispose();
+        }
     }
 
     public Window getBoxWindow(String nodeId) {

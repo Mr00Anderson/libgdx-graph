@@ -169,4 +169,11 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
             return null;
         return result;
     }
+
+    @Override
+    public void dispose() {
+        for (GraphBoxPart<T> part : graphBoxParts) {
+            part.dispose();
+        }
+    }
 }

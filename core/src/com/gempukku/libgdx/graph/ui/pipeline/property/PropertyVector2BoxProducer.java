@@ -69,7 +69,7 @@ public class PropertyVector2BoxProducer implements PropertyBoxProducer<PipelineF
         table.add(new Label("Y ", skin));
         table.add(v2Input).grow();
 
-        return new PropertyBoxImpl<PipelineFieldType>(skin, "Vector2",
+        return new PropertyBoxImpl<PipelineFieldType>(skin,
                 name,
                 PipelineFieldType.Vector2,
                 new PropertyDefaultBox() {

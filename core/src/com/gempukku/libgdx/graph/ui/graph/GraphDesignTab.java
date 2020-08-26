@@ -334,6 +334,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         Actor actor = propertyBox.getActor();
         propertyBoxes.remove(propertyBox);
         pipelineProperties.removeActor(actor.getParent());
+        propertyBox.dispose();
 
         contentTable.fire(new GraphChangedEvent(true, false));
     }
@@ -341,6 +342,9 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     @Override
     public void dispose() {
         graphContainer.dispose();
+        for (PropertyBox<T> propertyBox : propertyBoxes) {
+            propertyBox.dispose();
+        }
     }
 
     @Override
