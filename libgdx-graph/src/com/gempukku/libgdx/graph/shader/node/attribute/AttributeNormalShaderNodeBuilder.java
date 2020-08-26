@@ -26,18 +26,22 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
 
         String coordinates = (String) data.get("coordinates");
         if (coordinates.equals("world")) {
-            vertexShaderBuilder.addUniformVariable("u_normalMatrix", "mat3", false, UniformSetters.normalMatrix);
-            vertexShaderBuilder.addVaryingVariable("v_normal_world", "vec3");
-            vertexShaderBuilder.addMainLine("v_normal_world = normalize(u_normalMatrix * a_normal);");
+            if (!vertexShaderBuilder.hasVaryingVariable("v_normal_world")) {
+                vertexShaderBuilder.addUniformVariable("u_normalMatrix", "mat3", false, UniformSetters.normalMatrix);
+                vertexShaderBuilder.addVaryingVariable("v_normal_world", "vec3");
+                vertexShaderBuilder.addMainLine("v_normal_world = normalize(u_normalMatrix * a_normal);");
 
-            fragmentShaderBuilder.addVaryingVariable("v_normal_world", "vec3");
+                fragmentShaderBuilder.addVaryingVariable("v_normal_world", "vec3");
+            }
 
             return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, "v_normal_world"));
         } else if (coordinates.equals("object")) {
-            vertexShaderBuilder.addVaryingVariable("v_normal_object", "vec3");
-            vertexShaderBuilder.addMainLine("v_normal_object = a_normal;");
+            if (!vertexShaderBuilder.hasVaryingVariable("v_normal_object")) {
+                vertexShaderBuilder.addVaryingVariable("v_normal_object", "vec3");
+                vertexShaderBuilder.addMainLine("v_normal_object = a_normal;");
 
-            fragmentShaderBuilder.addVaryingVariable("v_normal_object", "vec3");
+                fragmentShaderBuilder.addVaryingVariable("v_normal_object", "vec3");
+            }
 
             return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, "v_normal_object"));
         }

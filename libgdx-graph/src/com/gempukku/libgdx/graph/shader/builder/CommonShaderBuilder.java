@@ -42,8 +42,16 @@ public abstract class CommonShaderBuilder {
         }
     }
 
+    public boolean hasUniformVariable(String name) {
+        return uniformVariables.containsKey(name);
+    }
+
     public void addUniformVariable(String name, String type, boolean global, UniformRegistry.UniformSetter setter) {
         addArrayUniformVariable(name, -1, type, global, setter);
+    }
+
+    public boolean hasVaryingVariable(String name) {
+        return varyingVariables.containsKey(name);
     }
 
     public void addVaryingVariable(String name, String type) {

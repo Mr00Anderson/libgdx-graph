@@ -32,11 +32,12 @@ public class AttributeUVShaderNodeBuilder extends ConfigurationShaderNodeBuilder
         vertexShaderBuilder.addAttributeVariable(attributeName, "vec2");
 
         String name = "v_uv_" + unit;
+        if (!vertexShaderBuilder.hasVaryingVariable(name)) {
+            vertexShaderBuilder.addVaryingVariable(name, "vec2");
+            vertexShaderBuilder.addMainLine(name + " = " + attributeName + ";");
 
-        vertexShaderBuilder.addVaryingVariable(name, "vec2");
-        vertexShaderBuilder.addMainLine(name + " = " + attributeName + ";");
-
-        fragmentShaderBuilder.addVaryingVariable(name, "vec2");
+            fragmentShaderBuilder.addVaryingVariable(name, "vec2");
+        }
 
         return Collections.singletonMap("uv", new DefaultFieldOutput(ShaderFieldType.Vector2, name));
     }
