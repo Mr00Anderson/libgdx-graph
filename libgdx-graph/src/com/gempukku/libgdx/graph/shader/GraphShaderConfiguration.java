@@ -17,6 +17,7 @@ import com.gempukku.libgdx.graph.shader.node.math.PowerShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.RemapShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.SubtractShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoiseShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.noise.VoronoiDistanceShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.MergeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.SplitShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.texture.Sampler2DShaderNodeBuilder;
@@ -77,6 +78,7 @@ public class GraphShaderConfiguration {
 
         // Noise
         addGraphShaderNodeBuilder(new SimplexNoiseShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new VoronoiDistanceShaderNodeBuilder());
 
         // Values
         addGraphShaderNodeBuilder(new ValueBooleanShaderNodeBuilder());

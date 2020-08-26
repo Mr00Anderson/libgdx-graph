@@ -6,7 +6,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.GLSLFragmentReader;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoiseNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.noise.VoronoiDistanceNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
@@ -15,9 +15,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class SimplexNoiseShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
-    public SimplexNoiseShaderNodeBuilder() {
-        super(new SimplexNoiseNodeConfiguration());
+public class VoronoiDistanceShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
+    public VoronoiDistanceShaderNodeBuilder() {
+        super(new VoronoiDistanceNodeConfiguration());
     }
 
     @Override
@@ -25,16 +25,16 @@ public class SimplexNoiseShaderNodeBuilder extends ConfigurationShaderNodeBuilde
         FieldOutput uvValue = inputs.get("uv");
         FieldOutput scaleValue = inputs.get("scale");
 
-        if (!fragmentShaderBuilder.containsFunction("simplexNoise")) {
-            fragmentShaderBuilder.addFunction("simplexNoise", GLSLFragmentReader.getFragment("simplexNoise"));
+        if (!fragmentShaderBuilder.containsFunction("voronoiDistance")) {
+            fragmentShaderBuilder.addFunction("voronoiDistance", GLSLFragmentReader.getFragment("voronoiDistance"));
         }
 
-        fragmentShaderBuilder.addMainLine("// Simplex noise node");
+        fragmentShaderBuilder.addMainLine("// Voronoi distance node");
         String name = "result_" + nodeId;
         if (uvValue.getFieldType() == ShaderFieldType.Vector2) {
-            fragmentShaderBuilder.addMainLine("float " + name + " = simplexNoise(" + uvValue.getRepresentation() + " * " + scaleValue.getRepresentation() + ");");
+            fragmentShaderBuilder.addMainLine("float " + name + " = voronoiDistance(" + uvValue.getRepresentation() + " * " + scaleValue.getRepresentation() + ");");
         } else {
-            fragmentShaderBuilder.addMainLine("float " + name + " = simplexNoise(vec2(" + uvValue.getRepresentation() + ", 0.0) * " + scaleValue.getRepresentation() + ");");
+            fragmentShaderBuilder.addMainLine("float " + name + " = voronoiDistance(vec2(" + uvValue.getRepresentation() + ", 0.0) * " + scaleValue.getRepresentation() + ");");
         }
 
         return Collections.singletonMap("output", new DefaultFieldOutput(ShaderFieldType.Float, name));
