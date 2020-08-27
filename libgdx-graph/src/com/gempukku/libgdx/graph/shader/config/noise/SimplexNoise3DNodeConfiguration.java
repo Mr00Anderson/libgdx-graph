@@ -5,11 +5,11 @@ import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeInputImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
-public class SimplexNoiseNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
-    public SimplexNoiseNodeConfiguration() {
-        super("SimplexNoise", "Simplex Noise", "Noise");
+public class SimplexNoise3DNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
+    public SimplexNoise3DNodeConfiguration() {
+        super("SimplexNoise3D", "Simplex Noise 3D", "Noise");
         addNodeInput(
-                new GraphNodeInputImpl<ShaderFieldType>("uv", "UV", true, ShaderFieldType.Vector2, ShaderFieldType.Float));
+                new GraphNodeInputImpl<ShaderFieldType>("point", "Point", true, ShaderFieldType.Vector3));
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("scale", "Scale", true, ShaderFieldType.Float));
         addNodeOutput(

@@ -6,7 +6,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.GLSLFragmentReader;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoiseNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise2DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
@@ -15,9 +15,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class SimplexNoiseShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
-    public SimplexNoiseShaderNodeBuilder() {
-        super(new SimplexNoiseNodeConfiguration());
+public class SimplexNoise2DShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
+    public SimplexNoise2DShaderNodeBuilder() {
+        super(new SimplexNoise2DNodeConfiguration());
     }
 
     @Override
@@ -25,16 +25,16 @@ public class SimplexNoiseShaderNodeBuilder extends ConfigurationShaderNodeBuilde
         FieldOutput uvValue = inputs.get("uv");
         FieldOutput scaleValue = inputs.get("scale");
 
-        if (!fragmentShaderBuilder.containsFunction("simplexNoise")) {
-            fragmentShaderBuilder.addFunction("simplexNoise", GLSLFragmentReader.getFragment("simplexNoise"));
+        if (!fragmentShaderBuilder.containsFunction("simplexNoise2d")) {
+            fragmentShaderBuilder.addFunction("simplexNoise2d", GLSLFragmentReader.getFragment("simplexNoise2d"));
         }
 
-        fragmentShaderBuilder.addMainLine("// Simplex noise node");
+        fragmentShaderBuilder.addMainLine("// Simplex noise 2D node");
         String name = "result_" + nodeId;
         if (uvValue.getFieldType() == ShaderFieldType.Vector2) {
-            fragmentShaderBuilder.addMainLine("float " + name + " = simplexNoise(" + uvValue.getRepresentation() + " * " + scaleValue.getRepresentation() + ");");
+            fragmentShaderBuilder.addMainLine("float " + name + " = simplexNoise2d(" + uvValue.getRepresentation() + " * " + scaleValue.getRepresentation() + ");");
         } else {
-            fragmentShaderBuilder.addMainLine("float " + name + " = simplexNoise(vec2(" + uvValue.getRepresentation() + ", 0.0) * " + scaleValue.getRepresentation() + ");");
+            fragmentShaderBuilder.addMainLine("float " + name + " = simplexNoise2d(vec2(" + uvValue.getRepresentation() + ", 0.0) * " + scaleValue.getRepresentation() + ");");
         }
 
         return Collections.singletonMap("output", new DefaultFieldOutput(ShaderFieldType.Float, name));

@@ -1,8 +1,3 @@
-// Some useful functions
-vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
-vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
-
 //
 // Description : GLSL 2D simplex noise function
 //      Author : Ian McEwan, Ashima Arts
@@ -13,7 +8,13 @@ vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
 //  Distributed under the MIT License. See LICENSE file.
 //  https://github.com/ashima/webgl-noise
 //
-float simplexNoise(vec2 v) {
+
+// Some useful functions
+vec3 simplexNoise2d_mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec2 simplexNoise2d_mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+vec3 simplexNoise2d_permute(vec3 x) { return simplexNoise2d_mod289(((x*34.0)+1.0)*x); }
+
+float simplexNoise2d(vec2 v) {
     // Precompute values for skewed triangular grid
     const vec4 C = vec4(0.211324865405187,
     // (3.0-sqrt(3.0))/6.0
@@ -36,9 +37,9 @@ float simplexNoise(vec2 v) {
 
     // Do some permutations to avoid
     // truncation effects in permutation
-    i = mod289(i);
-    vec3 p = permute(
-    permute(i.y + vec3(0.0, i1.y, 1.0))
+    i = simplexNoise2d_mod289(i);
+    vec3 p = simplexNoise2d_permute(
+    simplexNoise2d_permute(i.y + vec3(0.0, i1.y, 1.0))
     + i.x + vec3(0.0, i1.x, 1.0));
 
     vec3 m = max(0.5 - vec3(

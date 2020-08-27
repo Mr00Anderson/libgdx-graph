@@ -10,7 +10,8 @@ import com.gempukku.libgdx.graph.shader.config.math.MultiplyShaderNodeConfigurat
 import com.gempukku.libgdx.graph.shader.config.math.PowerShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.RemapShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.SubtractShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoiseNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise2DNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise3DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.VoronoiDistanceNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.MergeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.SplitShaderNodeConfiguration;
@@ -81,7 +82,8 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
 
-        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoiseNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise2DNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise3DNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new VoronoiDistanceNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new TimeShaderNodeConfiguration()));

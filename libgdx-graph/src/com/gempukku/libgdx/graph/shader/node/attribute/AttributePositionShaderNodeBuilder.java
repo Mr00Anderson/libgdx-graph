@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformSetters;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.attribute.AttributeNormalShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.attribute.AttributePositionShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
     public AttributePositionShaderNodeBuilder() {
-        super(new AttributeNormalShaderNodeConfiguration());
+        super(new AttributePositionShaderNodeConfiguration());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeB
                 fragmentShaderBuilder.addVaryingVariable("v_position_world", "vec3");
             }
 
-            return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, "v_position_world"));
+            return Collections.singletonMap("position", new DefaultFieldOutput(ShaderFieldType.Vector3, "v_position_world"));
         } else if (coordinates.equals("object")) {
             if (!vertexShaderBuilder.hasVaryingVariable("v_position_object")) {
                 vertexShaderBuilder.addMainLine("// Attribute Position Node");
@@ -45,7 +45,7 @@ public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeB
                 fragmentShaderBuilder.addVaryingVariable("v_position_object", "vec3");
             }
 
-            return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, "v_position_object"));
+            return Collections.singletonMap("position", new DefaultFieldOutput(ShaderFieldType.Vector3, "v_position_object"));
         }
         throw new IllegalArgumentException();
     }

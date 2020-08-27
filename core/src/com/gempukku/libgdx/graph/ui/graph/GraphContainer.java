@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.gempukku.libgdx.graph.data.FieldType;
@@ -34,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphContainer<T extends FieldType> extends WidgetGroup implements NavigableCanvas {
+public class GraphContainer<T extends FieldType> extends Table implements NavigableCanvas {
     private static final float CANVAS_GAP = 50f;
     private static final float CONNECTOR_LENGTH = 10;
     private static final float CONNECTOR_RADIUS = 5;
@@ -60,6 +60,8 @@ public class GraphContainer<T extends FieldType> extends WidgetGroup implements 
     public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
+
+        setClip(true);
 
         addListener(
                 new ClickListener(Input.Buttons.RIGHT) {
