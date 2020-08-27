@@ -9,9 +9,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
@@ -62,6 +64,7 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
         shapeRenderer.setAutoShapeType(true);
 
         setClip(true);
+        setTouchable(Touchable.enabled);
 
         addListener(
                 new ClickListener(Input.Buttons.RIGHT) {
@@ -78,6 +81,24 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         processLeftClick(x, y);
+                    }
+                });
+        addListener(
+                new DragListener() {
+                    private float canvasXStart;
+                    private float canvasYStart;
+
+                    @Override
+                    public void dragStart(InputEvent event, float x, float y, int pointer) {
+                        canvasXStart = canvasX;
+                        canvasYStart = canvasY;
+                    }
+
+                    @Override
+                    public void drag(InputEvent event, float x, float y, int pointer) {
+                        if (event.getTarget() == GraphContainer.this) {
+                            navigateTo(canvasXStart + getDragStartX() - x, canvasYStart + getDragStartY() - y);
+                        }
                     }
                 });
     }

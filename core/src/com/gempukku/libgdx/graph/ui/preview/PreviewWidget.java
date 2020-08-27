@@ -3,18 +3,21 @@ package com.gempukku.libgdx.graph.ui.preview;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.gempukku.libgdx.WhitePixel;
 
 public class PreviewWidget extends Widget {
     private Rectangle viewRectangle = new Rectangle();
     private float viewScale = 1;
     private NavigableCanvas navigableCanvas;
+    private boolean movedThisFrame = false;
 
     public PreviewWidget(NavigableCanvas navigableCanvas) {
         this.navigableCanvas = navigableCanvas;
@@ -23,9 +26,19 @@ public class PreviewWidget extends Widget {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         navigateCanvasTo(x + getX(), y + getY());
-                        event.stop();
                     }
                 });
+        DragListener moveCanvasDragListener = new DragListener() {
+            @Override
+            public void drag(InputEvent event, float x, float y, int pointer) {
+                if (event.getTarget() == PreviewWidget.this && !movedThisFrame) {
+                    navigateCanvasTo(x + getX(), y + getY());
+                    movedThisFrame = true;
+                }
+            }
+        };
+        moveCanvasDragListener.setTapSquareSize(0);
+        addListener(moveCanvasDragListener);
     }
 
     private void navigateCanvasTo(float x, float y) {
@@ -40,7 +53,7 @@ public class PreviewWidget extends Widget {
         float canvasX = tmp.x;
         float canvasY = tmp.y;
 
-        navigableCanvas.navigateTo(canvasX + difX / viewScale, canvasY + difY / viewScale);
+        navigableCanvas.navigateTo(MathUtils.round(canvasX + difX / viewScale), MathUtils.round(canvasY + difY / viewScale));
     }
 
     @Override
@@ -93,5 +106,6 @@ public class PreviewWidget extends Widget {
 
         viewRectangle.set(x + originX + canvasX * viewScale, y + originY + canvasY * viewScale,
                 tmp.x * viewScale, tmp.y * viewScale);
+        movedThisFrame = false;
     }
 }
