@@ -50,7 +50,9 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         models.addRenderableProvider(new ModelInstance(sphereModel));
 
         camera = new PerspectiveCamera();
-        camera.position.set(1.5f, 0f, 0f);
+        camera.near = 0.5f;
+        camera.far = 100f;
+        camera.position.set(1f, 0.5f, 0f);
         camera.up.set(0f, 1f, 0f);
         camera.lookAt(0, 0f, 0f);
         camera.update();
