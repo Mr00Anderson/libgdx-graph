@@ -1,15 +1,20 @@
 package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-import com.gempukku.libgdx.graph.shader.config.math.ClampShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.LerpShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.RemapShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.AddShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.MultiplyShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.PowerShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.SubtractShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.AbsShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.CeilingShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.ClampShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.FloorShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.FractionalPartShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.LerpShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.SignShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArccosShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArcsinShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArctanShaderNodeConfiguration;
@@ -87,13 +92,19 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArccosShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArctanShaderNodeConfiguration()));
 
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new AbsShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SignShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new FloorShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CeilingShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new FractionalPartShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LerpShaderNodeConfiguration()));
+
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DotProductShaderNodeConfiguration()));
-        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LerpShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RemapShaderNodeConfiguration()));
 
-        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise2DNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise3DNodeConfiguration()));

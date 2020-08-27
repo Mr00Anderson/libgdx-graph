@@ -7,15 +7,20 @@ import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNode
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.ClampShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.DotProductShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.LerpShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.RemapShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.AddShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.DivideShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.MultiplyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.PowerShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.SubtractShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.AbsShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.CeilingShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.ClampShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.FloorShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.FractionalPartShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.LerpShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.SignShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArccosShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArcsinShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArctanShaderNodeBuilder;
@@ -54,19 +59,28 @@ public class GraphShaderConfiguration {
         // End
         addGraphShaderNodeBuilder(new EndGraphShaderNodeBuilder());
 
-        // Math
-        addGraphShaderNodeBuilder(new MergeShaderNodeBuilder());
-        addGraphShaderNodeBuilder(new SplitShaderNodeBuilder());
+        // Math - Arithmetic
         addGraphShaderNodeBuilder(new AddShaderNodeBuilder());
         addGraphShaderNodeBuilder(new SubtractShaderNodeBuilder());
         addGraphShaderNodeBuilder(new MultiplyShaderNodeBuilder());
         addGraphShaderNodeBuilder(new DivideShaderNodeBuilder());
-        addGraphShaderNodeBuilder(new DotProductShaderNodeBuilder());
-        addGraphShaderNodeBuilder(new LerpShaderNodeBuilder());
-        addGraphShaderNodeBuilder(new ClampShaderNodeBuilder());
         addGraphShaderNodeBuilder(new PowerShaderNodeBuilder());
+
+        // Math - Common
+        addGraphShaderNodeBuilder(new AbsShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new SignShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new FloorShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new CeilingShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new FractionalPartShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new ClampShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new LerpShaderNodeBuilder());
+
+        addGraphShaderNodeBuilder(new MergeShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new SplitShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new DotProductShaderNodeBuilder());
         addGraphShaderNodeBuilder(new RemapShaderNodeBuilder());
 
+        // Math - trigonometry
         addGraphShaderNodeBuilder(new SinShaderNodeBuilder());
         addGraphShaderNodeBuilder(new CosShaderNodeBuilder());
         addGraphShaderNodeBuilder(new TanShaderNodeBuilder());
