@@ -1,15 +1,21 @@
 package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-import com.gempukku.libgdx.graph.shader.config.math.AddShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.ClampShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.LerpShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.MultiplyShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.PowerShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.RemapShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.SubtractShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.arithmetic.AddShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.arithmetic.DivideShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.arithmetic.MultiplyShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.arithmetic.PowerShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.arithmetic.SubtractShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArccosShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArcsinShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArctanShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.CosShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.SinShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.TanShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise2DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise3DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.VoronoiDistanceNodeConfiguration;
@@ -73,6 +79,13 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MultiplyShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DivideShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new PowerShaderNodeConfiguration()));
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SinShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CosShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new TanShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArcsinShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArccosShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArctanShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));

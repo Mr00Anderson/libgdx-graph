@@ -7,15 +7,21 @@ import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNode
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.AddShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.ClampShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.DivideShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.DotProductShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.LerpShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.MultiplyShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.PowerShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.RemapShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.SubtractShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.arithmetic.AddShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.arithmetic.DivideShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.arithmetic.MultiplyShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.arithmetic.PowerShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.arithmetic.SubtractShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArccosShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArcsinShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArctanShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.CosShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.SinShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.TanShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoise2DShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoise3DShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.VoronoiDistanceShaderNodeBuilder;
@@ -60,6 +66,13 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new ClampShaderNodeBuilder());
         addGraphShaderNodeBuilder(new PowerShaderNodeBuilder());
         addGraphShaderNodeBuilder(new RemapShaderNodeBuilder());
+
+        addGraphShaderNodeBuilder(new SinShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new CosShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new TanShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new ArcsinShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new ArccosShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new ArctanShaderNodeBuilder());
 
         // Attributes
         addGraphShaderNodeBuilder(new AttributePositionShaderNodeBuilder());

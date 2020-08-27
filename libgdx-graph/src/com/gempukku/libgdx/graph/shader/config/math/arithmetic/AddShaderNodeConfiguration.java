@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.shader.config.math;
+package com.gempukku.libgdx.graph.shader.config.math.arithmetic;
 
 import com.gempukku.libgdx.graph.NodeConfigurationImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeInputImpl;

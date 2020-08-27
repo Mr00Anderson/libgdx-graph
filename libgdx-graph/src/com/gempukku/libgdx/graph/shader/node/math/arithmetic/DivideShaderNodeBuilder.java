@@ -1,11 +1,11 @@
-package com.gempukku.libgdx.graph.shader.node.math;
+package com.gempukku.libgdx.graph.shader.node.math.arithmetic;
 
 import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.math.DivideShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.arithmetic.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;

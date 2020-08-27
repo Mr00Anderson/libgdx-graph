@@ -1,11 +1,11 @@
-package com.gempukku.libgdx.graph.shader.node.math;
+package com.gempukku.libgdx.graph.shader.node.math.arithmetic;
 
 import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.math.MultiplyShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.arithmetic.MultiplyShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
@@ -14,8 +14,8 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class MultiplyShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
-    public MultiplyShaderNodeBuilder() {
+public class AddShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
+    public AddShaderNodeBuilder() {
         super(new MultiplyShaderNodeConfiguration());
     }
 
@@ -25,9 +25,9 @@ public class MultiplyShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
         FieldOutput bValue = inputs.get("b");
         ShaderFieldType resultType = determineOutputType(aValue, bValue);
 
-        fragmentShaderBuilder.addMainLine("// Multiply node");
+        fragmentShaderBuilder.addMainLine("// Add node");
         String name = "result_" + nodeId;
-        fragmentShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = " + aValue.getRepresentation() + " * " + bValue.getRepresentation() + ";");
+        fragmentShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = " + aValue.getRepresentation() + " + " + bValue.getRepresentation() + ";");
 
         return Collections.singletonMap("output", new DefaultFieldOutput(resultType, name));
     }

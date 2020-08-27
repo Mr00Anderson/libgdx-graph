@@ -1,13 +1,13 @@
-package com.gempukku.libgdx.graph.shader.config.math;
+package com.gempukku.libgdx.graph.shader.config.math.arithmetic;
 
 import com.gempukku.libgdx.graph.NodeConfigurationImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeInputImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
-public class SubtractShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
-    public SubtractShaderNodeConfiguration() {
-        super("Subtract", "Subtract", "Math/Arithmetic");
+public class DivideShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
+    public DivideShaderNodeConfiguration() {
+        super("Divide", "Divide", "Math/Arithmetic");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("a", "A", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeInput(
