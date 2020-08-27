@@ -14,6 +14,7 @@ import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoiseNodeConfigurati
 import com.gempukku.libgdx.graph.shader.config.noise.VoronoiDistanceNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.MergeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.part.SplitShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.provided.TimeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.texture.Sampler2DShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueBooleanShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.value.ValueColorShaderNodeConfiguration;
@@ -82,6 +83,8 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoiseNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new VoronoiDistanceNodeConfiguration()));
+
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new TimeShaderNodeConfiguration()));
 
         graphBoxProducers.add(new ValueColorBoxProducer<ShaderFieldType>(new ValueColorShaderNodeConfiguration()));
         graphBoxProducers.add(new ValueFloatBoxProducer<ShaderFieldType>(new ValueFloatShaderNodeConfiguration()));

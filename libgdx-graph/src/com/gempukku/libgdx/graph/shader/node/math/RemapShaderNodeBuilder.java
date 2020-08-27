@@ -26,9 +26,9 @@ public class RemapShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
         FieldOutput toValue = inputs.get("to");
         ShaderFieldType resultType = inputValue.getFieldType();
 
-        if (fragmentShaderBuilder.containsFunction("remap")) {
-            fragmentShaderBuilder.addFunction("remap", resultType.getShaderType() + " remap(" + resultType.getShaderType() + " input, vec2 from, vec2 to) {\n" +
-                    "  return to.x + (input - from.x) * (to.y - to.x) / (from.y - from.x);\n" +
+        if (!fragmentShaderBuilder.containsFunction("remap")) {
+            fragmentShaderBuilder.addFunction("remap", resultType.getShaderType() + " remap(" + resultType.getShaderType() + " value, vec2 from, vec2 to) {\n" +
+                    "  return to.x + (value - from.x) * (to.y - to.x) / (from.y - from.x);\n" +
                     "}\n");
         }
         fragmentShaderBuilder.addMainLine("// Remap node");

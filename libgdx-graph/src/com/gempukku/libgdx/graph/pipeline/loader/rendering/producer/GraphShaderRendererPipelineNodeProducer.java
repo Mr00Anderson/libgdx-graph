@@ -72,6 +72,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                     renderableProvider.getRenderables(renderables, renderablePool);
                 }
                 for (GraphShader shader : shaders) {
+                    shader.setTimeProvider(pipelineRenderingContext.getTimeProvider());
                     renderWithShader(shader, camera, models, environment);
                 }
                 renderables.clear();

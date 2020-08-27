@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.Disposable;
+import com.gempukku.libgdx.graph.DefaultTimeKeeper;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNode;
@@ -40,13 +41,14 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
     private ModelInstance modelInstance;
     private Renderable renderable = new Renderable();
     private Camera camera;
+    private DefaultTimeKeeper timeKeeper;
 
     public ShaderPreviewWidget(int width, int height) {
         this.width = width;
         this.height = height;
         renderContext = new RenderContext(new DefaultTextureBinder(DefaultTextureBinder.LRU, 1));
         camera = new PerspectiveCamera();
-        camera.position.set(1.5f, 0f, 0f);
+        camera.position.set(-1.5f, 0f, 0f);
         camera.up.set(0f, 1f, 0f);
         camera.lookAt(0, 0f, 0f);
         camera.update();
@@ -73,7 +75,8 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
     private void createShader(Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
         try {
             graphShader = new GraphShader("");
-            GraphShaderBuilder.buildShader(graphShader, graph, true);
+            timeKeeper = new DefaultTimeKeeper();
+            GraphShaderBuilder.buildShader(graphShader, timeKeeper, graph, true);
             frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
             createModel();
 
@@ -114,6 +117,7 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
         if (frameBuffer != null) {
             batch.end();
 
+            timeKeeper.updateTime(Gdx.graphics.getDeltaTime());
             Gdx.gl.glDisable(GL20.GL_SCISSOR_TEST);
             try {
                 frameBuffer.begin();

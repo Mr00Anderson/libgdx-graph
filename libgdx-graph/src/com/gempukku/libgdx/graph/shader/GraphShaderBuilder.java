@@ -2,6 +2,8 @@ package com.gempukku.libgdx.graph.shader;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.gempukku.libgdx.graph.DefaultTimeKeeper;
+import com.gempukku.libgdx.graph.TimeProvider;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNode;
@@ -18,11 +20,18 @@ import java.util.Map;
 import java.util.Set;
 
 public class GraphShaderBuilder {
-    public static void buildShader(GraphShader graphShader, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-        buildShader(graphShader, graph, false);
+    public static void buildShader(GraphShader graphShader,
+                                   Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
+        buildShader(graphShader, new DefaultTimeKeeper(), graph);
     }
 
-    public static void buildShader(GraphShader graphShader, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
+    public static void buildShader(GraphShader graphShader, TimeProvider timeProvider,
+                                   Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
+        buildShader(graphShader, timeProvider, graph, false);
+    }
+
+    public static void buildShader(GraphShader graphShader, TimeProvider timeProvider,
+                                   Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
                                    boolean designTime) {
         Map<String, PropertySource> propertyMap = new HashMap<>();
         for (GraphProperty<ShaderFieldType> property : graph.getProperties()) {
@@ -35,9 +44,9 @@ public class GraphShaderBuilder {
 
         initializeShaders(vertexShaderBuilder, fragmentShaderBuilder);
 
-        GraphShaderContextImpl context = new GraphShaderContextImpl(propertyMap);
-        graphShader.addDisposable(context);
-        buildGraph(designTime, graph, context, graphShader, vertexShaderBuilder, fragmentShaderBuilder);
+        graphShader.setPropertySourceMap(propertyMap);
+        graphShader.setTimeProvider(timeProvider);
+        buildGraph(designTime, graph, graphShader, graphShader, vertexShaderBuilder, fragmentShaderBuilder);
 
         String vertexShader = vertexShaderBuilder.buildProgram();
         String fragmentShader = fragmentShaderBuilder.buildProgram();

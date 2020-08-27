@@ -20,6 +20,7 @@ import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoiseShaderNodeBuilder
 import com.gempukku.libgdx.graph.shader.node.noise.VoronoiDistanceShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.MergeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.SplitShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.provided.TimeGraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.texture.Sampler2DShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueBooleanShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueColorShaderNodeBuilder;
@@ -79,6 +80,9 @@ public class GraphShaderConfiguration {
         // Noise
         addGraphShaderNodeBuilder(new SimplexNoiseShaderNodeBuilder());
         addGraphShaderNodeBuilder(new VoronoiDistanceShaderNodeBuilder());
+
+        // Provided
+        addGraphShaderNodeBuilder(new TimeGraphShaderNodeBuilder());
 
         // Values
         addGraphShaderNodeBuilder(new ValueBooleanShaderNodeBuilder());

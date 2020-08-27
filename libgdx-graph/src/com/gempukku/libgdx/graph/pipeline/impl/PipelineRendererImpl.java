@@ -1,5 +1,8 @@
 package com.gempukku.libgdx.graph.pipeline.impl;
 
+import com.gempukku.libgdx.graph.DefaultTimeKeeper;
+import com.gempukku.libgdx.graph.TimeKeeper;
+import com.gempukku.libgdx.graph.TimeProvider;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.pipeline.PipelineProperty;
 import com.gempukku.libgdx.graph.pipeline.PipelinePropertySource;
@@ -16,11 +19,18 @@ public class PipelineRendererImpl implements PipelineRenderer {
     private Iterable<PipelineNode> nodes;
     private Map<String, WritablePipelineProperty> pipelinePropertyMap;
     private EndPipelineNode endNode;
+    private TimeKeeper timeKeeper;
 
     public PipelineRendererImpl(Iterable<PipelineNode> nodes, Map<String, WritablePipelineProperty> pipelinePropertyMap, EndPipelineNode endNode) {
         this.nodes = nodes;
         this.pipelinePropertyMap = pipelinePropertyMap;
         this.endNode = endNode;
+        this.timeKeeper = new DefaultTimeKeeper();
+    }
+
+    @Override
+    public void setTimeKeeper(TimeKeeper timeKeeper) {
+        this.timeKeeper = timeKeeper;
     }
 
     @Override
@@ -77,6 +87,11 @@ public class PipelineRendererImpl implements PipelineRenderer {
             @Override
             public PipelinePropertySource getPipelinePropertySource() {
                 return PipelineRendererImpl.this;
+            }
+
+            @Override
+            public TimeProvider getTimeProvider() {
+                return timeKeeper;
             }
         };
 

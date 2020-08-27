@@ -5,7 +5,7 @@ import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.math.MultiplyShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class DivideShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
     public DivideShaderNodeBuilder() {
-        super(new MultiplyShaderNodeConfiguration());
+        super(new DivideShaderNodeConfiguration());
     }
 
     @Override
