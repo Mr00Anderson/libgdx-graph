@@ -190,28 +190,25 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
 
         for (Uniform uniform : uniforms.values()) {
             String alias = uniform.alias;
-            int location = getUniformLocationSafely(program, alias);
+            int location = getUniformLocation(program, alias);
             uniform.setUniformLocation(location);
         }
 
         for (StructArrayUniform uniform : structArrayUniforms.values()) {
-            int startIndex = getUniformLocationSafely(program, uniform.alias + "[0]." + uniform.fieldNames[0]);
+            int startIndex = getUniformLocation(program, uniform.alias + "[0]." + uniform.fieldNames[0]);
             int size = program.fetchUniformLocation(uniform.alias + "[1]." + uniform.fieldNames[0], false) - startIndex;
             int[] fieldOffsets = new int[uniform.fieldNames.length];
             // Starting at 1, as first field offset is 0 by default
             for (int i = 1; i < uniform.fieldNames.length; i++) {
-                fieldOffsets[i] = getUniformLocationSafely(program, uniform.alias + "[0]." + uniform.fieldNames[i]) - startIndex;
+                fieldOffsets[i] = getUniformLocation(program, uniform.alias + "[0]." + uniform.fieldNames[i]) - startIndex;
             }
             uniform.setUniformLocations(startIndex, size, fieldOffsets);
         }
         initialized = true;
     }
 
-    private int getUniformLocationSafely(ShaderProgram program, String alias) {
-        int location = program.fetchUniformLocation(alias, false);
-        if (location == -1)
-            throw new GdxRuntimeException("Uniform not found in program - " + alias);
-        return location;
+    private int getUniformLocation(ShaderProgram program, String alias) {
+        return program.fetchUniformLocation(alias, false);
     }
 
     private final IntArray tempArray = new IntArray();
@@ -253,11 +250,11 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
         setBlending(context, transparency, blending);
 
         for (Uniform uniform : uniforms.values()) {
-            if (uniform.global)
+            if (uniform.global && uniform.location != -1)
                 uniform.setter.set(this, uniform.location, null, null);
         }
         for (StructArrayUniform uniform : structArrayUniforms.values()) {
-            if (uniform.global)
+            if (uniform.global && uniform.startIndex != -1)
                 uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, null, null);
         }
     }

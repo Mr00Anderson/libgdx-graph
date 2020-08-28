@@ -78,7 +78,7 @@
                 },
                 {
                   "data": {
-                    "previewPath": "D:\/dev\/libgdx-graph\/libgdx-graph-test\/resources\/image\/seamless_rock_face_texture_by_hhh316.jpg"
+                    "previewPath": null
                   },
                   "x": 286.0,
                   "y": 487.0,
@@ -355,7 +355,7 @@
               "properties": [
                 {
                   "data": {
-                    "x": -1.0,
+                    "x": 0.0,
                     "y": 1.0,
                     "z": 0.0
                   },
