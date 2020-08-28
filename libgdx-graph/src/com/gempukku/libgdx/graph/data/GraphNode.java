@@ -16,4 +16,6 @@ public interface GraphNode<T extends FieldType> {
     Map<String, ? extends GraphNodeInput<T>> getInputs();
 
     Map<String, ? extends GraphNodeOutput<T>> getOutputs();
+
+    boolean isValid(Map<String, GraphNodeOutput<T>> inputs, Iterable<? extends GraphProperty<T>> properties);
 }

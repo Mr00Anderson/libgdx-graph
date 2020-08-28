@@ -3,6 +3,7 @@ package com.gempukku.libgdx.graph;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
+import com.gempukku.libgdx.graph.data.GraphProperty;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,5 +52,10 @@ public class NodeConfigurationImpl<T extends FieldType> implements NodeConfigura
     @Override
     public Map<String, GraphNodeOutput<T>> getNodeOutputs() {
         return nodeOutputs;
+    }
+
+    @Override
+    public boolean isValid(Map<String, ? extends GraphNodeOutput<T>> inputs, Iterable<? extends GraphProperty<T>> properties) {
+        return true;
     }
 }

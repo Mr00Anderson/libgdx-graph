@@ -105,6 +105,11 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
         public JSONObject getData() {
             return data;
         }
+
+        @Override
+        public boolean isValid(Map<String, GraphNodeOutput<T>> inputs, Iterable<? extends GraphProperty<T>> graphProperties) {
+            return configuration.isValid(inputs, graphProperties);
+        }
     }
 
     private static class GraphPropertyData<T extends FieldType> implements GraphProperty<T> {

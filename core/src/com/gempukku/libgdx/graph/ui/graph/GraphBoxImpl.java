@@ -55,6 +55,11 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
 
     }
 
+    @Override
+    public boolean isValid(Map<String, GraphNodeOutput<T>> inputs, Iterable<? extends GraphProperty<T>> properties) {
+        return configuration.isValid(inputs, properties);
+    }
+
     public void addTopConnector(GraphNodeInput<T> graphNodeInput) {
         inputConnectors.put(graphNodeInput.getFieldId(), new GraphBoxInputConnectorImpl<T>(GraphBoxInputConnector.Side.Top, new Supplier<Float>() {
             @Override

@@ -42,11 +42,14 @@ public class GraphValidator {
     private static <T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> void validateNode(ValidationResult<T, U, V, W> result, Graph<T, U, V, W> graph, String nodeId) {
         T thisNode = graph.getNodeById(nodeId);
         Set<String> validatedFields = new HashSet<>();
+        Map<String, GraphNodeOutput<W>> inputs = new HashMap<>();
         for (U incomingConnection : getIncomingConnections(graph, nodeId)) {
             String fieldTo = incomingConnection.getFieldTo();
             GraphNodeInput<W> input = thisNode.getInputs().get(fieldTo);
             T remoteNode = graph.getNodeById(incomingConnection.getNodeFrom());
             GraphNodeOutput<W> output = remoteNode.getOutputs().get(incomingConnection.getFieldFrom());
+
+            inputs.put(fieldTo, output);
 
             // Validate the actual output is accepted by the input
             List<? extends W> acceptedPropertyTypes = input.getAcceptedPropertyTypes();
@@ -62,6 +65,9 @@ public class GraphValidator {
             if (input.isRequired() && !validatedFields.contains(input.getFieldId()))
                 result.addErrorConnector(new NodeConnector(nodeId, input.getFieldId()));
         }
+
+        if (!thisNode.isValid(inputs, graph.getProperties()))
+            result.addErrorNode(thisNode);
     }
 
     private static <T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> Iterable<U> getIncomingConnections(Graph<T, U, V, W> graph, String nodeId) {
