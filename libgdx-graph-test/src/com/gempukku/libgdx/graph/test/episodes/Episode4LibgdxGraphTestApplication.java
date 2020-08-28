@@ -1,11 +1,16 @@
 package com.gempukku.libgdx.graph.test.episodes;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cubemap;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -15,6 +20,8 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -49,6 +56,8 @@ public class Episode4LibgdxGraphTestApplication extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
         WhitePixel.initialize();
         skin = new Skin(Gdx.files.internal("uiskin.json"));
         stage = constructStage();
@@ -152,6 +161,14 @@ public class Episode4LibgdxGraphTestApplication extends ApplicationAdapter {
         skin.dispose();
         stage.dispose();
         WhitePixel.dispose();
+
+        Gdx.app.debug("Unclosed", Cubemap.getManagedStatus());
+        Gdx.app.debug("Unclosed", GLFrameBuffer.getManagedStatus());
+        Gdx.app.debug("Unclosed", Mesh.getManagedStatus());
+        Gdx.app.debug("Unclosed", Texture.getManagedStatus());
+        Gdx.app.debug("Unclosed", TextureArray.getManagedStatus());
+        Gdx.app.debug("Unclosed", ShaderProgram.getManagedStatus());
+
     }
 
     private PipelineRenderer loadPipelineRenderer() {

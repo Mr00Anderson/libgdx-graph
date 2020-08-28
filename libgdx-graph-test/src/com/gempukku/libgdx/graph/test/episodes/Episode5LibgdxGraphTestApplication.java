@@ -1,17 +1,23 @@
 package com.gempukku.libgdx.graph.test.episodes;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Cubemap;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -44,11 +50,21 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
     private Camera camera;
     private Texture rockTexture;
     private Stage stage;
+    private Skin skin;
 
     @Override
     public void create() {
+        Gdx.app.setLogLevel(Application.LOG_DEBUG);
+
         WhitePixel.initialize();
 
+        rockTexture = new Texture(Gdx.files.internal("image/seamless_rock_face_texture_by_hhh316.jpg"));
+        ModelBuilder modelBuilder = new ModelBuilder();
+        sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
+                new Material(TextureAttribute.createDiffuse(rockTexture)),
+                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
         stage = createStage();
 
         models = createModels();
@@ -71,14 +87,6 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
     }
 
     private PipelineRendererModels createModels() {
-        rockTexture = new Texture(Gdx.files.internal("image/seamless_rock_face_texture_by_hhh316.jpg"));
-
-        ModelBuilder modelBuilder = new ModelBuilder();
-        Material material = new Material(TextureAttribute.createDiffuse(rockTexture));
-        sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
-                material,
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
-
         LibGDXModels models = new LibGDXModels();
         sphereModelInstance = new ModelInstance(sphereModel);
         models.addRenderableProvider(sphereModelInstance);
@@ -87,8 +95,6 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
     }
 
     private Stage createStage() {
-        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-
         Stage stage = new Stage(new ScreenViewport());
 
         final Slider amount = new Slider(0, 10, 0.1f, false, skin);
@@ -172,10 +178,19 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        skin.dispose();
+        stage.dispose();
         sphereModel.dispose();
         pipelineRenderer.dispose();
         rockTexture.dispose();
         WhitePixel.dispose();
+
+        Gdx.app.debug("Unclosed", Cubemap.getManagedStatus());
+        Gdx.app.debug("Unclosed", GLFrameBuffer.getManagedStatus());
+        Gdx.app.debug("Unclosed", Mesh.getManagedStatus());
+        Gdx.app.debug("Unclosed", Texture.getManagedStatus());
+        Gdx.app.debug("Unclosed", TextureArray.getManagedStatus());
+        Gdx.app.debug("Unclosed", ShaderProgram.getManagedStatus());
     }
 
     private PipelineRenderer loadPipelineRenderer() {

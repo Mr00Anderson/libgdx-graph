@@ -34,6 +34,7 @@ public class RenderPipelineImpl implements RenderPipeline {
         }
         oldFrameBuffers.clear();
         newFrameBuffers.clear();
+        bufferCopyHelper.dispose();
     }
 
     @Override
