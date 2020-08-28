@@ -28,7 +28,6 @@ import com.gempukku.libgdx.graph.pipeline.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
 import com.gempukku.libgdx.graph.pipeline.PipelineRendererModels;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
-import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.GraphShaderUtil;
 import com.gempukku.libgdx.graph.test.WhitePixel;
 
@@ -75,17 +74,15 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
         rockTexture = new Texture(Gdx.files.internal("image/seamless_rock_face_texture_by_hhh316.jpg"));
 
         ModelBuilder modelBuilder = new ModelBuilder();
-        GraphShaderAttribute graphShaderAttribute = new GraphShaderAttribute();
-        graphShaderAttribute.addShaderTag("Cover");
-        Material material = new Material(TextureAttribute.createDiffuse(rockTexture), graphShaderAttribute);
+        Material material = new Material(TextureAttribute.createDiffuse(rockTexture));
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 material,
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
-
         LibGDXModels models = new LibGDXModels();
         sphereModelInstance = new ModelInstance(sphereModel);
         models.addRenderableProvider(sphereModelInstance);
+        GraphShaderUtil.addShaderTag(sphereModelInstance, "Cover");
         return models;
     }
 
