@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.shader;
 
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import com.gempukku.libgdx.graph.TimeProvider;
@@ -14,6 +15,7 @@ public class GraphShader extends UniformCachingShader implements GraphShaderCont
     private String tag;
     private ShaderProgram shaderProgram;
     private TimeProvider timeProvider;
+    private Environment environment;
 
     public GraphShader(String tag) {
         this.tag = tag;
@@ -44,9 +46,18 @@ public class GraphShader extends UniformCachingShader implements GraphShaderCont
         this.timeProvider = timeProvider;
     }
 
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
     @Override
     public TimeProvider getTimeProvider() {
         return timeProvider;
+    }
+
+    @Override
+    public Environment getEnvironment() {
+        return environment;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class EndGraphShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
         String alpha = (alphaField != null) ? alphaField.getRepresentation() : "1.0";
         FieldOutput alphaClipField = inputs.get("alphaClip");
         String alphaClip = (alphaClipField != null) ? alphaClipField.getRepresentation() : "0.0";
-        fragmentShaderBuilder.addMainLine("if (" + alpha + " < " + alphaClip + ")");
+        fragmentShaderBuilder.addMainLine("if (" + alpha + " <= " + alphaClip + ")");
         fragmentShaderBuilder.addMainLine("  discard;");
 
         FieldOutput colorField = inputs.get("color");
