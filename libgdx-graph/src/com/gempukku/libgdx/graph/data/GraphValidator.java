@@ -1,8 +1,10 @@
 package com.gempukku.libgdx.graph.data;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class GraphValidator {
@@ -17,6 +19,17 @@ public class GraphValidator {
         T end = graph.getNodeById(nodeEnd);
         if (end == null)
             return result;
+
+        // Check duplicate property names
+        Map<String, V> propertyNames = new HashMap<>();
+        for (V property : graph.getProperties()) {
+            String propertyName = property.getName();
+            if (propertyNames.containsKey(propertyName)) {
+                result.addErrorProperty(property);
+                result.addErrorProperty(propertyNames.get(propertyName));
+            }
+            propertyNames.put(propertyName, property);
+        }
 
         boolean cyclic = isCyclic(result, graph, nodeEnd);
         if (!cyclic) {
@@ -125,6 +138,7 @@ public class GraphValidator {
         private final Set<T> warningNodes = new HashSet<>();
         private final Set<U> errorConnections = new HashSet<>();
         private final Set<NodeConnector> errorConnectors = new HashSet<>();
+        private final Set<V> errorProperties = new HashSet<>();
 
         public void addErrorNode(T node) {
             errorNodes.add(node);
@@ -140,6 +154,10 @@ public class GraphValidator {
 
         public void addErrorConnector(NodeConnector nodeConnector) {
             errorConnectors.add(nodeConnector);
+        }
+
+        public void addErrorProperty(V property) {
+            errorProperties.add(property);
         }
 
         public Set<T> getErrorNodes() {
@@ -158,8 +176,12 @@ public class GraphValidator {
             return errorConnectors;
         }
 
+        public Set<V> getErrorProperties() {
+            return errorProperties;
+        }
+
         public boolean hasErrors() {
-            return !errorNodes.isEmpty() || !errorConnections.isEmpty() || !errorConnectors.isEmpty();
+            return !errorNodes.isEmpty() || !errorConnections.isEmpty() || !errorConnectors.isEmpty() || !errorProperties.isEmpty();
         }
 
         public boolean hasWarnings() {
