@@ -1,12 +1,12 @@
 package com.gempukku.libgdx.graph.pipeline;
 
 import com.gempukku.libgdx.graph.GraphDataLoaderCallback;
-import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNode;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphProperty;
 import com.gempukku.libgdx.graph.data.GraphValidator;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import com.gempukku.libgdx.graph.pipeline.impl.PipelineRendererImpl;
 import com.gempukku.libgdx.graph.pipeline.impl.WritablePipelineProperty;
 import com.gempukku.libgdx.graph.pipeline.loader.node.PipelineNode;
@@ -26,7 +26,8 @@ public class PipelineLoaderCallback extends GraphDataLoaderCallback<PipelineRend
 
     @Override
     public PipelineRenderer end() {
-        GraphValidator.ValidationResult<GraphNode<PipelineFieldType>, GraphConnection, GraphProperty<PipelineFieldType>, PipelineFieldType> result = GraphValidator.validateGraph(this, "end");
+        GraphValidator<GraphNode<PipelineFieldType>, GraphConnection, GraphProperty<PipelineFieldType>, PipelineFieldType> graphValidator = new GraphValidator<>();
+        GraphValidator.ValidationResult<GraphNode<PipelineFieldType>, GraphConnection, GraphProperty<PipelineFieldType>, PipelineFieldType> result = graphValidator.validateGraph(this, "end");
         if (result.hasErrors())
             throw new IllegalStateException("The graph contains errors, open it in the graph designer and correct them");
 

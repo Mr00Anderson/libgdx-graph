@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.pipeline.config.math;
 
 import com.gempukku.libgdx.graph.NodeConfigurationImpl;
+import com.gempukku.libgdx.graph.VectorArithmeticOutputTypeFunction;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeInputImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeOutputImpl;
@@ -21,6 +22,7 @@ public class MultiplyPipelineNodeConfiguration extends NodeConfigurationImpl<Pip
                         Color, Vector3, Vector2, Float));
         addNodeOutput(
                 new GraphNodeOutputImpl<PipelineFieldType>("output", "Result",
+                        new VectorArithmeticOutputTypeFunction<PipelineFieldType>(Float, "inputA", "inputB"),
                         Float, Vector2, Vector3, Color));
     }
 }

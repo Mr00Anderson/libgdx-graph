@@ -56,6 +56,8 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     private Table contentTable;
     private Label validationLabel;
 
+    private GraphValidator<GraphBox<T>, GraphConnection, PropertyBox<T>, T> graphValidator = new GraphValidator<>();
+
     private boolean finishedLoading = false;
 
     public GraphDesignTab(boolean closeable, String id, String title, Skin skin,
@@ -274,7 +276,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     }
 
     private void updatePipelineValidation() {
-        GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> validationResult = GraphValidator.validateGraph(this, "end");
+        GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> validationResult = graphValidator.validateGraph(this, "end");
         graphContainer.setValidationResult(validationResult);
         if (validationResult.hasErrors()) {
             validationLabel.setColor(Color.RED);

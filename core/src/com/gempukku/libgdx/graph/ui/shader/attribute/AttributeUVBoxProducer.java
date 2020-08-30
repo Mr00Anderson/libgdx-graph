@@ -1,9 +1,9 @@
 package com.gempukku.libgdx.graph.ui.shader.attribute;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.config.attribute.AttributeUVShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.ui.graph.GraphBox;

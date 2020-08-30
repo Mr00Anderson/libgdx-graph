@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.pipeline.loader.node;
 
-import com.gempukku.libgdx.graph.NodeConfiguration;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import org.json.simple.JSONObject;
 

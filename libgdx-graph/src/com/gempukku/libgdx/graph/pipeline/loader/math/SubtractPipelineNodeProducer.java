@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.pipeline.config.math.MultiplyPipelineNodeConfiguration;
 import com.gempukku.libgdx.graph.pipeline.loader.PipelineRenderingContext;
 import com.gempukku.libgdx.graph.pipeline.loader.node.OncePerFrameJobPipelineNode;
@@ -13,8 +12,6 @@ import com.gempukku.libgdx.graph.pipeline.loader.node.PipelineNodeProducerImpl;
 import org.json.simple.JSONObject;
 
 import java.util.Map;
-
-import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Float;
 
 public class SubtractPipelineNodeProducer extends PipelineNodeProducerImpl {
     public SubtractPipelineNodeProducer() {
@@ -26,21 +23,6 @@ public class SubtractPipelineNodeProducer extends PipelineNodeProducerImpl {
         final PipelineNode.FieldOutput<?> aFunction = inputFields.get("inputA");
         final PipelineNode.FieldOutput<?> bFunction = inputFields.get("inputB");
         return new OncePerFrameJobPipelineNode(configuration, inputFields) {
-            @Override
-            protected PipelineFieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
-                FieldOutput<?> a = inputFields.get("inputA");
-                FieldOutput<?> b = inputFields.get("inputB");
-                PipelineFieldType aType = a.getPropertyType();
-                PipelineFieldType bType = b.getPropertyType();
-                if (aType == Float)
-                    return bType;
-                if (bType == Float)
-                    return aType;
-                if (aType != bType)
-                    throw new IllegalStateException("Invalid mix of input field types");
-                return aType;
-            }
-
             @Override
             protected void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues) {
                 Object aValue = aFunction.getValue(pipelineRenderingContext);

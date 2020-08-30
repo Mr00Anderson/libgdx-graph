@@ -261,8 +261,8 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
                     NodeConnector connectorFrom = drawingFromIsInput ? clickedNodeConnector : drawingFromConnector;
                     NodeConnector connectorTo = drawingFromIsInput ? drawingFromConnector : clickedNodeConnector;
 
-                    GraphNodeOutput<T> output = getGraphBoxById(connectorFrom.getNodeId()).getOutputs().get(connectorFrom.getFieldId());
-                    GraphNodeInput<T> input = getGraphBoxById(connectorTo.getNodeId()).getInputs().get(connectorTo.getFieldId());
+                    GraphNodeOutput<T> output = getGraphBoxById(connectorFrom.getNodeId()).getConfiguration().getNodeOutputs().get(connectorFrom.getFieldId());
+                    GraphNodeInput<T> input = getGraphBoxById(connectorTo.getNodeId()).getConfiguration().getNodeInputs().get(connectorTo.getFieldId());
 
                     if (!connectorsMatch(input, output)) {
                         // Either input-input, output-output, or different property type
@@ -288,7 +288,7 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
             }
         } else {
             if (clickedNode.isInputField(clickedNodeConnector.getFieldId())
-                    || !clickedNode.getOutputs().get(clickedNodeConnector.getFieldId()).supportsMultiple()) {
+                    || !clickedNode.getConfiguration().getNodeOutputs().get(clickedNodeConnector.getFieldId()).supportsMultiple()) {
                 List<GraphConnection> nodeConnections = findNodeConnections(clickedNodeConnector);
                 if (nodeConnections.size() > 0) {
                     GraphConnection oldConnection = nodeConnections.get(0);
@@ -308,7 +308,7 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
     }
 
     private boolean connectorsMatch(GraphNodeInput<T> input, GraphNodeOutput<T> output) {
-        List<? extends T> producablePropertyTypes = output.getProducablePropertyTypes();
+        Collection<? extends T> producablePropertyTypes = output.getProducableFieldTypes();
         for (T acceptedPropertyType : input.getAcceptedPropertyTypes()) {
             if (producablePropertyTypes.contains(acceptedPropertyType))
                 return true;
@@ -483,9 +483,10 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
             GraphBox<T> graphBox = graphBoxes.get(nodeId);
-            for (GraphBoxInputConnector<T> connector : graphBox.getInputs().values()) {
+            for (GraphNodeInput<T> connector : graphBox.getConfiguration().getNodeInputs().values()) {
                 if (!connector.isRequired()) {
-                    calculateConnector(from, to, window, connector);
+                    String fieldId = connector.getFieldId();
+                    calculateConnector(from, to, window, graphBox.getInputs().get(fieldId));
                     from.add(x, y);
                     to.add(x, y);
 
@@ -544,9 +545,10 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
             String nodeId = windowEntry.getKey();
             Window window = windowEntry.getValue();
             GraphBox<T> graphBox = graphBoxes.get(nodeId);
-            for (GraphBoxInputConnector<T> connector : graphBox.getInputs().values()) {
+            for (GraphNodeInput<T> connector : graphBox.getConfiguration().getNodeInputs().values()) {
                 if (connector.isRequired()) {
-                    calculateConnector(from, to, window, connector);
+                    String fieldId = connector.getFieldId();
+                    calculateConnector(from, to, window, graphBox.getInputs().get(fieldId));
                     from.add(x, y);
                     to.add(x, y);
 

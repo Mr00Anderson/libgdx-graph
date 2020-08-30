@@ -1,9 +1,8 @@
 package com.gempukku.libgdx.graph.ui.graph;
 
 import com.gempukku.libgdx.graph.data.FieldType;
-import com.gempukku.libgdx.graph.data.GraphNodeInput;
 
-public interface GraphBoxInputConnector<T extends FieldType> extends GraphNodeInput<T> {
+public interface GraphBoxInputConnector<T extends FieldType> {
     enum Side {
         Left, Top;
     }
@@ -11,4 +10,6 @@ public interface GraphBoxInputConnector<T extends FieldType> extends GraphNodeIn
     Side getSide();
 
     float getOffset();
+
+    String getFieldId();
 }

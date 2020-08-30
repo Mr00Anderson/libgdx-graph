@@ -18,11 +18,11 @@ public class GraphBoxPartImpl<T extends FieldType> implements GraphBoxPart<T> {
     }
 
     public void setInputConnector(GraphBoxInputConnector.Side side, GraphNodeInput<T> graphNodeInput) {
-        inputConnector = new GraphBoxInputConnectorImpl<T>(side, null, graphNodeInput);
+        inputConnector = new GraphBoxInputConnectorImpl<T>(side, null, graphNodeInput.getFieldId());
     }
 
     public void setOutputConnector(GraphBoxOutputConnector.Side side, GraphNodeOutput<T> graphNodeOutput) {
-        outputConnector = new GraphBoxOutputConnectorImpl<T>(side, null, graphNodeOutput);
+        outputConnector = new GraphBoxOutputConnectorImpl<T>(side, null, graphNodeOutput.getFieldId());
     }
 
     @Override

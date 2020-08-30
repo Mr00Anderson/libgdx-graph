@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.shader.config.math;
 
 import com.gempukku.libgdx.graph.NodeConfigurationImpl;
+import com.gempukku.libgdx.graph.SameTypeOutputTypeFunction;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeInputImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeOutputImpl;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
@@ -15,6 +16,8 @@ public class RemapShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFi
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("to", "To", true, ShaderFieldType.Vector2));
         addNodeOutput(
-                new GraphNodeOutputImpl<ShaderFieldType>("output", "Result", ShaderFieldType.Float, ShaderFieldType.Vector2, ShaderFieldType.Vector3, ShaderFieldType.Color));
+                new GraphNodeOutputImpl<ShaderFieldType>("output", "Result",
+                        new SameTypeOutputTypeFunction<ShaderFieldType>("input"),
+                        ShaderFieldType.Float, ShaderFieldType.Vector2, ShaderFieldType.Vector3, ShaderFieldType.Color));
     }
 }

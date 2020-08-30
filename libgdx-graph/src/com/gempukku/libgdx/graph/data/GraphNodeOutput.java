@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.data;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 public interface GraphNodeOutput<T extends FieldType> {
     boolean isMainConnection();
@@ -9,7 +10,9 @@ public interface GraphNodeOutput<T extends FieldType> {
 
     String getFieldId();
 
-    List<? extends T> getProducablePropertyTypes();
+    Collection<? extends T> getProducableFieldTypes();
+
+    T determineFieldType(Map<String, T> inputs);
 
     boolean supportsMultiple();
 }

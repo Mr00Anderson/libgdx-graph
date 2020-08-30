@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
@@ -13,6 +12,7 @@ import com.gempukku.libgdx.graph.data.GraphNode;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.gempukku.libgdx.graph.data.GraphProperty;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import com.google.common.base.Supplier;
 import org.json.simple.JSONObject;
 
@@ -56,8 +56,8 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
     }
 
     @Override
-    public boolean isValid(Map<String, GraphNodeOutput<T>> inputs, Iterable<? extends GraphProperty<T>> properties) {
-        return configuration.isValid(inputs, properties);
+    public NodeConfiguration<T> getConfiguration() {
+        return configuration;
     }
 
     public void addTopConnector(GraphNodeInput<T> graphNodeInput) {
@@ -66,7 +66,7 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
             public Float get() {
                 return table.getWidth() / 2f;
             }
-        }, graphNodeInput));
+        }, graphNodeInput.getFieldId()));
     }
 
     public void addBottomConnector(GraphNodeOutput<T> graphNodeOutput) {
@@ -76,7 +76,7 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
                     public Float get() {
                         return table.getWidth() / 2f;
                     }
-                }, graphNodeOutput));
+                }, graphNodeOutput.getFieldId()));
     }
 
     public void addTwoSideGraphPart(Skin skin,
@@ -132,7 +132,7 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
                                     return actor.getY() + actor.getHeight() / 2f;
                                 }
                             },
-                            inputConnector));
+                            inputConnector.getFieldId()));
         }
         final GraphBoxOutputConnector<T> outputConnector = graphBoxPart.getOutputConnector();
         if (outputConnector != null) {
@@ -144,7 +144,7 @@ public class GraphBoxImpl<T extends FieldType> implements GraphBox<T> {
                                     return actor.getY() + actor.getHeight() / 2f;
                                 }
                             },
-                            outputConnector));
+                            outputConnector.getFieldId()));
         }
     }
 

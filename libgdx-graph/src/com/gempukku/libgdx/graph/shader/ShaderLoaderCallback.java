@@ -1,11 +1,11 @@
 package com.gempukku.libgdx.graph.shader;
 
 import com.gempukku.libgdx.graph.GraphDataLoaderCallback;
-import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNode;
 import com.gempukku.libgdx.graph.data.GraphProperty;
 import com.gempukku.libgdx.graph.data.GraphValidator;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import org.json.simple.JSONObject;
 
 public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, ShaderFieldType> {
@@ -23,7 +23,8 @@ public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, S
 
     @Override
     public GraphShader end() {
-        GraphValidator.ValidationResult<GraphNode<ShaderFieldType>, GraphConnection, GraphProperty<ShaderFieldType>, ShaderFieldType> result = GraphValidator.validateGraph(this, "end");
+        GraphValidator<GraphNode<ShaderFieldType>, GraphConnection, GraphProperty<ShaderFieldType>, ShaderFieldType> graphValidator = new GraphValidator<>();
+        GraphValidator.ValidationResult<GraphNode<ShaderFieldType>, GraphConnection, GraphProperty<ShaderFieldType>, ShaderFieldType> result = graphValidator.validateGraph(this, "end");
         if (result.hasErrors())
             throw new IllegalStateException("The graph contains errors, open it in the graph designer and correct them");
 

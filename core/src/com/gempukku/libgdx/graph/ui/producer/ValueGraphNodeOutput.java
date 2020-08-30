@@ -3,16 +3,17 @@ package com.gempukku.libgdx.graph.ui.producer;
 import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 
 public class ValueGraphNodeOutput<T extends FieldType> implements GraphNodeOutput<T> {
     private String fieldName;
-    private List<? extends T> propertyTypes;
+    private T fieldType;
 
-    public ValueGraphNodeOutput(String fieldName, T propertyType) {
+    public ValueGraphNodeOutput(String fieldName, T fieldType) {
         this.fieldName = fieldName;
-        this.propertyTypes = Arrays.asList(propertyType);
+        this.fieldType = fieldType;
     }
 
     @Override
@@ -31,12 +32,17 @@ public class ValueGraphNodeOutput<T extends FieldType> implements GraphNodeOutpu
     }
 
     @Override
-    public List<? extends T> getProducablePropertyTypes() {
-        return propertyTypes;
+    public Collection<? extends T> getProducableFieldTypes() {
+        return Collections.singleton(fieldType);
     }
 
     @Override
     public boolean supportsMultiple() {
         return true;
+    }
+
+    @Override
+    public T determineFieldType(Map<String, T> inputs) {
+        return fieldType;
     }
 }

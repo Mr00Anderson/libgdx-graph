@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.shader.node;
 
-import com.gempukku.libgdx.graph.NodeConfiguration;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import org.json.simple.JSONObject;
 

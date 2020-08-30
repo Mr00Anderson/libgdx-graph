@@ -4,9 +4,8 @@ import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.Graph;
 import com.gempukku.libgdx.graph.data.GraphConnection;
 import com.gempukku.libgdx.graph.data.GraphNode;
-import com.gempukku.libgdx.graph.data.GraphNodeInput;
-import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.gempukku.libgdx.graph.data.GraphProperty;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
@@ -92,23 +91,13 @@ public abstract class GraphDataLoaderCallback<T, U extends FieldType> implements
         }
 
         @Override
-        public Map<String, ? extends GraphNodeInput<T>> getInputs() {
-            return configuration.getNodeInputs();
-        }
-
-        @Override
-        public Map<String, ? extends GraphNodeOutput<T>> getOutputs() {
-            return configuration.getNodeOutputs();
-        }
-
-        @Override
         public JSONObject getData() {
             return data;
         }
 
         @Override
-        public boolean isValid(Map<String, GraphNodeOutput<T>> inputs, Iterable<? extends GraphProperty<T>> graphProperties) {
-            return configuration.isValid(inputs, graphProperties);
+        public NodeConfiguration<T> getConfiguration() {
+            return configuration;
         }
     }
 

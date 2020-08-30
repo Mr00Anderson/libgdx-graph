@@ -1,5 +1,6 @@
 package com.gempukku.libgdx.graph.data;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -7,13 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class GraphValidator {
-
-    private GraphValidator() {
-
-    }
-
-    public static <T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> ValidationResult<T, U, V, W> validateGraph(Graph<T, U, V, W> graph, String nodeEnd) {
+public class GraphValidator<T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> {
+    public ValidationResult<T, U, V, W> validateGraph(Graph<T, U, V, W> graph, String nodeEnd) {
         ValidationResult<T, U, V, W> result = new ValidationResult<>();
 
         T end = graph.getNodeById(nodeEnd);
@@ -34,22 +30,26 @@ public class GraphValidator {
         boolean cyclic = isCyclic(result, graph, nodeEnd);
         if (!cyclic) {
             // Do other Validation
-            validateNode(result, graph, nodeEnd);
+            validateNode(result, graph, nodeEnd, new HashMap<String, NodeOutputs<W>>());
         }
         return result;
     }
 
-    private static <T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> void validateNode(ValidationResult<T, U, V, W> result, Graph<T, U, V, W> graph, String nodeId) {
+    private NodeOutputs<W> validateNode(ValidationResult<T, U, V, W> result, Graph<T, U, V, W> graph, String nodeId,
+                                        Map<String, NodeOutputs<W>> nodeOutputs) {
+        // Check if already validated
+        NodeOutputs<W> outputs = nodeOutputs.get(nodeId);
+        if (outputs != null)
+            return outputs;
+
         T thisNode = graph.getNodeById(nodeId);
         Set<String> validatedFields = new HashSet<>();
-        Map<String, GraphNodeOutput<W>> inputs = new HashMap<>();
+        Map<String, W> inputsTypes = new HashMap<>();
         for (U incomingConnection : getIncomingConnections(graph, nodeId)) {
             String fieldTo = incomingConnection.getFieldTo();
-            GraphNodeInput<W> input = thisNode.getInputs().get(fieldTo);
+            GraphNodeInput<W> input = thisNode.getConfiguration().getNodeInputs().get(fieldTo);
             T remoteNode = graph.getNodeById(incomingConnection.getNodeFrom());
-            GraphNodeOutput<W> output = remoteNode.getOutputs().get(incomingConnection.getFieldFrom());
-
-            inputs.put(fieldTo, output);
+            GraphNodeOutput<W> output = remoteNode.getConfiguration().getNodeOutputs().get(incomingConnection.getFieldFrom());
 
             // Validate the actual output is accepted by the input
             List<? extends W> acceptedPropertyTypes = input.getAcceptedPropertyTypes();
@@ -58,19 +58,32 @@ public class GraphValidator {
             }
 
             validatedFields.add(fieldTo);
-            validateNode(result, graph, incomingConnection.getNodeFrom());
+            NodeOutputs<W> outputFromRemoteNode = validateNode(result, graph, incomingConnection.getNodeFrom(), nodeOutputs);
+            inputsTypes.put(fieldTo, outputFromRemoteNode.outputs.get(incomingConnection.getFieldFrom()));
         }
 
-        for (GraphNodeInput<W> input : thisNode.getInputs().values()) {
-            if (input.isRequired() && !validatedFields.contains(input.getFieldId()))
+        for (GraphNodeInput<W> input : thisNode.getConfiguration().getNodeInputs().values()) {
+            if (input.isRequired() && !validatedFields.contains(input.getFieldId())) {
                 result.addErrorConnector(new NodeConnector(nodeId, input.getFieldId()));
+            }
         }
 
-        if (!thisNode.isValid(inputs, graph.getProperties()))
+        boolean valid = thisNode.getConfiguration().isValid(inputsTypes, graph.getProperties());
+        if (!valid)
             result.addErrorNode(thisNode);
+
+        Map<String, W> nodeOutputMap = new HashMap<>();
+        for (GraphNodeOutput<W> value : thisNode.getConfiguration().getNodeOutputs().values()) {
+            String fieldName = value.getFieldName();
+            nodeOutputMap.put(value.getFieldId(), value.determineFieldType(inputsTypes));
+        }
+
+        NodeOutputs<W> nodeOutput = new NodeOutputs<>(nodeOutputMap);
+        nodeOutputs.put(nodeId, nodeOutput);
+        return nodeOutput;
     }
 
-    private static <T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> Iterable<U> getIncomingConnections(Graph<T, U, V, W> graph, String nodeId) {
+    private Iterable<U> getIncomingConnections(Graph<T, U, V, W> graph, String nodeId) {
         List<U> result = new LinkedList<>();
         for (U connection : graph.getConnections()) {
             if (connection.getNodeTo().equals(nodeId))
@@ -79,8 +92,8 @@ public class GraphValidator {
         return result;
     }
 
-    private static boolean outputAcceptsPropertyType(GraphNodeOutput<? extends FieldType> output, List<? extends FieldType> acceptedPropertyTypes) {
-        List<? extends FieldType> producablePropertyTypes = output.getProducablePropertyTypes();
+    private boolean outputAcceptsPropertyType(GraphNodeOutput<? extends FieldType> output, List<? extends FieldType> acceptedPropertyTypes) {
+        Collection<? extends FieldType> producablePropertyTypes = output.getProducableFieldTypes();
         for (FieldType acceptedFieldType : acceptedPropertyTypes) {
             if (producablePropertyTypes.contains(acceptedFieldType))
                 return true;
@@ -90,8 +103,8 @@ public class GraphValidator {
 
     // This function is a variation of DFSUtil() in
     // https://www.geeksforgeeks.org/archives/18212
-    private static <T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> boolean isCyclicUtil(ValidationResult<T, U, V, W> validationResult, Graph<T, U, V, W> graph, String nodeId, Set<String> visited,
-                                                                                                                                             Set<String> recStack) {
+    private boolean isCyclicUtil(ValidationResult<T, U, V, W> validationResult, Graph<T, U, V, W> graph, String nodeId, Set<String> visited,
+                                 Set<String> recStack) {
         // Mark the current node as visited and
         // part of recursion stack
         if (recStack.contains(nodeId)) {
@@ -120,7 +133,7 @@ public class GraphValidator {
         return false;
     }
 
-    private static <T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> boolean isCyclic(ValidationResult<T, U, V, W> validationResult, Graph<T, U, V, W> graph, String start) {
+    private boolean isCyclic(ValidationResult<T, U, V, W> validationResult, Graph<T, U, V, W> graph, String start) {
         Set<String> visited = new HashSet<>();
         Set<String> recStack = new HashSet<>();
 
@@ -137,6 +150,14 @@ public class GraphValidator {
             }
         }
         return false;
+    }
+
+    private static class NodeOutputs<W> {
+        private Map<String, W> outputs;
+
+        public NodeOutputs(Map<String, W> outputs) {
+            this.outputs = outputs;
+        }
     }
 
     public static class ValidationResult<T extends GraphNode<W>, U extends GraphConnection, V extends GraphProperty<W>, W extends FieldType> {

@@ -1,7 +1,7 @@
 package com.gempukku.libgdx.graph.ui.producer.value;
 
-import com.gempukku.libgdx.graph.NodeConfiguration;
 import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import com.gempukku.libgdx.graph.ui.producer.GraphBoxProducer;
 
 public abstract class ValueGraphBoxProducer<T extends FieldType> implements GraphBoxProducer<T> {

@@ -1,6 +1,6 @@
 package com.gempukku.libgdx.graph.pipeline.loader.node;
 
-import com.gempukku.libgdx.graph.NodeConfiguration;
+import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import com.gempukku.libgdx.graph.pipeline.PipelineFieldType;
 import com.gempukku.libgdx.graph.pipeline.loader.PipelineRenderingContext;
 
@@ -30,8 +30,13 @@ public abstract class OncePerFrameJobPipelineNode implements PipelineNode {
         return fieldOutput;
     }
 
-    protected PipelineFieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
-        return configuration.getNodeOutputs().get(name).getProducablePropertyTypes().get(0);
+    private PipelineFieldType determineOutputType(String name, Map<String, FieldOutput<?>> inputFields) {
+        Map<String, PipelineFieldType> inputs = new HashMap<>();
+        for (Map.Entry<String, FieldOutput<?>> stringFieldOutputEntry : inputFields.entrySet()) {
+            inputs.put(stringFieldOutputEntry.getKey(), stringFieldOutputEntry.getValue().getPropertyType());
+        }
+
+        return configuration.getNodeOutputs().get(name).determineFieldType(inputs);
     }
 
     protected abstract void executeJob(PipelineRenderingContext pipelineRenderingContext, Map<String, ? extends OutputValue> outputValues);
