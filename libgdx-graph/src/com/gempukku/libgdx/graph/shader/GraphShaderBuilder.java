@@ -58,27 +58,29 @@ public class GraphShaderBuilder {
         // Vertex part
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> vertexNodeOutputs = new HashMap<>();
         vertexShaderBuilder.addMainLine("// End Graph Node");
-        GraphShaderNodeBuilder.FieldOutput positionField = getOutput(findInputVertex(graph, "end", "alpha"),
+        GraphShaderNodeBuilder.FieldOutput positionField = getOutput(findInputVertex(graph, "end", "position"),
                 designTime, false, graph, graphShader, graphShader, vertexNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
         if (positionField != null) {
             vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+            vertexShaderBuilder.addMainLine("// End Graph Node");
             vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * (u_worldTrans * vec4(" + positionField.getRepresentation() + ", 1.0));");
         } else {
             vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
             vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
             vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+            vertexShaderBuilder.addMainLine("// End Graph Node");
             vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * (u_worldTrans * vec4(a_position, 1.0));");
         }
 
         // Fragment part
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> fragmentNodeOutputs = new HashMap<>();
-        fragmentShaderBuilder.addMainLine("// End Graph Node");
         GraphShaderNodeBuilder.FieldOutput alphaField = getOutput(findInputVertex(graph, "end", "alpha"),
                 designTime, true, graph, graphShader, graphShader, fragmentNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
         String alpha = (alphaField != null) ? alphaField.getRepresentation() : "1.0";
         GraphShaderNodeBuilder.FieldOutput alphaClipField = getOutput(findInputVertex(graph, "end", "alphaClip"),
                 designTime, true, graph, graphShader, graphShader, fragmentNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
         String alphaClip = (alphaClipField != null) ? alphaClipField.getRepresentation() : "0.0";
+        fragmentShaderBuilder.addMainLine("// End Graph Node");
         fragmentShaderBuilder.addMainLine("if (" + alpha + " <= " + alphaClip + ")");
         fragmentShaderBuilder.addMainLine("  discard;");
 
@@ -92,6 +94,7 @@ public class GraphShaderBuilder {
         } else {
             color = "vec4(" + colorField.getRepresentation() + ", " + alpha + ")";
         }
+        fragmentShaderBuilder.addMainLine("// End Graph Node");
         fragmentShaderBuilder.addMainLine("gl_FragColor = " + color + ";");
 
         String vertexShader = vertexShaderBuilder.buildProgram();
