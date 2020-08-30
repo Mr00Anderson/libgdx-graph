@@ -22,7 +22,25 @@ public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeB
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+    public Map<String, ? extends FieldOutput> buildVertexNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+        vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
+
+        String coordinates = (String) data.get("coordinates");
+        if (coordinates.equals("world")) {
+            vertexShaderBuilder.addMainLine("// Attribute Position Node");
+            vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
+            String name = "result_" + nodeId;
+            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = (u_worldTrans * vec4(a_position, 1.0)).xyz;");
+
+            return Collections.singletonMap("position", new DefaultFieldOutput(ShaderFieldType.Vector3, name));
+        } else if (coordinates.equals("object")) {
+            return Collections.singletonMap("position", new DefaultFieldOutput(ShaderFieldType.Vector3, "a_position"));
+        }
+        throw new IllegalArgumentException();
+    }
+
+    @Override
+    public Map<String, ? extends FieldOutput> buildFragmentNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
 
         String coordinates = (String) data.get("coordinates");

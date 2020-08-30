@@ -22,7 +22,28 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+    public Map<String, ? extends FieldOutput> buildVertexNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+        vertexShaderBuilder.addAttributeVariable(ShaderProgram.NORMAL_ATTRIBUTE, "vec3");
+
+        String coordinates = (String) data.get("coordinates");
+        if (coordinates.equals("world")) {
+            vertexShaderBuilder.addMainLine("// Attribute Normal Node");
+            vertexShaderBuilder.addUniformVariable("u_normalMatrix", "mat3", false, UniformSetters.normalMatrix);
+            String name = "result_" + nodeId;
+            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = normalize(u_normalMatrix * a_normal);");
+
+            return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, name));
+        } else if (coordinates.equals("object")) {
+            return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, "a_normal"));
+        }
+        throw new IllegalArgumentException();
+    }
+
+    @Override
+    public Map<String, ? extends FieldOutput> buildFragmentNode(boolean designTime, String nodeId, JSONObject
+            data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder
+                                                                        vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext
+                                                                        graphShaderContext, GraphShader graphShader) {
         vertexShaderBuilder.addAttributeVariable(ShaderProgram.NORMAL_ATTRIBUTE, "vec3");
 
         String coordinates = (String) data.get("coordinates");

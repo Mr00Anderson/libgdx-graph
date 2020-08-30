@@ -13,6 +13,7 @@ import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
 import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.property.GraphShaderPropertyProducer;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,7 +47,52 @@ public class GraphShaderBuilder {
 
         graphShader.setPropertySourceMap(propertyMap);
         graphShader.setTimeProvider(timeProvider);
-        buildGraph(designTime, graph, graphShader, graphShader, vertexShaderBuilder, fragmentShaderBuilder);
+
+        GraphNode<ShaderFieldType> endNode = graph.getNodeById("end");
+        JSONObject data = endNode.getData();
+
+        graphShader.setCulling(BasicShader.Culling.valueOf((String) data.get("culling")));
+        graphShader.setTransparency(BasicShader.Transparency.valueOf((String) data.get("transparency")));
+        graphShader.setBlending(BasicShader.Blending.valueOf((String) data.get("blending")));
+
+        // Vertex part
+        Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> vertexNodeOutputs = new HashMap<>();
+        vertexShaderBuilder.addMainLine("// End Graph Node");
+        GraphShaderNodeBuilder.FieldOutput positionField = getOutput(findInputVertex(graph, "end", "alpha"),
+                designTime, false, graph, graphShader, graphShader, vertexNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        if (positionField != null) {
+            vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+            vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * (u_worldTrans * vec4(" + positionField.getRepresentation() + ", 1.0));");
+        } else {
+            vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
+            vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
+            vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+            vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * (u_worldTrans * vec4(a_position, 1.0));");
+        }
+
+        // Fragment part
+        Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> fragmentNodeOutputs = new HashMap<>();
+        fragmentShaderBuilder.addMainLine("// End Graph Node");
+        GraphShaderNodeBuilder.FieldOutput alphaField = getOutput(findInputVertex(graph, "end", "alpha"),
+                designTime, true, graph, graphShader, graphShader, fragmentNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        String alpha = (alphaField != null) ? alphaField.getRepresentation() : "1.0";
+        GraphShaderNodeBuilder.FieldOutput alphaClipField = getOutput(findInputVertex(graph, "end", "alphaClip"),
+                designTime, true, graph, graphShader, graphShader, fragmentNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        String alphaClip = (alphaClipField != null) ? alphaClipField.getRepresentation() : "0.0";
+        fragmentShaderBuilder.addMainLine("if (" + alpha + " <= " + alphaClip + ")");
+        fragmentShaderBuilder.addMainLine("  discard;");
+
+        GraphShaderNodeBuilder.FieldOutput colorField = getOutput(findInputVertex(graph, "end", "color"),
+                designTime, true, graph, graphShader, graphShader, fragmentNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        String color;
+        if (colorField == null) {
+            color = "vec4(1.0, 1.0, 1.0, " + alpha + ")";
+        } else if (colorField.getFieldType() == ShaderFieldType.Color) {
+            color = "vec4(" + colorField.getRepresentation() + ".rgb, " + alpha + ")";
+        } else {
+            color = "vec4(" + colorField.getRepresentation() + ", " + alpha + ")";
+        }
+        fragmentShaderBuilder.addMainLine("gl_FragColor = " + color + ";");
 
         String vertexShader = vertexShaderBuilder.buildProgram();
         String fragmentShader = fragmentShaderBuilder.buildProgram();
@@ -64,6 +110,18 @@ public class GraphShaderBuilder {
         graphShader.setProgram(shaderProgram);
         graphShader.init();
     }
+
+    private static GraphShaderNodeBuilder.FieldOutput getOutput(GraphConnection connection,
+                                                                boolean designTime, boolean fragmentShader,
+                                                                Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
+                                                                GraphShaderContext context, GraphShader graphShader, Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> nodeOutputs,
+                                                                VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+        if (connection == null)
+            return null;
+        Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(designTime, fragmentShader, graph, context, graphShader, connection.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+        return output.get(connection.getFieldFrom());
+    }
+
 
     private static void initializeShaders(VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
         vertexShaderBuilder.addInitialLine("#ifdef GL_ES");
@@ -89,14 +147,8 @@ public class GraphShaderBuilder {
         fragmentShaderBuilder.addInitialLine("#endif");
     }
 
-    private static void buildGraph(boolean designTime, Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
-                                   GraphShaderContext context, GraphShader graphShader, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
-        Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> graphNodeOutputs = new HashMap<>();
-        buildNode(designTime, graph, context, graphShader, "end", graphNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
-    }
-
     private static Map<String, GraphShaderNodeBuilder.FieldOutput> buildNode(
-            boolean designTime,
+            boolean designTime, boolean fragmentShader,
             Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
             GraphShaderContext context, GraphShader graphShader, String nodeId, Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> nodeOutputs,
             VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
@@ -114,7 +166,7 @@ public class GraphShaderBuilder {
                 if (vertexInfo == null && nodeInput.isRequired())
                     throw new IllegalStateException("Required input not provided");
                 if (vertexInfo != null) {
-                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(designTime, graph, context, graphShader, vertexInfo.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
+                    Map<String, ? extends GraphShaderNodeBuilder.FieldOutput> output = buildNode(designTime, fragmentShader, graph, context, graphShader, vertexInfo.getNodeFrom(), nodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
                     GraphShaderNodeBuilder.FieldOutput fieldOutput = output.get(vertexInfo.getFieldFrom());
                     ShaderFieldType fieldType = fieldOutput.getFieldType();
                     if (!nodeInput.getAcceptedPropertyTypes().contains(fieldType))
@@ -123,7 +175,11 @@ public class GraphShaderBuilder {
                 }
             }
             Set<String> requiredOutputs = findRequiredOutputs(graph, nodeId);
-            nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildNode(designTime, nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context, graphShader);
+            if (fragmentShader) {
+                nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildFragmentNode(designTime, nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, fragmentShaderBuilder, context, graphShader);
+            } else {
+                nodeOutput = (Map<String, GraphShaderNodeBuilder.FieldOutput>) nodeBuilder.buildVertexNode(designTime, nodeId, nodeInfo.getData(), inputFields, requiredOutputs, vertexShaderBuilder, context, graphShader);
+            }
             nodeOutputs.put(nodeId, nodeOutput);
         }
 

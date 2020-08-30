@@ -8,6 +8,8 @@ public class EndShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFiel
     public EndShaderNodeConfiguration() {
         super("ShaderEnd", "Shader output", null);
         addNodeInput(
+                new GraphNodeInputImpl<ShaderFieldType>("position", "World position", false, false, ShaderFieldType.Vector3));
+        addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("color", "Color", false, false, ShaderFieldType.Color, ShaderFieldType.Vector3));
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("alpha", "Alpha", false, false, ShaderFieldType.Float));

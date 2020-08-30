@@ -11,10 +11,9 @@ import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformRegistry;
 import com.gempukku.libgdx.graph.shader.UniformSetters;
-import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
-import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
+import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
 import com.gempukku.libgdx.graph.shader.config.material.TextureAttributeShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.ConfigurationCommonShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
 
@@ -22,7 +21,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class TextureAttributeShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
+public class TextureAttributeShaderNodeBuilder extends ConfigurationCommonShaderNodeBuilder {
     private String symbol;
 
     public TextureAttributeShaderNodeBuilder(String type, String name, String symbol) {
@@ -31,8 +30,8 @@ public class TextureAttributeShaderNodeBuilder extends ConfigurationShaderNodeBu
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
-                                                        VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+    protected Map<String, ? extends FieldOutput> buildCommonNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
+                                                                 CommonShaderBuilder commonShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         String textureName = "u_" + symbol + "Texture";
         String transformName = "u_" + symbol + "UVTransform";
         if (designTime) {
@@ -53,14 +52,14 @@ public class TextureAttributeShaderNodeBuilder extends ConfigurationShaderNodeBu
 
 
             final Texture finalTexture = texture;
-            fragmentShaderBuilder.addUniformVariable(textureName, "sampler2D", false,
+            commonShaderBuilder.addUniformVariable(textureName, "sampler2D", false,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
                             shader.setUniform(location, finalTexture);
                         }
                     });
-            fragmentShaderBuilder.addUniformVariable(transformName, "vec4", false,
+            commonShaderBuilder.addUniformVariable(transformName, "vec4", false,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -68,9 +67,9 @@ public class TextureAttributeShaderNodeBuilder extends ConfigurationShaderNodeBu
                         }
                     });
         } else {
-            fragmentShaderBuilder.addUniformVariable(textureName, "sampler2D", false,
+            commonShaderBuilder.addUniformVariable(textureName, "sampler2D", false,
                     UniformSetters.diffuseTexture);
-            fragmentShaderBuilder.addUniformVariable(transformName, "vec4", false,
+            commonShaderBuilder.addUniformVariable(transformName, "vec4", false,
                     UniformSetters.diffuseUVTransform);
         }
 

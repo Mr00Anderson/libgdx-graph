@@ -14,6 +14,7 @@ import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformRegistry;
+import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
 import org.json.simple.JSONObject;
@@ -37,31 +38,42 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
-                                                        VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+    public Map<String, ? extends FieldOutput> buildVertexNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+        return buildCommonNode(designTime, nodeId, data, inputs, producedOutputs, vertexShaderBuilder, graphShaderContext, graphShader);
+    }
+
+    @Override
+    public Map<String, ? extends FieldOutput> buildFragmentNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
+                                                                VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+        return buildCommonNode(designTime, nodeId, data, inputs, producedOutputs, fragmentShaderBuilder, graphShaderContext, graphShader);
+    }
+
+    private Map<String, ? extends FieldOutput> buildCommonNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
+                                                               CommonShaderBuilder commonShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         final String name = (String) data.get("name");
         final ShaderFieldType propertyType = ShaderFieldType.valueOf((String) data.get("type"));
 
         switch (propertyType) {
             case Color:
-                return buildColorPropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
+                return buildColorPropertyNode(nodeId, name, graphShaderContext, commonShaderBuilder);
             case Float:
-                return buildFloatPropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
+                return buildFloatPropertyNode(nodeId, name, graphShaderContext, commonShaderBuilder);
             case Vector2:
-                return buildVector2PropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
+                return buildVector2PropertyNode(nodeId, name, graphShaderContext, commonShaderBuilder);
             case Vector3:
-                return buildVector3PropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
+                return buildVector3PropertyNode(nodeId, name, graphShaderContext, commonShaderBuilder);
             case TextureRegion:
-                return buildTexturePropertyNode(nodeId, name, graphShaderContext, vertexShaderBuilder, fragmentShaderBuilder);
+                return buildTexturePropertyNode(nodeId, name, graphShaderContext, commonShaderBuilder);
         }
 
         return null;
     }
 
+
     private Map<String, DefaultFieldOutput> buildColorPropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
-                                                                   VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+                                                                   CommonShaderBuilder commonShaderBuilder) {
         String variableName = "u_property_" + nodeId;
-        fragmentShaderBuilder.addUniformVariable(variableName, "vec4", false,
+        commonShaderBuilder.addUniformVariable(variableName, "vec4", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -77,9 +89,9 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
     }
 
     private Map<String, DefaultFieldOutput> buildFloatPropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
-                                                                   VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+                                                                   CommonShaderBuilder commonShaderBuilder) {
         String variableName = "u_property_" + nodeId;
-        fragmentShaderBuilder.addUniformVariable(variableName, "float", false,
+        commonShaderBuilder.addUniformVariable(variableName, "float", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -95,9 +107,9 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
     }
 
     private Map<String, DefaultFieldOutput> buildVector2PropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
-                                                                     VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+                                                                     CommonShaderBuilder commonShaderBuilder) {
         String variableName = "u_property_" + nodeId;
-        fragmentShaderBuilder.addUniformVariable(variableName, "vec2", false,
+        commonShaderBuilder.addUniformVariable(variableName, "vec2", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -113,9 +125,9 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
     }
 
     private Map<String, DefaultFieldOutput> buildVector3PropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
-                                                                     VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+                                                                     CommonShaderBuilder commonShaderBuilder) {
         String variableName = "u_property_" + nodeId;
-        fragmentShaderBuilder.addUniformVariable(variableName, "vec3", false,
+        commonShaderBuilder.addUniformVariable(variableName, "vec3", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -131,10 +143,10 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
     }
 
     private Map<String, DefaultFieldOutput> buildTexturePropertyNode(String nodeId, final String name, final GraphShaderContext graphShaderContext,
-                                                                     VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder) {
+                                                                     CommonShaderBuilder commonShaderBuilder) {
         String textureVariableName = "u_property_" + nodeId;
         String uvTransformVariableName = "u_uvTransform_" + nodeId;
-        fragmentShaderBuilder.addUniformVariable(textureVariableName, "sampler2D", false,
+        commonShaderBuilder.addUniformVariable(textureVariableName, "sampler2D", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -145,7 +157,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
                         shader.setUniform(location, ((TextureRegion) value).getTexture());
                     }
                 });
-        fragmentShaderBuilder.addUniformVariable(uvTransformVariableName, "vec4", false,
+        commonShaderBuilder.addUniformVariable(uvTransformVariableName, "vec4", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
                     public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {

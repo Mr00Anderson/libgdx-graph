@@ -25,7 +25,18 @@ public class AttributeUVShaderNodeBuilder extends ConfigurationShaderNodeBuilder
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+    public Map<String, ? extends FieldOutput> buildVertexNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+        String channel = (String) data.get("channel");
+        int unit = channels.indexOf(channel);
+
+        String attributeName = ShaderProgram.TEXCOORD_ATTRIBUTE + unit;
+        vertexShaderBuilder.addAttributeVariable(attributeName, "vec2");
+
+        return Collections.singletonMap("uv", new DefaultFieldOutput(ShaderFieldType.Vector2, attributeName));
+    }
+
+    @Override
+    public Map<String, ? extends FieldOutput> buildFragmentNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         String channel = (String) data.get("channel");
         int unit = channels.indexOf(channel);
 

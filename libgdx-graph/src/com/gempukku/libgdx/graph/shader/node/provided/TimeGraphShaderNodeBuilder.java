@@ -8,10 +8,9 @@ import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformRegistry;
-import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
-import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
+import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
 import com.gempukku.libgdx.graph.shader.config.provided.TimeShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.ConfigurationCommonShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
 
@@ -19,16 +18,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class TimeGraphShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
+public class TimeGraphShaderNodeBuilder extends ConfigurationCommonShaderNodeBuilder {
     public TimeGraphShaderNodeBuilder() {
         super(new TimeShaderNodeConfiguration());
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, final GraphShaderContext graphShaderContext, GraphShader graphShader) {
+    protected Map<String, ? extends FieldOutput> buildCommonNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs,
+                                                                 CommonShaderBuilder commonShaderBuilder, final GraphShaderContext graphShaderContext, GraphShader graphShader) {
         Map<String, FieldOutput> result = new HashMap<>();
         if (producedOutputs.contains("time")) {
-            fragmentShaderBuilder.addUniformVariable("u_time", "float", true,
+            commonShaderBuilder.addUniformVariable("u_time", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -38,7 +38,7 @@ public class TimeGraphShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
             result.put("time", new DefaultFieldOutput(ShaderFieldType.Float, "u_time"));
         }
         if (producedOutputs.contains("sinTime")) {
-            fragmentShaderBuilder.addUniformVariable("u_sinTime", "float", true,
+            commonShaderBuilder.addUniformVariable("u_sinTime", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -48,7 +48,7 @@ public class TimeGraphShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
             result.put("sinTime", new DefaultFieldOutput(ShaderFieldType.Float, "u_sinTime"));
         }
         if (producedOutputs.contains("cosTime")) {
-            fragmentShaderBuilder.addUniformVariable("u_cosTime", "float", true,
+            commonShaderBuilder.addUniformVariable("u_cosTime", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {
@@ -58,7 +58,7 @@ public class TimeGraphShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
             result.put("cosTime", new DefaultFieldOutput(ShaderFieldType.Float, "u_cosTime"));
         }
         if (producedOutputs.contains("deltaTime")) {
-            fragmentShaderBuilder.addUniformVariable("u_deltaTime", "float", true,
+            commonShaderBuilder.addUniformVariable("u_deltaTime", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
                         public void set(BasicShader shader, int location, Renderable renderable, Attributes combinedAttributes) {

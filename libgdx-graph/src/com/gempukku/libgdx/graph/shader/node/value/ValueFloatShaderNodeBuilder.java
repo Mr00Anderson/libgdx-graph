@@ -3,10 +3,9 @@ package com.gempukku.libgdx.graph.shader.node.value;
 import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
-import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
+import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
 import com.gempukku.libgdx.graph.shader.config.value.ValueFloatShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.node.ConfigurationShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.ConfigurationCommonShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
 
@@ -16,7 +15,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-public class ValueFloatShaderNodeBuilder extends ConfigurationShaderNodeBuilder {
+public class ValueFloatShaderNodeBuilder extends ConfigurationCommonShaderNodeBuilder {
     private static NumberFormat numberFormat = new DecimalFormat("0.0000");
 
     public ValueFloatShaderNodeBuilder() {
@@ -24,7 +23,7 @@ public class ValueFloatShaderNodeBuilder extends ConfigurationShaderNodeBuilder 
     }
 
     @Override
-    public Map<String, ? extends FieldOutput> buildNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, VertexShaderBuilder vertexShaderBuilder, FragmentShaderBuilder fragmentShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
+    protected Map<String, ? extends FieldOutput> buildCommonNode(boolean designTime, String nodeId, JSONObject data, Map<String, FieldOutput> inputs, Set<String> producedOutputs, CommonShaderBuilder commonShaderBuilder, GraphShaderContext graphShaderContext, GraphShader graphShader) {
         float value = ((Number) data.get("v1")).floatValue();
 
         return Collections.singletonMap("value", new DefaultFieldOutput(ShaderFieldType.Float, format(value)));
