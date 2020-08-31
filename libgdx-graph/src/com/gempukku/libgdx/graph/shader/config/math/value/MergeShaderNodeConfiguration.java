@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.shader.config.part;
+package com.gempukku.libgdx.graph.shader.config.math.value;
 
 import com.gempukku.libgdx.graph.NodeConfigurationImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeInputImpl;
@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class MergeShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public MergeShaderNodeConfiguration() {
-        super("Merge", "Merge", "Math/Advanced");
+        super("Merge", "Merge", "Math/Value");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("x", "X", ShaderFieldType.Float));
         addNodeInput(

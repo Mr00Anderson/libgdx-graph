@@ -2,8 +2,6 @@ package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.config.color.IntensityShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.RemapShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.AddShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.MultiplyShaderNodeConfiguration;
@@ -27,6 +25,11 @@ import com.gempukku.libgdx.graph.shader.config.math.exponential.LogarithmBase2Sh
 import com.gempukku.libgdx.graph.shader.config.math.exponential.NaturalLogarithmShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.exponential.PowerShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.exponential.SquareRootShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.geometric.CrossProductShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.geometric.DistanceShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.geometric.DotProductShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.geometric.LengthShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.geometric.NormalizeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArccosShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArcsinShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArctanShaderNodeConfiguration;
@@ -35,11 +38,12 @@ import com.gempukku.libgdx.graph.shader.config.math.trigonometry.DegreesShaderNo
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.RadiansShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.SinShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.TanShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.value.MergeShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.value.RemapShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.value.SplitShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise2DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise3DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.VoronoiDistanceNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.part.MergeShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.part.SplitShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.provided.InstanceIdShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.provided.TimeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.texture.Sampler2DShaderNodeConfiguration;
@@ -129,9 +133,14 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new StepShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SmoothstepShaderNodeConfiguration()));
 
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LengthShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DistanceShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DotProductShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CrossProductShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new NormalizeShaderNodeConfiguration()));
+
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));
-        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DotProductShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RemapShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new IntensityShaderNodeConfiguration()));
