@@ -23,21 +23,12 @@ public class LerpShaderNodeBuilder extends ConfigurationCommonShaderNodeBuilder 
         FieldOutput aValue = inputs.get("a");
         FieldOutput bValue = inputs.get("b");
         FieldOutput tValue = inputs.get("t");
-        ShaderFieldType resultType = determineOutputType(aValue, bValue, tValue);
+        ShaderFieldType resultType = aValue.getFieldType();
 
         commonShaderBuilder.addMainLine("// Mix (lerp) node");
         String name = "result_" + nodeId;
         commonShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = mix(" + aValue.getRepresentation() + ", " + bValue.getRepresentation() + ", " + tValue.getRepresentation() + ");");
 
         return Collections.singletonMap("output", new DefaultFieldOutput(resultType, name));
-    }
-
-    private ShaderFieldType determineOutputType(FieldOutput a, FieldOutput b, FieldOutput t) {
-        ShaderFieldType aType = a.getFieldType();
-        ShaderFieldType bType = b.getFieldType();
-        ShaderFieldType tType = t.getFieldType();
-        if (aType != bType || !(tType == ShaderFieldType.Float || tType == aType))
-            throw new IllegalStateException("Invalid mix of input field types");
-        return aType;
     }
 }

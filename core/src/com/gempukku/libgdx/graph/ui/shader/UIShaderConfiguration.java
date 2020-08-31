@@ -14,7 +14,12 @@ import com.gempukku.libgdx.graph.shader.config.math.common.ClampShaderNodeConfig
 import com.gempukku.libgdx.graph.shader.config.math.common.FloorShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.common.FractionalPartShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.common.LerpShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.MaximumShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.MinimumShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.ModuloShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.common.SignShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.SmoothstepShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.common.StepShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.exponential.ExponentialBase2ShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.exponential.ExponentialShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.exponential.InverseSquareRootShaderNodeConfiguration;
@@ -116,8 +121,13 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new FloorShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CeilingShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new FractionalPartShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ModuloShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MinimumShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MaximumShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ClampShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LerpShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new StepShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SmoothstepShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SplitShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MergeShaderNodeConfiguration()));

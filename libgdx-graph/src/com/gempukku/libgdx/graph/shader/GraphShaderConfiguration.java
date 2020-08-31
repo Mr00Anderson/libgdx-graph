@@ -20,7 +20,12 @@ import com.gempukku.libgdx.graph.shader.node.math.common.ClampShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.FloorShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.FractionalPartShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.LerpShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.MaximumShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.MinimumShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.ModuloShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.SignShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.SmoothstepShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.common.StepShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.exponential.ExponentialBase2ShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.exponential.ExponentialShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.exponential.InverseSquareRootShaderNodeBuilder;
@@ -90,9 +95,16 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new FloorShaderNodeBuilder());
         addGraphShaderNodeBuilder(new CeilingShaderNodeBuilder());
         addGraphShaderNodeBuilder(new FractionalPartShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new ModuloShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new MinimumShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new MaximumShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new MaximumShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ClampShaderNodeBuilder());
         addGraphShaderNodeBuilder(new LerpShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new StepShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new SmoothstepShaderNodeBuilder());
 
+        // Math - advanced
         addGraphShaderNodeBuilder(new MergeShaderNodeBuilder());
         addGraphShaderNodeBuilder(new SplitShaderNodeBuilder());
         addGraphShaderNodeBuilder(new DotProductShaderNodeBuilder());
