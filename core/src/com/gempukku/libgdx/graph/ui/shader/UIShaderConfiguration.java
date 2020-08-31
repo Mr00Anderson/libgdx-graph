@@ -7,7 +7,6 @@ import com.gempukku.libgdx.graph.shader.config.math.RemapShaderNodeConfiguration
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.AddShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.MultiplyShaderNodeConfiguration;
-import com.gempukku.libgdx.graph.shader.config.math.arithmetic.PowerShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.SubtractShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.common.AbsShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.common.CeilingShaderNodeConfiguration;
@@ -16,10 +15,19 @@ import com.gempukku.libgdx.graph.shader.config.math.common.FloorShaderNodeConfig
 import com.gempukku.libgdx.graph.shader.config.math.common.FractionalPartShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.common.LerpShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.common.SignShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.exponential.ExponentialBase2ShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.exponential.ExponentialShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.exponential.InverseSquareRootShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.exponential.LogarithmBase2ShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.exponential.NaturalLogarithmShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.exponential.PowerShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.exponential.SquareRootShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArccosShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArcsinShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.ArctanShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.CosShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.DegreesShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.math.trigonometry.RadiansShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.SinShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.trigonometry.TanShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise2DNodeConfiguration;
@@ -85,7 +93,14 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SubtractShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new MultiplyShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DivideShaderNodeConfiguration()));
+
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new PowerShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ExponentialShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ExponentialBase2ShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new NaturalLogarithmShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new LogarithmBase2ShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SquareRootShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new InverseSquareRootShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SinShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CosShaderNodeConfiguration()));
@@ -93,6 +108,8 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArcsinShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArccosShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new ArctanShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RadiansShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DegreesShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new AbsShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SignShaderNodeConfiguration()));

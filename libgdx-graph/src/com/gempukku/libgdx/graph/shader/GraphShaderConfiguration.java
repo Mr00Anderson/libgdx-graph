@@ -13,7 +13,6 @@ import com.gempukku.libgdx.graph.shader.node.math.RemapShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.AddShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.DivideShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.MultiplyShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.math.arithmetic.PowerShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.SubtractShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.AbsShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.CeilingShaderNodeBuilder;
@@ -22,10 +21,19 @@ import com.gempukku.libgdx.graph.shader.node.math.common.FloorShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.FractionalPartShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.LerpShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.common.SignShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.exponential.ExponentialBase2ShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.exponential.ExponentialShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.exponential.InverseSquareRootShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.exponential.LogarithmBase2ShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.exponential.NaturalLogarithmShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.exponential.PowerShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.exponential.SquareRootShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArccosShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArcsinShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.ArctanShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.CosShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.DegreesShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.math.trigonometry.RadiansShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.SinShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.trigonometry.TanShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoise2DShaderNodeBuilder;
@@ -66,7 +74,15 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new SubtractShaderNodeBuilder());
         addGraphShaderNodeBuilder(new MultiplyShaderNodeBuilder());
         addGraphShaderNodeBuilder(new DivideShaderNodeBuilder());
+
+        // Math - exponential
         addGraphShaderNodeBuilder(new PowerShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new ExponentialShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new ExponentialBase2ShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new NaturalLogarithmShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new LogarithmBase2ShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new SquareRootShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new InverseSquareRootShaderNodeBuilder());
 
         // Math - Common
         addGraphShaderNodeBuilder(new AbsShaderNodeBuilder());
@@ -89,7 +105,10 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new ArcsinShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ArccosShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ArctanShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new RadiansShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new DegreesShaderNodeBuilder());
 
+        // Color
         addGraphShaderNodeBuilder(new IntensityShaderNodeBuilder());
 
         // Attributes

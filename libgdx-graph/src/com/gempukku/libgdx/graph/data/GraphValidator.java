@@ -74,7 +74,6 @@ public class GraphValidator<T extends GraphNode<W>, U extends GraphConnection, V
 
         Map<String, W> nodeOutputMap = new HashMap<>();
         for (GraphNodeOutput<W> value : thisNode.getConfiguration().getNodeOutputs().values()) {
-            String fieldName = value.getFieldName();
             nodeOutputMap.put(value.getFieldId(), value.determineFieldType(inputsTypes));
         }
 
