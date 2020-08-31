@@ -9,13 +9,6 @@ import com.gempukku.libgdx.graph.data.NodeConfiguration;
 import org.json.simple.JSONObject;
 
 public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, ShaderFieldType> {
-    private String tag;
-    private GraphShader graphShader;
-
-    public ShaderLoaderCallback(String tag) {
-        this.tag = tag;
-    }
-
     @Override
     public void start() {
 
@@ -28,11 +21,7 @@ public class ShaderLoaderCallback extends GraphDataLoaderCallback<GraphShader, S
         if (result.hasErrors())
             throw new IllegalStateException("The graph contains errors, open it in the graph designer and correct them");
 
-        graphShader = new GraphShader(tag);
-
-        GraphShaderBuilder.buildShader(graphShader, this);
-
-        return graphShader;
+        return GraphShaderBuilder.buildShader(this);
     }
 
     @Override

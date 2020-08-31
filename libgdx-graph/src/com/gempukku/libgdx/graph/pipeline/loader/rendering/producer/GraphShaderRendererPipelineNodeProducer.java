@@ -22,7 +22,7 @@ import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.ShaderLoaderCallback;
 import org.json.simple.JSONObject;
 
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,10 +33,11 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
 
     @Override
     public PipelineNode createNode(JSONObject data, Map<String, PipelineNode.FieldOutput<?>> inputFields) {
-        List<JSONObject> shaderDefinitions = (List<JSONObject>) data.get("shaders");
-        final List<GraphShader> shaders = new LinkedList<>();
+        final List<JSONObject> shaderDefinitions = (List<JSONObject>) data.get("shaders");
+        final Map<String, GraphShader> shaders = new LinkedHashMap<>();
         for (JSONObject shaderDefinition : shaderDefinitions) {
-            shaders.add(createShader(shaderDefinition));
+            String tag = (String) shaderDefinition.get("tag");
+            shaders.put(tag, createShader(shaderDefinition));
         }
 
         final PipelineNode.FieldOutput<PipelineRendererModels> modelsInput = (PipelineNode.FieldOutput<PipelineRendererModels>) inputFields.get("models");
@@ -71,10 +72,12 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                 for (RenderableProvider renderableProvider : models.getModels()) {
                     renderableProvider.getRenderables(renderables, renderablePool);
                 }
-                for (GraphShader shader : shaders) {
+                for (Map.Entry<String, GraphShader> shaderEntry : shaders.entrySet()) {
+                    String tag = shaderEntry.getKey();
+                    GraphShader shader = shaderEntry.getValue();
                     shader.setTimeProvider(pipelineRenderingContext.getTimeProvider());
                     shader.setEnvironment(environment);
-                    renderWithShader(shader, camera, models, environment);
+                    renderWithShader(tag, shader, camera, models, environment);
                 }
                 renderables.clear();
 
@@ -85,8 +88,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                     output.setValue(renderPipeline);
             }
 
-            private void renderWithShader(GraphShader shader, Camera camera, PipelineRendererModels models, Environment environment) {
-                String tag = shader.getTag();
+            private void renderWithShader(String tag, GraphShader shader, Camera camera, PipelineRendererModels models, Environment environment) {
                 shader.begin(camera, environment, renderContext);
                 for (Renderable renderable : renderables) {
                     GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
@@ -98,7 +100,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
 
             @Override
             public void dispose() {
-                for (GraphShader shader : shaders) {
+                for (GraphShader shader : shaders.values()) {
                     shader.dispose();
                 }
             }
@@ -106,9 +108,8 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
     }
 
     private GraphShader createShader(JSONObject shaderDefinition) {
-        String tag = (String) shaderDefinition.get("tag");
         JSONObject shaderGraph = (JSONObject) shaderDefinition.get("shader");
-        return GraphLoader.loadGraph(shaderGraph, new ShaderLoaderCallback(tag));
+        return GraphLoader.loadGraph(shaderGraph, new ShaderLoaderCallback());
     }
 
     private static class RenderablePool extends FlushablePool<Renderable> {

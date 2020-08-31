@@ -12,21 +12,12 @@ import java.util.Map;
 public class GraphShader extends UniformCachingShader implements GraphShaderContext {
     private List<Disposable> disposableList = new LinkedList<>();
     private Map<String, PropertySource> propertySourceMap;
-    private String tag;
     private ShaderProgram shaderProgram;
     private TimeProvider timeProvider;
     private Environment environment;
 
-    public GraphShader(String tag) {
-        this.tag = tag;
-    }
-
     public void setProgram(ShaderProgram shaderProgram) {
         this.shaderProgram = shaderProgram;
-    }
-
-    public String getTag() {
-        return tag;
     }
 
     public void init() {

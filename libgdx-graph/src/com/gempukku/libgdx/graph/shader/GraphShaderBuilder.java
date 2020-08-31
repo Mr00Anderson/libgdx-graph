@@ -21,19 +21,21 @@ import java.util.Map;
 import java.util.Set;
 
 public class GraphShaderBuilder {
-    public static void buildShader(GraphShader graphShader,
-                                   Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-        buildShader(graphShader, new DefaultTimeKeeper(), graph);
+    public static GraphShader buildShader(
+            Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
+        return buildShader(new DefaultTimeKeeper(), graph);
     }
 
-    public static void buildShader(GraphShader graphShader, TimeProvider timeProvider,
-                                   Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
-        buildShader(graphShader, timeProvider, graph, false);
+    public static GraphShader buildShader(TimeProvider timeProvider,
+                                          Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
+        return buildShader(timeProvider, graph, false);
     }
 
-    public static void buildShader(GraphShader graphShader, TimeProvider timeProvider,
-                                   Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
-                                   boolean designTime) {
+    public static GraphShader buildShader(TimeProvider timeProvider,
+                                          Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph,
+                                          boolean designTime) {
+        GraphShader graphShader = new GraphShader();
+
         Map<String, PropertySource> propertyMap = new HashMap<>();
         for (GraphProperty<ShaderFieldType> property : graph.getProperties()) {
             String name = property.getName();
@@ -111,6 +113,8 @@ public class GraphShaderBuilder {
         ShaderProgram shaderProgram = new ShaderProgram(vertexShader, fragmentShader);
         graphShader.setProgram(shaderProgram);
         graphShader.init();
+
+        return graphShader;
     }
 
     private static GraphShaderNodeBuilder.FieldOutput getOutput(GraphConnection connection,

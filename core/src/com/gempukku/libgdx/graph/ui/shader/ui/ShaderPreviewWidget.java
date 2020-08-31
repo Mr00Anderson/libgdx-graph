@@ -76,9 +76,8 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
 
     private void createShader(Graph<? extends GraphNode<ShaderFieldType>, ? extends GraphConnection, ? extends GraphProperty<ShaderFieldType>, ShaderFieldType> graph) {
         try {
-            graphShader = new GraphShader("");
             timeKeeper = new DefaultTimeKeeper();
-            GraphShaderBuilder.buildShader(graphShader, timeKeeper, graph, true);
+            graphShader = GraphShaderBuilder.buildShader(timeKeeper, graph, true);
             frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);
             createModel();
 
