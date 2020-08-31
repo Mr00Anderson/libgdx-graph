@@ -8,7 +8,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class ExponentialShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public ExponentialShaderNodeConfiguration() {
-        super("Exp", "Exp", "Math/Exponential");
+        super("Exp", "Exp e", "Math/Exponential");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("input", "Input", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeOutput(

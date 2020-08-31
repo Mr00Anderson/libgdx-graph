@@ -8,7 +8,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class NaturalLogarithmShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public NaturalLogarithmShaderNodeConfiguration() {
-        super("Log", "Log", "Math/Exponential");
+        super("Log", "Log e", "Math/Exponential");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("input", "Input", true, ShaderFieldType.Color, ShaderFieldType.Vector3, ShaderFieldType.Vector2, ShaderFieldType.Float));
         addNodeOutput(
