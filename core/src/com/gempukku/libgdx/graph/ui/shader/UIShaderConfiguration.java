@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
+import com.gempukku.libgdx.graph.shader.config.color.IntensityShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.DotProductShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.RemapShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.AddShaderNodeConfiguration;
@@ -105,6 +106,7 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new DotProductShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RemapShaderNodeConfiguration()));
 
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new IntensityShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise2DNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise3DNodeConfiguration()));

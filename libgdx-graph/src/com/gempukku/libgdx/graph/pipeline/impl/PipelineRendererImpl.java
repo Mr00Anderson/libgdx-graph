@@ -69,6 +69,8 @@ public class PipelineRendererImpl implements PipelineRenderer {
 
     @Override
     public void render(float delta, final RenderOutput renderOutput) {
+        timeKeeper.updateTime(delta);
+
         for (PipelineNode node : nodes) {
             node.startFrame(delta);
         }

@@ -6,6 +6,7 @@ import com.gempukku.libgdx.graph.shader.node.PropertyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.color.IntensityShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.DotProductShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.RemapShaderNodeBuilder;
@@ -87,6 +88,8 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new ArcsinShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ArccosShaderNodeBuilder());
         addGraphShaderNodeBuilder(new ArctanShaderNodeBuilder());
+
+        addGraphShaderNodeBuilder(new IntensityShaderNodeBuilder());
 
         // Attributes
         addGraphShaderNodeBuilder(new AttributePositionShaderNodeBuilder());

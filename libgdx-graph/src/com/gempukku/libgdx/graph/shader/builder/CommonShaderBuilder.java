@@ -32,9 +32,8 @@ public abstract class CommonShaderBuilder {
     public void addArrayUniformVariable(String name, int size, String type, boolean global, UniformRegistry.UniformSetter setter) {
         UniformVariable uniformVariable = uniformVariables.get(name);
         if (uniformVariable != null &&
-                (!uniformVariable.type.equals(type) || uniformVariable.setter != setter || uniformVariable.global != global
-                        || uniformVariable.size != size))
-            throw new IllegalStateException("Already contains uniform of that name with a different setter, type, size or global flag");
+                (!uniformVariable.type.equals(type) || uniformVariable.global != global || uniformVariable.size != size))
+            throw new IllegalStateException("Already contains uniform of that name with a different type, size or global flag");
 
         if (uniformVariable == null) {
             uniformRegistry.registerUniform(name, global, setter);

@@ -78,7 +78,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
         ModelBuilder modelBuilder = new ModelBuilder();
         GraphShaderAttribute graphShaderAttribute = new GraphShaderAttribute();
-        graphShaderAttribute.addShaderTag("Cover");
+        graphShaderAttribute.addShaderTag("Hologram");
         Material material = new Material(TextureAttribute.createDiffuse(rockTexture), graphShaderAttribute);
         sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 material,
