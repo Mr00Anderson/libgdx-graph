@@ -91,6 +91,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                     }
                 }
                 // Then render transparent models
+                GraphShader lastShader = null;
                 for (Renderable renderable : renderables) {
                     for (Map.Entry<String, GraphShader> shaderEntry : shaders.entrySet()) {
                         String tag = shaderEntry.getKey();
@@ -100,13 +101,19 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                             shader.setEnvironment(environment);
                             GraphShaderAttribute graphShaderAttribute = renderable.material.get(GraphShaderAttribute.class, GraphShaderAttribute.GraphShader);
                             if (graphShaderAttribute.hasTag(tag)) {
-                                shader.begin(camera, environment, renderContext);
+                                if (lastShader != shader) {
+                                    if (lastShader != null)
+                                        lastShader.end();
+                                    shader.begin(camera, environment, renderContext);
+                                }
                                 shader.render(renderable);
-                                shader.end();
+                                lastShader = shader;
                             }
                         }
                     }
                 }
+                if (lastShader != null)
+                    lastShader.end();
                 renderables.clear();
 
                 currentBuffer.end();
@@ -185,8 +192,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
             getTranslation(o1.worldTransform, o1.meshPart.center, tmpV1);
             getTranslation(o2.worldTransform, o2.meshPart.center, tmpV2);
             final float dst = (int) (1000f * camera.position.dst2(tmpV1)) - (int) (1000f * camera.position.dst2(tmpV2));
-            final int result = dst < 0 ? -1 : (dst > 0 ? 1 : 0);
-            return result;
+            return dst < 0 ? 1 : (dst > 0 ? -1 : 0);
         }
     }
 }

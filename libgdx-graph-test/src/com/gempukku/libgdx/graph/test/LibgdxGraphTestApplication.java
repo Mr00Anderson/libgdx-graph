@@ -13,15 +13,8 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.GraphLoader;
 import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
@@ -30,7 +23,6 @@ import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
 import com.gempukku.libgdx.graph.pipeline.PipelineRendererModels;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
 import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
-import com.gempukku.libgdx.graph.shader.GraphShaderUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,60 +86,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private Stage createStage() {
         Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        Stage stage = new Stage(new ScreenViewport());
-
-        final Slider amount = new Slider(0, 10, 0.1f, false, skin);
-        amount.setValue(1f);
-        amount.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        GraphShaderUtil.setProperty(sphereModelInstance, "Amount", amount.getValue());
-                    }
-                });
-        final Slider scale = new Slider(1, 50, 1f, false, skin);
-        scale.setValue(20f);
-        scale.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        GraphShaderUtil.setProperty(sphereModelInstance, "Scale", scale.getValue());
-                    }
-                });
-        final Slider x = new Slider(-1, 1, 0.01f, false, skin);
-        x.setValue(0f);
-        final Slider y = new Slider(-1, 1, 0.01f, false, skin);
-        y.setValue(1f);
-        final Slider z = new Slider(-1, 1, 0.01f, false, skin);
-        z.setValue(0f);
-        ChangeListener directionListener = new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                GraphShaderUtil.setProperty(sphereModelInstance, "Direction", new Vector3(x.getValue(), y.getValue(), z.getValue()));
-            }
-        };
-        x.addListener(directionListener);
-        y.addListener(directionListener);
-        z.addListener(directionListener);
-
-
-        Table tbl = new Table();
-        tbl.add(new Label("Cover amount", skin));
-        tbl.add(amount).row();
-        tbl.add(new Label("Cover scale", skin));
-        tbl.add(scale).row();
-        tbl.add(new Label("X", skin));
-        tbl.add(x).row();
-        tbl.add(new Label("Y", skin));
-        tbl.add(y).row();
-        tbl.add(new Label("Z", skin));
-        tbl.add(z).row();
-
-        tbl.setFillParent(true);
-        tbl.align(Align.topLeft);
-
-        stage.addActor(tbl);
-        return stage;
+        return new Stage(new ScreenViewport());
     }
 
     @Override
