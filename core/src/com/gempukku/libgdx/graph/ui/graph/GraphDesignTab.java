@@ -42,6 +42,10 @@ import java.util.Map;
 import java.util.UUID;
 
 public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<GraphBox<T>, GraphConnection, PropertyBox<T>, T> {
+    public enum Type {
+        Render_Pipeline, Graph_Shader
+    }
+
     private List<PropertyBox<T>> propertyBoxes = new LinkedList<>();
     private final GraphContainer<T> graphContainer;
 
@@ -49,6 +53,7 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
     private UIGraphConfiguration<T> uiGraphConfiguration;
     private SaveCallback<T> saveCallback;
 
+    private Type type;
     private String id;
     private String title;
 
@@ -60,9 +65,10 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
 
     private boolean finishedLoading = false;
 
-    public GraphDesignTab(boolean closeable, String id, String title, Skin skin,
+    public GraphDesignTab(boolean closeable, Type type, String id, String title, Skin skin,
                           UIGraphConfiguration<T> uiGraphConfiguration, SaveCallback<T> saveCallback) {
         super(true, closeable);
+        this.type = type;
         this.id = id;
         this.title = title;
 
@@ -129,6 +135,10 @@ public class GraphDesignTab<T extends FieldType> extends Tab implements Graph<Gr
         splitPane.setMaxSplitAmount(0.2f);
 
         contentTable.add(splitPane).grow().row();
+    }
+
+    public Type getType() {
+        return type;
     }
 
     @Override

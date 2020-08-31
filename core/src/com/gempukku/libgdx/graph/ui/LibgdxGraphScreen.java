@@ -46,6 +46,11 @@ public class LibgdxGraphScreen extends Table {
     private Skin skin;
     private final Table insideTable;
 
+    private MenuItem save;
+    private MenuItem saveAs;
+    private MenuItem exportShader;
+    private MenuItem close;
+
     public LibgdxGraphScreen(Skin skin) {
         this.skin = skin;
         setFillParent(true);
@@ -58,6 +63,22 @@ public class LibgdxGraphScreen extends Table {
                     public void switchedTab(Tab tab) {
                         insideTable.clearChildren();
                         insideTable.add(tab.getContentTable()).grow().row();
+
+                        save.setDisabled(false);
+                        saveAs.setDisabled(false);
+                        close.setDisabled(false);
+
+                        GraphDesignTab<?> designTab = (GraphDesignTab<?>) tab;
+                        boolean graphShaderTab = designTab.getType() == GraphDesignTab.Type.Graph_Shader;
+                        exportShader.setDisabled(!graphShaderTab);
+                    }
+
+                    @Override
+                    public void removedAllTabs() {
+                        save.setDisabled(true);
+                        saveAs.setDisabled(true);
+                        close.setDisabled(true);
+                        exportShader.setDisabled(true);
                     }
                 });
 
@@ -70,7 +91,7 @@ public class LibgdxGraphScreen extends Table {
     private void openShaderTab(String id, JSONObject shader) {
         UIShaderConfiguration shaderConfiguration = new UIShaderConfiguration();
         final GraphDesignTab<ShaderFieldType> shaderTab = GraphLoader.loadGraph(shader, new UIGraphLoaderCallback<ShaderFieldType>(
-                skin, new GraphDesignTab<ShaderFieldType>(true, id, "Shader", skin,
+                skin, new GraphDesignTab<ShaderFieldType>(true, GraphDesignTab.Type.Graph_Shader, id, "Shader", skin,
                 shaderConfiguration, new SaveCallback<ShaderFieldType>() {
             @Override
             public void save(GraphDesignTab<ShaderFieldType> graphDesignTab) {
@@ -78,9 +99,9 @@ public class LibgdxGraphScreen extends Table {
                 graphDesignTab.setDirty(true);
             }
         }), shaderConfiguration));
-        shaderTab.setDirty(false);
         tabbedPane.add(shaderTab);
         tabbedPane.switchTab(shaderTab);
+        shaderTab.setDirty(false);
     }
 
     private Tab findTabByGraphId(String id) {
@@ -119,7 +140,8 @@ public class LibgdxGraphScreen extends Table {
                 });
         fileMenu.addItem(open);
 
-        MenuItem save = new MenuItem("Save");
+        save = new MenuItem("Save");
+        save.setDisabled(true);
         save.setShortcut(Input.Keys.CONTROL_LEFT, Input.Keys.S);
         save.addListener(
                 new ClickListener(Input.Buttons.LEFT) {
@@ -130,7 +152,8 @@ public class LibgdxGraphScreen extends Table {
                 });
         fileMenu.addItem(save);
 
-        MenuItem saveAs = new MenuItem("Save As");
+        saveAs = new MenuItem("Save As");
+        saveAs.setDisabled(true);
         saveAs.addListener(
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
@@ -142,7 +165,21 @@ public class LibgdxGraphScreen extends Table {
 
         fileMenu.addSeparator();
 
-        MenuItem close = new MenuItem("Close pipeline");
+        exportShader = new MenuItem("Export shader");
+        exportShader.setDisabled(true);
+        exportShader.addListener(
+                new ClickListener(Input.Buttons.LEFT) {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        exportShader();
+                    }
+                });
+        fileMenu.addItem(exportShader);
+
+        fileMenu.addSeparator();
+
+        close = new MenuItem("Close pipeline");
+        close.setDisabled(true);
         close.addListener(
                 new ClickListener(Input.Buttons.LEFT) {
                     @Override
@@ -246,6 +283,23 @@ public class LibgdxGraphScreen extends Table {
         }
     }
 
+    private void exportShader() {
+        FileChooser fileChooser = new FileChooser(FileChooser.Mode.SAVE);
+        fileChooser.setModal(true);
+        fileChooser.setSelectionMode(FileChooser.SelectionMode.FILES);
+        fileChooser.setListener(new FileChooserAdapter() {
+            @Override
+            public void selected(Array<FileHandle> file) {
+                FileHandle selectedFile = file.get(0);
+                if (!selectedFile.name().toLowerCase().endsWith(".json")) {
+                    selectedFile = selectedFile.parent().child(selectedFile.name() + ".json");
+                }
+                writeGraph(selectedFile, ((GraphDesignTab<?>) tabbedPane.getActiveTab()).serializeGraph());
+            }
+        });
+        getStage().addActor(fileChooser.fadeIn());
+    }
+
     private void saveAs() {
         FileChooser fileChooser = new FileChooser(FileChooser.Mode.SAVE);
         fileChooser.setModal(true);
@@ -288,12 +342,18 @@ public class LibgdxGraphScreen extends Table {
         }
     }
 
-    private void saveToFile(GraphDesignTab<PipelineFieldType> graphDesignTab, FileHandle editedFile) {
+    private void saveToFile(GraphDesignTab<?> graphDesignTab, FileHandle editedFile) {
         for (Tab tab : tabbedPane.getTabs()) {
             tab.save();
         }
         JSONObject graph = graphDesignTab.serializeGraph();
 
+        writeGraph(editedFile, graph);
+
+        graphDesignTab.setDirty(false);
+    }
+
+    private void writeGraph(FileHandle editedFile, JSONObject graph) {
         try {
             OutputStreamWriter out = new OutputStreamWriter(editedFile.write(false));
             try {
@@ -305,8 +365,6 @@ public class LibgdxGraphScreen extends Table {
         } catch (IOException exp) {
             exp.printStackTrace();
         }
-
-        graphDesignTab.setDirty(false);
     }
 
     private PopupMenu createTemplateMenu() {
@@ -333,7 +391,7 @@ public class LibgdxGraphScreen extends Table {
                 try {
                     UIPipelineConfiguration graphConfiguration = new UIPipelineConfiguration();
                     graphDesignTab = GraphLoader.loadGraph(stream, new UIGraphLoaderCallback<PipelineFieldType>(
-                            skin, new GraphDesignTab<PipelineFieldType>(false, "main", "Render pipeline", skin,
+                            skin, new GraphDesignTab<PipelineFieldType>(false, GraphDesignTab.Type.Render_Pipeline, "main", "Render pipeline", skin,
                             graphConfiguration, null), graphConfiguration));
 
                     graphDesignTab.getContentTable().addListener(
