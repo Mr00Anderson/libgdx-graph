@@ -33,6 +33,7 @@ import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoise3DShaderNodeBuild
 import com.gempukku.libgdx.graph.shader.node.noise.VoronoiDistanceShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.MergeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.part.SplitShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.provided.InstanceIdShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.provided.TimeGraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.texture.Sampler2DShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.value.ValueBooleanShaderNodeBuilder;
@@ -115,6 +116,7 @@ public class GraphShaderConfiguration {
 
         // Provided
         addGraphShaderNodeBuilder(new TimeGraphShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new InstanceIdShaderNodeBuilder());
 
         // Values
         addGraphShaderNodeBuilder(new ValueBooleanShaderNodeBuilder());
