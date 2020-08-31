@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -26,7 +27,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_BACK;
 import static com.badlogic.gdx.graphics.GL20.GL_FRONT;
 import static com.badlogic.gdx.graphics.GL20.GL_NONE;
 
-public abstract class BasicShader implements UniformRegistry, Disposable {
+public abstract class BasicShader implements Shader, UniformRegistry, Disposable {
     public enum Culling {
         back(GL_BACK), none(GL_NONE), front(GL_FRONT);
 
@@ -127,6 +128,7 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
 
     private ShaderProgram program;
     private RenderContext context;
+    private Environment environment;
     private Camera camera;
     private Mesh currentMesh;
     private Culling culling = Culling.back;
@@ -134,6 +136,30 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
     private Blending blending = Blending.alpha;
 
     private boolean initialized = false;
+    private boolean begunWithLibGDX = false;
+
+    @Override
+    public void init() {
+        // Do nithing, already initialized
+    }
+
+    @Override
+    public int compareTo(Shader other) {
+        if (other == null) return -1;
+        if (other == this) return 0;
+        return 0; // FIXME compare shaders on their impact on performance
+    }
+
+    @Override
+    public boolean canRender(Renderable instance) {
+        return true;
+    }
+
+    @Override
+    public void begin(Camera camera, RenderContext context) {
+        begunWithLibGDX = true;
+        begin(camera, null, context);
+    }
 
     @Override
     public void registerAttribute(String alias) {
@@ -241,6 +267,7 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
     public void begin(Camera camera, Environment environment, RenderContext context) {
         this.camera = camera;
         this.context = context;
+        this.environment = environment;
         program.begin();
 
         // Enable depth testing
@@ -265,6 +292,9 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
     }
 
     public void render(Renderable renderable) {
+        if (begunWithLibGDX) {
+            environment = renderable.environment;
+        }
         for (Uniform uniform : uniforms.values()) {
             if (!uniform.global)
                 uniform.setter.set(this, uniform.location, renderable, renderable.material);
@@ -288,6 +318,7 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
             currentMesh = null;
         }
         program.end();
+        begunWithLibGDX = false;
     }
 
     @Override
