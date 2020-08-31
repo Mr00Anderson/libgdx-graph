@@ -260,6 +260,10 @@ public abstract class BasicShader implements Shader, UniformRegistry, Disposable
         this.transparency = transparency;
     }
 
+    public Transparency getTransparency() {
+        return transparency;
+    }
+
     public void setBlending(Blending blending) {
         this.blending = blending;
     }
