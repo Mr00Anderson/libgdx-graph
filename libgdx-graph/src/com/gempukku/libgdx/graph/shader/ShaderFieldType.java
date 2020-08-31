@@ -1,6 +1,5 @@
 package com.gempukku.libgdx.graph.shader;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.gempukku.libgdx.graph.data.FieldType;
 
@@ -28,7 +27,7 @@ public enum ShaderFieldType implements FieldType {
             case Boolean:
                 return value instanceof Boolean;
             case TextureRegion:
-                return value instanceof com.badlogic.gdx.graphics.Texture || value instanceof TextureRegion;
+                return value instanceof TextureRegion;
         }
         return false;
     }
@@ -39,9 +38,6 @@ public enum ShaderFieldType implements FieldType {
 
     @Override
     public Object convert(Object value) {
-        if (this == TextureRegion && value instanceof Texture) {
-            return new TextureRegion((Texture) value);
-        }
         return value;
     }
 }
