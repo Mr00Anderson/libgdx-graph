@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ValueColorShaderNodeBuilder extends ConfigurationCommonShaderNodeBuilder {
-    private static NumberFormat numberFormat = new DecimalFormat("0.0000");
+    private static NumberFormat numberFormat = new DecimalFormat("0.0######");
 
     public ValueColorShaderNodeBuilder() {
         super(new ValueColorShaderNodeConfiguration());

@@ -1,7 +1,8 @@
 package com.gempukku.libgdx.graph.ui.shader;
 
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
-import com.gempukku.libgdx.graph.shader.config.color.IntensityShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.effect.FresnelEffectShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.effect.IntensityShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.AddShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.MultiplyShaderNodeConfiguration;
@@ -44,6 +45,8 @@ import com.gempukku.libgdx.graph.shader.config.math.value.SplitShaderNodeConfigu
 import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise2DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.SimplexNoise3DNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.noise.VoronoiDistanceNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.provided.CameraDirectionShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.provided.CameraPositionShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.provided.InstanceIdShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.provided.TimeShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.texture.Sampler2DShaderNodeConfiguration;
@@ -144,12 +147,15 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new RemapShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new IntensityShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new FresnelEffectShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise2DNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new SimplexNoise3DNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new VoronoiDistanceNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new TimeShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CameraPositionShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CameraDirectionShaderNodeConfiguration()));
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new InstanceIdShaderNodeConfiguration()));
 
         graphBoxProducers.add(new ValueColorBoxProducer<ShaderFieldType>(new ValueColorShaderNodeConfiguration()));

@@ -22,6 +22,7 @@ import com.gempukku.libgdx.graph.data.GraphValidator;
 import com.gempukku.libgdx.graph.data.NodeConnector;
 import com.gempukku.libgdx.graph.ui.graph.property.PropertyBox;
 import com.gempukku.libgdx.graph.ui.preview.NavigableCanvas;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
@@ -31,10 +32,12 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GraphContainer<T extends FieldType> extends Table implements NavigableCanvas {
     private static final float CANVAS_GAP = 50f;
@@ -58,6 +61,8 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
 
     private NodeConnector drawingFromConnector;
     private GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> validationResult = new GraphValidator.ValidationResult<>();
+
+    private Set<String> selectedNodes = new HashSet<>();
 
     public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
@@ -332,7 +337,7 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
 
     public void addGraphBox(final GraphBox<T> graphBox, String windowTitle, boolean closeable, float x, float y) {
         graphBoxes.put(graphBox.getId(), graphBox);
-        VisWindow window = new VisWindow(windowTitle) {
+        VisWindow window = new VisWindow(windowTitle, false) {
             @Override
             protected void positionChanged() {
                 recreateClickableShapes();
@@ -345,6 +350,16 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
                 removeGraphBox(graphBox);
                 super.close();
             }
+
+            @Override
+            public void toFront() {
+                super.toFront();
+                if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                    addToSelection(graphBox.getId());
+                } else {
+                    setSelection(graphBox.getId());
+                }
+            }
         };
         window.setKeepWithinStage(false);
         if (closeable) {
@@ -356,6 +371,27 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
         window.setSize(Math.max(150, window.getPrefWidth()), window.getPrefHeight());
         boxWindows.put(graphBox.getId(), window);
         fire(new GraphChangedEvent(true, false));
+    }
+
+    private void addToSelection(String nodeId) {
+        selectedNodes.add(nodeId);
+        updateSelectedVisuals();
+    }
+
+    private void setSelection(String nodeId) {
+        selectedNodes.clear();
+        selectedNodes.add(nodeId);
+        updateSelectedVisuals();
+    }
+
+    private void updateSelectedVisuals() {
+        Window.WindowStyle notSelectedStyle = VisUI.getSkin().get("noborder", Window.WindowStyle.class);
+        Window.WindowStyle selectedStyle = VisUI.getSkin().get("default", Window.WindowStyle.class);
+
+        for (Map.Entry<String, VisWindow> windowEntry : boxWindows.entrySet()) {
+            Window.WindowStyle newStyle = selectedNodes.contains(windowEntry.getKey()) ? selectedStyle : notSelectedStyle;
+            windowEntry.getValue().setStyle(newStyle);
+        }
     }
 
     private void removeGraphBox(GraphBox<T> graphBox) {

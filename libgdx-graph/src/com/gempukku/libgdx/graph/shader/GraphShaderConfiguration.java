@@ -6,7 +6,8 @@ import com.gempukku.libgdx.graph.shader.node.PropertyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
-import com.gempukku.libgdx.graph.shader.node.color.IntensityShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.effect.FresnelEffectShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.effect.IntensityShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.AddShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.DivideShaderNodeBuilder;
@@ -50,6 +51,8 @@ import com.gempukku.libgdx.graph.shader.node.math.value.SplitShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoise2DShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.SimplexNoise3DShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.noise.VoronoiDistanceShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.provided.CameraDirectionShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.provided.CameraPositionShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.provided.InstanceIdShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.provided.TimeGraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.texture.Sampler2DShaderNodeBuilder;
@@ -130,7 +133,8 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new RadiansShaderNodeBuilder());
         addGraphShaderNodeBuilder(new DegreesShaderNodeBuilder());
 
-        // Color
+        // Effect
+        addGraphShaderNodeBuilder(new FresnelEffectShaderNodeBuilder());
         addGraphShaderNodeBuilder(new IntensityShaderNodeBuilder());
 
         // Attributes
@@ -157,6 +161,8 @@ public class GraphShaderConfiguration {
 
         // Provided
         addGraphShaderNodeBuilder(new TimeGraphShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new CameraPositionShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new CameraDirectionShaderNodeBuilder());
         addGraphShaderNodeBuilder(new InstanceIdShaderNodeBuilder());
 
         // Values

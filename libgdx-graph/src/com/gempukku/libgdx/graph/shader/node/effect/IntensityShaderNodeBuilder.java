@@ -1,10 +1,10 @@
-package com.gempukku.libgdx.graph.shader.node.color;
+package com.gempukku.libgdx.graph.shader.node.effect;
 
 import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderContext;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
-import com.gempukku.libgdx.graph.shader.config.color.IntensityShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.effect.IntensityShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationCommonShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
@@ -24,9 +24,8 @@ public class IntensityShaderNodeBuilder extends ConfigurationCommonShaderNodeBui
 
         commonShaderBuilder.addMainLine("// Intensity node");
         String name = "result_" + nodeId;
-        String value = aValue.getRepresentation();
         ShaderFieldType resultType = ShaderFieldType.Float;
-        commonShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = 0.3 * " + value + ".r + 0.59 * " + value + ".g + 0.11 * " + value + ".b;");
+        commonShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = dot(" + aValue.getRepresentation() + ".rgb, vec3(0.2126729, 0.7151522, 0.0721750));");
 
         return Collections.singletonMap("output", new DefaultFieldOutput(resultType, name));
     }
