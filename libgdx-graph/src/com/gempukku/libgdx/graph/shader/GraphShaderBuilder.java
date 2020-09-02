@@ -12,9 +12,11 @@ import com.gempukku.libgdx.graph.data.GraphProperty;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
 import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.property.GraphShaderPropertyProducer;
 import org.json.simple.JSONObject;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -61,16 +63,15 @@ public class GraphShaderBuilder {
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> vertexNodeOutputs = new HashMap<>();
         GraphShaderNodeBuilder.FieldOutput positionField = getOutput(findInputVertex(graph, "end", "position"),
                 designTime, false, graph, graphShader, graphShader, vertexNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
-        String worldPosition;
-        if (positionField != null) {
-            vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
-            worldPosition = "vec4(" + positionField.getRepresentation() + ", 1.0)";
-        } else {
-            vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
-            vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
-            vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
-            worldPosition = "(u_worldTrans * vec4(a_position, 1.0))";
+        if (positionField == null) {
+            AttributePositionShaderNodeBuilder position = new AttributePositionShaderNodeBuilder();
+            JSONObject positionData = new JSONObject();
+            positionData.put("coordinates", "world");
+            positionField = position.buildVertexNode(false, "fakePositionAttribute", positionData, Collections.<String, GraphShaderNodeBuilder.FieldOutput>emptyMap(),
+                    Collections.singleton("position"), vertexShaderBuilder, graphShader, graphShader).get("position");
         }
+        vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+        String worldPosition = "vec4(" + positionField.getRepresentation() + ", 1.0)";
 
         // Fragment part
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> fragmentNodeOutputs = new HashMap<>();

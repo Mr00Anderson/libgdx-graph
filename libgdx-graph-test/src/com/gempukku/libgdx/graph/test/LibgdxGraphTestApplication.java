@@ -1,20 +1,29 @@
-package com.gempukku.libgdx.graph.test;
+package com.gempukku.libgdx.graph.test.episodes;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Cubemap;
+import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
+import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.GraphLoader;
 import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
@@ -22,7 +31,8 @@ import com.gempukku.libgdx.graph.pipeline.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
 import com.gempukku.libgdx.graph.pipeline.PipelineRendererModels;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
-import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
+import com.gempukku.libgdx.graph.shader.GraphShaderUtil;
+import com.gempukku.libgdx.graph.test.WhitePixel;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,11 +42,12 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     private PipelineRenderer pipelineRenderer;
     private PipelineRendererModels models;
-    private Model sphereModel;
-    private ModelInstance sphereModelInstance;
+    private Model model;
     private Camera camera;
-    private Texture rockTexture;
     private Stage stage;
+    private ModelInstance dukeInstance;
+    private Skin skin;
+    private AnimationController animationController;
 
     @Override
     public void create() {
@@ -58,35 +69,58 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         PerspectiveCamera camera = new PerspectiveCamera();
         camera.near = 0.5f;
         camera.far = 100f;
-        camera.position.set(1f, 0.5f, 0f);
-        camera.up.set(0f, 1f, 0f);
-        camera.lookAt(0, 0f, 0f);
+        camera.position.set(0.8f, 0.8f, 0.5f);
+        camera.up.set(0f, 0f, 1f);
+        camera.lookAt(0, 0f, 0.3f);
         camera.update();
         return camera;
     }
 
     private PipelineRendererModels createModels() {
-        rockTexture = new Texture(Gdx.files.internal("image/seamless_rock_face_texture_by_hhh316.jpg"));
-
-        ModelBuilder modelBuilder = new ModelBuilder();
-        GraphShaderAttribute graphShaderAttribute = new GraphShaderAttribute();
-        graphShaderAttribute.addShaderTag("Hologram");
-        Material material = new Material(TextureAttribute.createDiffuse(rockTexture), graphShaderAttribute);
-        sphereModel = modelBuilder.createSphere(1, 1, 1, 20, 20,
-                material,
-                VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
-
+        JsonReader jsonReader = new JsonReader();
+        G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
+        model = modelLoader.loadModel(Gdx.files.internal("model/duke/duke.g3dj"));
 
         LibGDXModels models = new LibGDXModels();
-        sphereModelInstance = new ModelInstance(sphereModel);
-        models.addRenderableProvider(sphereModelInstance);
+        dukeInstance = new ModelInstance(model);
+        float scale = 0.08f;
+        dukeInstance.transform.scale(scale, scale, scale);
+        dukeInstance.transform.rotate(0, 0, 1f, 90);
+
+        animationController = new AnimationController(dukeInstance);
+        animationController.animate("Armature|walk", -1, 1f, null, 0.2f);
+
+        GraphShaderUtil.addShaderTag(dukeInstance, "Default");
+        models.addRenderableProvider(dukeInstance);
         return models;
     }
 
     private Stage createStage() {
-        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        return new Stage(new ScreenViewport());
+        final TextButton switchButton = new TextButton("Normal/Hologram", skin, "toggle");
+        switchButton.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        boolean checked = switchButton.isChecked();
+                        String removeTag = checked ? "Default" : "Hologram";
+                        String tag = checked ? "Hologram" : "Default";
+                        GraphShaderUtil.removeShaderTag(dukeInstance, removeTag);
+                        GraphShaderUtil.addShaderTag(dukeInstance, tag);
+                    }
+                });
+
+        Stage stage = new Stage(new ScreenViewport());
+
+        Table tbl = new Table();
+        tbl.add(switchButton).row();
+
+        tbl.setFillParent(true);
+        tbl.align(Align.topLeft);
+
+        stage.addActor(tbl);
+        return stage;
     }
 
     @Override
@@ -97,6 +131,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     @Override
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
+        animationController.update(delta);
         reloadRendererIfNeeded();
         stage.act();
 
@@ -116,10 +151,18 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        sphereModel.dispose();
+        model.dispose();
+        stage.dispose();
+        skin.dispose();
         pipelineRenderer.dispose();
-        rockTexture.dispose();
         WhitePixel.dispose();
+
+        Gdx.app.debug("Unclosed", Cubemap.getManagedStatus());
+        Gdx.app.debug("Unclosed", GLFrameBuffer.getManagedStatus());
+        Gdx.app.debug("Unclosed", Mesh.getManagedStatus());
+        Gdx.app.debug("Unclosed", Texture.getManagedStatus());
+        Gdx.app.debug("Unclosed", TextureArray.getManagedStatus());
+        Gdx.app.debug("Unclosed", ShaderProgram.getManagedStatus());
     }
 
     private PipelineRenderer loadPipelineRenderer() {
