@@ -61,13 +61,15 @@ public class GraphShaderBuilder {
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> vertexNodeOutputs = new HashMap<>();
         GraphShaderNodeBuilder.FieldOutput positionField = getOutput(findInputVertex(graph, "end", "position"),
                 designTime, false, graph, graphShader, graphShader, vertexNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
-        String worldPositionField = positionField != null ? positionField.getRepresentation() : "a_position";
+        String worldPosition;
         if (positionField != null) {
             vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+            worldPosition = "vec4(" + positionField.getRepresentation() + ", 1.0)";
         } else {
             vertexShaderBuilder.addAttributeVariable(ShaderProgram.POSITION_ATTRIBUTE, "vec3");
             vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
             vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+            worldPosition = "(u_worldTrans * vec4(a_position, 1.0))";
         }
 
         // Fragment part
@@ -96,7 +98,7 @@ public class GraphShaderBuilder {
         fragmentShaderBuilder.addMainLine("gl_FragColor = " + color + ";");
 
         vertexShaderBuilder.addMainLine("// End Graph Node");
-        vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * (u_worldTrans * vec4(" + worldPositionField + ", 1.0));");
+        vertexShaderBuilder.addMainLine("gl_Position = u_projViewTrans * " + worldPosition + ";");
 
         String vertexShader = vertexShaderBuilder.buildProgram();
         String fragmentShader = fragmentShaderBuilder.buildProgram();
