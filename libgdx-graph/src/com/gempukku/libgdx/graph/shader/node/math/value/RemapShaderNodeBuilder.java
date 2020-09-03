@@ -25,14 +25,16 @@ public class RemapShaderNodeBuilder extends ConfigurationCommonShaderNodeBuilder
         FieldOutput toValue = inputs.get("to");
         ShaderFieldType resultType = inputValue.getFieldType();
 
-        if (!commonShaderBuilder.containsFunction("remap")) {
-            commonShaderBuilder.addFunction("remap", resultType.getShaderType() + " remap(" + resultType.getShaderType() + " value, vec2 from, vec2 to) {\n" +
+        String functionName = "remap_" + resultType.getShaderType();
+
+        if (!commonShaderBuilder.containsFunction(functionName)) {
+            commonShaderBuilder.addFunction(functionName, resultType.getShaderType() + " " + functionName + "(" + resultType.getShaderType() + " value, vec2 from, vec2 to) {\n" +
                     "  return to.x + (value - from.x) * (to.y - to.x) / (from.y - from.x);\n" +
                     "}\n");
         }
         commonShaderBuilder.addMainLine("// Remap node");
         String name = "result_" + nodeId;
-        commonShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = remap(" + inputValue.getRepresentation() + ", " + fromValue.getRepresentation() + ", " + toValue.getRepresentation() + ");");
+        commonShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = " + functionName + "(" + inputValue.getRepresentation() + ", " + fromValue.getRepresentation() + ", " + toValue.getRepresentation() + ");");
 
         return Collections.singletonMap("output", new DefaultFieldOutput(resultType, name));
     }
