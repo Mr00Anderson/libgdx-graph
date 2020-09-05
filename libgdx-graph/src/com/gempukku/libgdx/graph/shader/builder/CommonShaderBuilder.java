@@ -22,14 +22,24 @@ public abstract class CommonShaderBuilder {
         this.uniformRegistry = uniformRegistry;
     }
 
-    public void addStructArrayUniformVariable(String name, String[] fieldNames, int size, String type, boolean global, UniformRegistry.StructArrayUniformSetter setter) {
+    public void addStructArrayUniformVariable(String name, String[] fieldNames, int size, String type, boolean global,
+                                              UniformRegistry.StructArrayUniformSetter setter) {
+        addStructArrayUniformVariable(name, fieldNames, size, type, global, setter, null);
+    }
+
+    public void addStructArrayUniformVariable(String name, String[] fieldNames, int size, String type, boolean global,
+                                              UniformRegistry.StructArrayUniformSetter setter, String comment) {
         if (uniformVariables.containsKey(name))
             throw new IllegalStateException("Already contains uniform of that name");
         uniformRegistry.registerStructArrayUniform(name, fieldNames, global, setter);
-        uniformVariables.put(name + "[" + size + "]", new UniformVariable(type, global, null));
+        uniformVariables.put(name + "[" + size + "]", new UniformVariable(type, global, null, comment));
     }
 
     public void addArrayUniformVariable(String name, int size, String type, boolean global, UniformRegistry.UniformSetter setter) {
+        addArrayUniformVariable(name, size, type, global, setter, null);
+    }
+
+    public void addArrayUniformVariable(String name, int size, String type, boolean global, UniformRegistry.UniformSetter setter, String comment) {
         UniformVariable uniformVariable = uniformVariables.get(name);
         if (uniformVariable != null &&
                 (!uniformVariable.type.equals(type) || uniformVariable.global != global || uniformVariable.size != size))
@@ -37,7 +47,7 @@ public abstract class CommonShaderBuilder {
 
         if (uniformVariable == null) {
             uniformRegistry.registerUniform(name, global, setter);
-            uniformVariables.put(name, new UniformVariable(type, global, setter, size));
+            uniformVariables.put(name, new UniformVariable(type, global, setter, comment, size));
         }
     }
 
@@ -46,7 +56,11 @@ public abstract class CommonShaderBuilder {
     }
 
     public void addUniformVariable(String name, String type, boolean global, UniformRegistry.UniformSetter setter) {
-        addArrayUniformVariable(name, -1, type, global, setter);
+        addUniformVariable(name, type, global, setter, null);
+    }
+
+    public void addUniformVariable(String name, String type, boolean global, UniformRegistry.UniformSetter setter, String comment) {
+        addArrayUniformVariable(name, -1, type, global, setter, comment);
     }
 
     public boolean hasVaryingVariable(String name) {
@@ -92,10 +106,12 @@ public abstract class CommonShaderBuilder {
     protected void appendUniformVariables(StringBuilder stringBuilder) {
         for (Map.Entry<String, UniformVariable> uniformDefinition : uniformVariables.entrySet()) {
             UniformVariable uniformVariable = uniformDefinition.getValue();
-            String type = uniformVariable.type;
+            String name = uniformDefinition.getKey();
             if (uniformVariable.size > -1)
-                type += "[" + uniformVariable.size + "]";
-            stringBuilder.append("uniform " + type + " " + uniformDefinition.getKey() + ";\n");
+                name += "[" + uniformVariable.size + "]";
+            if (uniformVariable.comment != null)
+                stringBuilder.append("// " + uniformVariable.comment + "\n");
+            stringBuilder.append("uniform " + uniformVariable.type + " " + name + ";\n");
         }
         if (!uniformVariables.isEmpty())
             stringBuilder.append('\n');
@@ -155,17 +171,18 @@ public abstract class CommonShaderBuilder {
         public final int size;
         public final boolean global;
         public final UniformRegistry.UniformSetter setter;
+        public final String comment;
 
-        public UniformVariable(String type, boolean global, UniformRegistry.UniformSetter setter) {
-            this(type, global, setter, -1);
+        public UniformVariable(String type, boolean global, UniformRegistry.UniformSetter setter, String comment) {
+            this(type, global, setter, comment, -1);
         }
 
-        public UniformVariable(String type, boolean global, UniformRegistry.UniformSetter setter, int size) {
+        public UniformVariable(String type, boolean global, UniformRegistry.UniformSetter setter, String comment, int size) {
             this.type = type;
             this.global = global;
             this.setter = setter;
+            this.comment = comment;
             this.size = size;
         }
     }
-
 }

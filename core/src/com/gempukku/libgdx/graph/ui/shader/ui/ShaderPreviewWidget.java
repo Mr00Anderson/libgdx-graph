@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
@@ -28,6 +27,7 @@ import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.GraphShaderBuilder;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 
 public class ShaderPreviewWidget extends Widget implements Disposable {
     private boolean shaderInitialized;
@@ -38,8 +38,7 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
     private GraphShader graphShader;
     private RenderContext renderContext;
     private Model model;
-    private ModelInstance modelInstance;
-    private Renderable renderable = new Renderable();
+    private GraphShaderModelInstanceImpl modelInstance;
     private Camera camera;
     private DefaultTimeKeeper timeKeeper;
 
@@ -94,7 +93,8 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
         model = modelBuilder.createSphere(1, 1, 1, 20, 20,
                 material,
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
-        modelInstance = new ModelInstance(model);
+        ModelInstance modelInstance = new ModelInstance(model);
+        this.modelInstance = new GraphShaderModelInstanceImpl(null, null, modelInstance);
     }
 
     private void destroyShader() {
@@ -126,13 +126,11 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
                 camera.viewportHeight = height;
                 camera.update();
 
-                modelInstance.getRenderable(renderable);
-
                 renderContext.begin();
                 Gdx.gl.glClearColor(0, 0, 0, 1);
                 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
                 graphShader.begin(camera, null, renderContext);
-                graphShader.render(renderable);
+                graphShader.render(modelInstance);
                 graphShader.end();
                 frameBuffer.end();
                 renderContext.end();

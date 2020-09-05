@@ -13,7 +13,6 @@ import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
@@ -29,12 +28,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.GraphLoader;
-import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
 import com.gempukku.libgdx.graph.pipeline.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
-import com.gempukku.libgdx.graph.pipeline.PipelineRendererModels;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
-import com.gempukku.libgdx.graph.shader.GraphShaderUtil;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstance;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModels;
 import com.gempukku.libgdx.graph.test.WhitePixel;
 
 import java.io.IOException;
@@ -44,9 +42,9 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
     private long lastProcessedInput;
 
     private PipelineRenderer pipelineRenderer;
-    private PipelineRendererModels models;
+    private GraphShaderModels models;
     private Model sphereModel;
-    private ModelInstance sphereModelInstance;
+    private GraphShaderModelInstance sphereModelInstance;
     private Camera camera;
     private Texture rockTexture;
     private Stage stage;
@@ -86,11 +84,11 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
         return camera;
     }
 
-    private PipelineRendererModels createModels() {
-        LibGDXModels models = new LibGDXModels();
-        sphereModelInstance = new ModelInstance(sphereModel);
-        models.addRenderableProvider(sphereModelInstance);
-        GraphShaderUtil.addShaderTag(sphereModelInstance, "Cover");
+    private GraphShaderModels createModels() {
+        GraphShaderModels models = new GraphShaderModels();
+        String modelId = models.registerModel(sphereModel);
+        sphereModelInstance = models.createModelInstance(modelId);
+        sphereModelInstance.addTag("Cover");
         return models;
     }
 
@@ -103,7 +101,7 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        GraphShaderUtil.setProperty(sphereModelInstance, "Amount", amount.getValue());
+                        sphereModelInstance.setProperty("Amount", amount.getValue());
                     }
                 });
         final Slider scale = new Slider(1, 50, 1f, false, skin);
@@ -112,7 +110,7 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
-                        GraphShaderUtil.setProperty(sphereModelInstance, "Scale", scale.getValue());
+                        sphereModelInstance.setProperty("Scale", scale.getValue());
                     }
                 });
         final Slider x = new Slider(-1, 1, 0.01f, false, skin);
@@ -124,7 +122,7 @@ public class Episode5LibgdxGraphTestApplication extends ApplicationAdapter {
         ChangeListener directionListener = new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                GraphShaderUtil.setProperty(sphereModelInstance, "Direction", new Vector3(x.getValue(), y.getValue(), z.getValue()));
+                sphereModelInstance.setProperty("Direction", new Vector3(x.getValue(), y.getValue(), z.getValue()));
             }
         };
         x.addListener(directionListener);

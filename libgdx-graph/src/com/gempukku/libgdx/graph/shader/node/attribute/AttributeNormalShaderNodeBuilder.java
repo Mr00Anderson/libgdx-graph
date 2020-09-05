@@ -28,13 +28,15 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
         String coordinates = (String) data.get("coordinates");
         if (coordinates.equals("world")) {
             vertexShaderBuilder.addMainLine("// Attribute Normal Node");
-            vertexShaderBuilder.addUniformVariable("u_normalMatrix", "mat3", false, UniformSetters.normalMatrix);
+            vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
             String name = "result_" + nodeId;
-            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = normalize(u_normalMatrix * a_normal);");
+            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = normalize((u_worldTrans * skinning * vec4(a_normal, 0.0)).xyz);");
 
             return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, name));
         } else if (coordinates.equals("object")) {
-            return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, "a_normal"));
+            String name = "result_" + nodeId;
+            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = normalize((skinning * vec4(a_normal, 0.0)).xyz);");
+            return Collections.singletonMap("normal", new DefaultFieldOutput(ShaderFieldType.Vector3, name));
         }
         throw new IllegalArgumentException();
     }
@@ -50,9 +52,9 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
         if (coordinates.equals("world")) {
             if (!vertexShaderBuilder.hasVaryingVariable("v_normal_world")) {
                 vertexShaderBuilder.addMainLine("// Attribute Normal Node");
-                vertexShaderBuilder.addUniformVariable("u_normalMatrix", "mat3", false, UniformSetters.normalMatrix);
+                vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
                 vertexShaderBuilder.addVaryingVariable("v_normal_world", "vec3");
-                vertexShaderBuilder.addMainLine("v_normal_world = normalize(u_normalMatrix * a_normal);");
+                vertexShaderBuilder.addMainLine("v_normal_world = normalize((u_worldTrans * skinning * vec4(a_normal, 0.0)).xyz);");
 
                 fragmentShaderBuilder.addVaryingVariable("v_normal_world", "vec3");
             }
@@ -62,7 +64,7 @@ public class AttributeNormalShaderNodeBuilder extends ConfigurationShaderNodeBui
             if (!vertexShaderBuilder.hasVaryingVariable("v_normal_object")) {
                 vertexShaderBuilder.addMainLine("// Attribute Normal Node");
                 vertexShaderBuilder.addVaryingVariable("v_normal_object", "vec3");
-                vertexShaderBuilder.addMainLine("v_normal_object = a_normal;");
+                vertexShaderBuilder.addMainLine("v_normal_object = normalize((skinning * vec4(a_normal, 0.0)).xyz);");
 
                 fragmentShaderBuilder.addVaryingVariable("v_normal_object", "vec3");
             }

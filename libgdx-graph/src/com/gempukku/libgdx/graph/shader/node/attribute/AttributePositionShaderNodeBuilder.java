@@ -30,11 +30,13 @@ public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeB
             vertexShaderBuilder.addMainLine("// Attribute Position Node");
             vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
             String name = "result_" + nodeId;
-            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = (u_worldTrans * vec4(a_position, 1.0)).xyz;");
+            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = (u_worldTrans * skinning * vec4(a_position, 1.0)).xyz;");
 
             return Collections.singletonMap("position", new DefaultFieldOutput(ShaderFieldType.Vector3, name));
         } else if (coordinates.equals("object")) {
-            return Collections.singletonMap("position", new DefaultFieldOutput(ShaderFieldType.Vector3, "a_position"));
+            String name = "result_" + nodeId;
+            vertexShaderBuilder.addMainLine("vec3" + " " + name + " = (skinning * vec4(a_position, 1.0)).xyz;");
+            return Collections.singletonMap("position", new DefaultFieldOutput(ShaderFieldType.Vector3, name));
         }
         throw new IllegalArgumentException();
     }
@@ -49,7 +51,7 @@ public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeB
                 vertexShaderBuilder.addMainLine("// Attribute Position Node");
                 vertexShaderBuilder.addUniformVariable("u_worldTrans", "mat4", false, UniformSetters.worldTrans);
                 vertexShaderBuilder.addVaryingVariable("v_position_world", "vec3");
-                vertexShaderBuilder.addMainLine("v_position_world = (u_worldTrans * vec4(a_position, 1.0)).xyz;");
+                vertexShaderBuilder.addMainLine("v_position_world = (u_worldTrans * skinning * vec4(a_position, 1.0)).xyz;");
 
                 fragmentShaderBuilder.addVaryingVariable("v_position_world", "vec3");
             }
@@ -59,7 +61,7 @@ public class AttributePositionShaderNodeBuilder extends ConfigurationShaderNodeB
             if (!vertexShaderBuilder.hasVaryingVariable("v_position_object")) {
                 vertexShaderBuilder.addMainLine("// Attribute Position Node");
                 vertexShaderBuilder.addVaryingVariable("v_position_object", "vec3");
-                vertexShaderBuilder.addMainLine("v_position_object = a_position;");
+                vertexShaderBuilder.addMainLine("v_position_object = (skinning * vec4(a_position, 1.0)).xyz;");
 
                 fragmentShaderBuilder.addVaryingVariable("v_position_object", "vec3");
             }

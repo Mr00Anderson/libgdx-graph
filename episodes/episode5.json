@@ -5,7 +5,7 @@
         "name": "Camera",
         "type": "Camera"
       },
-      "x": 119.0,
+      "x": 50.0,
       "y": 403.0,
       "id": "72be9695e45949ccb5f449dbacdfd619",
       "type": "Property"
@@ -15,19 +15,19 @@
         "name": "Stage",
         "type": "Stage"
       },
-      "x": 203.0,
+      "x": 134.0,
       "y": 125.0,
       "id": "a9ef339d56654f4c8f7445b45b3bed0b",
       "type": "Property"
     },
     {
-      "x": 533.0,
+      "x": 464.0,
       "y": 126.0,
       "id": "dffb152d405a49d38792e850749129b2",
       "type": "UIRenderer"
     },
     {
-      "x": 447.0,
+      "x": 378.0,
       "y": 50.0,
       "id": "end",
       "type": "PipelineEnd"
@@ -36,20 +36,10 @@
       "data": {
         "color": "333333ff"
       },
-      "x": 329.0,
+      "x": 260.0,
       "y": 638.0,
       "id": "d54b356d4a1242cab5e6cb3f836b1930",
       "type": "ValueColor"
-    },
-    {
-      "data": {
-        "name": "Models",
-        "type": "Models"
-      },
-      "x": 50.0,
-      "y": 521.0,
-      "id": "1a227550a08b4089bf6974051b7b5bc3",
-      "type": "Property"
     },
     {
       "data": {
@@ -383,25 +373,29 @@
           }
         ]
       },
-      "x": 456.0,
+      "x": 387.0,
       "y": 225.0,
       "id": "ff6f63af3181472da525343236652acd",
       "type": "GraphShaderRenderer"
     },
     {
-      "x": 535.0,
+      "x": 466.0,
       "y": 576.0,
       "id": "746da9b276d442f0bc74ed9847a26a4b",
       "type": "PipelineStart"
+    },
+    {
+      "data": {
+        "name": "Models",
+        "type": "GraphModels"
+      },
+      "x": 52.0,
+      "y": 488.0,
+      "id": "3fbb6eb284b3434c98417f4b5acb6f7b",
+      "type": "Property"
     }
   ],
   "connections": [
-    {
-      "fromNode": "1a227550a08b4089bf6974051b7b5bc3",
-      "toField": "models",
-      "fromField": "value",
-      "toNode": "ff6f63af3181472da525343236652acd"
-    },
     {
       "fromNode": "72be9695e45949ccb5f449dbacdfd619",
       "toField": "camera",
@@ -437,13 +431,15 @@
       "toField": "stage",
       "fromField": "value",
       "toNode": "dffb152d405a49d38792e850749129b2"
+    },
+    {
+      "fromNode": "3fbb6eb284b3434c98417f4b5acb6f7b",
+      "toField": "models",
+      "fromField": "value",
+      "toNode": "ff6f63af3181472da525343236652acd"
     }
   ],
   "properties": [
-    {
-      "name": "Models",
-      "type": "Models"
-    },
     {
       "name": "Camera",
       "type": "Camera"
@@ -451,6 +447,10 @@
     {
       "name": "Stage",
       "type": "Stage"
+    },
+    {
+      "name": "Models",
+      "type": "GraphModels"
     }
   ]
 }

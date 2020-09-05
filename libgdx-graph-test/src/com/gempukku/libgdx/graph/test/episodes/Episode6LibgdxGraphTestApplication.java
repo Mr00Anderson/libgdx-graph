@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -25,12 +24,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.UBJsonReader;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.GraphLoader;
-import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
 import com.gempukku.libgdx.graph.pipeline.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
-import com.gempukku.libgdx.graph.pipeline.PipelineRendererModels;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
-import com.gempukku.libgdx.graph.shader.GraphShaderUtil;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstance;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModels;
 import com.gempukku.libgdx.graph.test.WhitePixel;
 
 import java.io.IOException;
@@ -40,11 +38,11 @@ public class Episode6LibgdxGraphTestApplication extends ApplicationAdapter {
     private long lastProcessedInput;
 
     private PipelineRenderer pipelineRenderer;
-    private PipelineRendererModels models;
+    private GraphShaderModels models;
     private Model model;
     private Camera camera;
     private Stage stage;
-    private ModelInstance shipInstance;
+    private GraphShaderModelInstance shipInstance;
     private Skin skin;
 
     @Override
@@ -74,18 +72,17 @@ public class Episode6LibgdxGraphTestApplication extends ApplicationAdapter {
         return camera;
     }
 
-    private PipelineRendererModels createModels() {
+    private GraphShaderModels createModels() {
         UBJsonReader jsonReader = new UBJsonReader();
         G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
         model = modelLoader.loadModel(Gdx.files.internal("model/fighter/fighter.g3db"));
 
-        LibGDXModels models = new LibGDXModels();
-        shipInstance = new ModelInstance(model);
+        GraphShaderModels models = new GraphShaderModels();
+        String modelId = models.registerModel(model);
+        shipInstance = models.createModelInstance(modelId);
         float scale = 0.0008f;
-        shipInstance.transform.scale(scale, scale, scale);
-        shipInstance.transform.rotate(-1, 0, 0f, 90);
-        GraphShaderUtil.addShaderTag(shipInstance, "Default");
-        models.addRenderableProvider(shipInstance);
+        shipInstance.getTransformMatrix().scale(scale, scale, scale).rotate(-1, 0, 0f, 90);
+        shipInstance.addTag("Default");
         return models;
     }
 
@@ -100,8 +97,8 @@ public class Episode6LibgdxGraphTestApplication extends ApplicationAdapter {
                         boolean checked = switchButton.isChecked();
                         String removeTag = checked ? "Default" : "Hologram";
                         String tag = checked ? "Hologram" : "Default";
-                        GraphShaderUtil.removeShaderTag(shipInstance, removeTag);
-                        GraphShaderUtil.addShaderTag(shipInstance, tag);
+                        shipInstance.removeTag(removeTag);
+                        shipInstance.addTag(tag);
                     }
                 });
 
@@ -144,6 +141,7 @@ public class Episode6LibgdxGraphTestApplication extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        models.dispose();
         model.dispose();
         stage.dispose();
         skin.dispose();

@@ -60,6 +60,25 @@ public class GraphShaderBuilder {
         graphShader.setBlending(BasicShader.Blending.valueOf((String) data.get("blending")));
 
         // Vertex part
+        int boneCount = GraphShaderConfig.getMaxNumberOfBonesPerMesh();
+        int boneWeightCount = GraphShaderConfig.getMaxNumberOfBoneWeights();
+        vertexShaderBuilder.addArrayUniformVariable("u_bones", boneCount, "mat4", false, new UniformSetters.Bones(boneCount));
+        for (int i = 0; i < boneWeightCount; i++) {
+            vertexShaderBuilder.addAttributeVariable("a_boneWeight" + i, "vec2");
+        }
+        StringBuilder getSkinning = new StringBuilder();
+        getSkinning.append("mat4 getSkinning() {\n");
+        getSkinning.append("  mat4 skinning = mat4(0.0);\n");
+        for (int i = 0; i < boneWeightCount; i++) {
+            getSkinning.append("  skinning += (a_boneWeight").append(i).append(".y) * u_bones[int(a_boneWeight").append(i).append(".x)];\n");
+        }
+        getSkinning.append("  return skinning;\n");
+        getSkinning.append("}\n");
+
+        vertexShaderBuilder.addFunction("getSkinning", getSkinning.toString());
+
+        vertexShaderBuilder.addMainLine("mat4 skinning = getSkinning();");
+
         Map<String, Map<String, GraphShaderNodeBuilder.FieldOutput>> vertexNodeOutputs = new HashMap<>();
         GraphShaderNodeBuilder.FieldOutput positionField = getOutput(findInputVertex(graph, "end", "position"),
                 designTime, false, graph, graphShader, graphShader, vertexNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);

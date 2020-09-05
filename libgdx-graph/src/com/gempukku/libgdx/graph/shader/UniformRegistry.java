@@ -1,7 +1,9 @@
 package com.gempukku.libgdx.graph.shader;
 
-import com.badlogic.gdx.graphics.g3d.Attributes;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 
 public interface UniformRegistry {
     void registerAttribute(final String alias);
@@ -10,11 +12,11 @@ public interface UniformRegistry {
 
     void registerStructArrayUniform(final String alias, String[] fieldNames, final boolean global, StructArrayUniformSetter setter);
 
-    public interface UniformSetter {
-        void set(final BasicShader shader, final int location, final Renderable renderable, final Attributes combinedAttributes);
+    interface UniformSetter {
+        void set(final BasicShader shader, final int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable);
     }
 
-    public interface StructArrayUniformSetter {
-        void set(final BasicShader shader, final int startingLocation, int[] fieldOffsets, int structSize, final Renderable renderable, final Attributes combinedAttributes);
+    interface StructArrayUniformSetter {
+        void set(final BasicShader shader, final int startingLocation, int[] fieldOffsets, int structSize, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable);
     }
 }

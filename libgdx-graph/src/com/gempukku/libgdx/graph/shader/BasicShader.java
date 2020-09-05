@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
-import com.badlogic.gdx.graphics.g3d.Shader;
+import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -16,9 +16,12 @@ import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.FlushablePool;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +30,7 @@ import static com.badlogic.gdx.graphics.GL20.GL_BACK;
 import static com.badlogic.gdx.graphics.GL20.GL_FRONT;
 import static com.badlogic.gdx.graphics.GL20.GL_NONE;
 
-public abstract class BasicShader implements Shader, UniformRegistry, Disposable {
+public abstract class BasicShader implements UniformRegistry, Disposable {
     public enum Culling {
         back(GL_BACK), none(GL_NONE), front(GL_FRONT);
 
@@ -136,30 +139,11 @@ public abstract class BasicShader implements Shader, UniformRegistry, Disposable
     private Blending blending = Blending.alpha;
 
     private boolean initialized = false;
-    private boolean begunWithLibGDX = false;
-
-    @Override
-    public void init() {
-        // Do nithing, already initialized
-    }
-
-    @Override
-    public int compareTo(Shader other) {
-        if (other == null) return -1;
-        if (other == this) return 0;
-        return 0; // FIXME compare shaders on their impact on performance
-    }
-
-    @Override
-    public boolean canRender(Renderable instance) {
-        return true;
-    }
-
-    @Override
-    public void begin(Camera camera, RenderContext context) {
-        begunWithLibGDX = true;
-        begin(camera, null, context);
-    }
+    protected final RenderablePool renderablesPool = new RenderablePool();
+    /**
+     * list of Renderables to be rendered in the current batch
+     **/
+    protected final Array<Renderable> renderables = new Array<Renderable>();
 
     @Override
     public void registerAttribute(String alias) {
@@ -282,11 +266,11 @@ public abstract class BasicShader implements Shader, UniformRegistry, Disposable
 
         for (Uniform uniform : uniforms.values()) {
             if (uniform.global && uniform.location != -1)
-                uniform.setter.set(this, uniform.location, null, null);
+                uniform.setter.set(this, uniform.location, camera, environment, null, null);
         }
         for (StructArrayUniform uniform : structArrayUniforms.values()) {
             if (uniform.global && uniform.startIndex != -1)
-                uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, null, null);
+                uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, camera, environment, null, null);
         }
     }
 
@@ -295,25 +279,27 @@ public abstract class BasicShader implements Shader, UniformRegistry, Disposable
         context.setBlending(enabled, blending.getSourceFactor(), blending.getDestinationFactor());
     }
 
-    public void render(Renderable renderable) {
-        if (begunWithLibGDX) {
-            environment = renderable.environment;
+    public void render(GraphShaderModelInstanceImpl graphShaderModelInstance) {
+        graphShaderModelInstance.getRenderables(renderables, renderablesPool);
+        for (Renderable renderable : renderables) {
+            for (Uniform uniform : uniforms.values()) {
+                if (!uniform.global)
+                    uniform.setter.set(this, uniform.location, camera, environment, graphShaderModelInstance, renderable);
+            }
+            for (StructArrayUniform uniform : structArrayUniforms.values()) {
+                if (!uniform.global)
+                    uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, camera, environment, graphShaderModelInstance, renderable);
+            }
+            MeshPart meshPart = renderable.meshPart;
+            Mesh mesh = meshPart.mesh;
+            if (currentMesh != mesh) {
+                if (currentMesh != null) currentMesh.unbind(program, tempArray.items);
+                currentMesh = mesh;
+                currentMesh.bind(program, getAttributeLocations(mesh.getVertexAttributes()));
+            }
+            meshPart.render(program, false);
         }
-        for (Uniform uniform : uniforms.values()) {
-            if (!uniform.global)
-                uniform.setter.set(this, uniform.location, renderable, renderable.material);
-        }
-        for (StructArrayUniform uniform : structArrayUniforms.values()) {
-            if (!uniform.global)
-                uniform.setter.set(this, uniform.startIndex, uniform.fieldOffsets, uniform.size, renderable, renderable.material);
-        }
-
-        if (currentMesh != renderable.meshPart.mesh) {
-            if (currentMesh != null) currentMesh.unbind(program, tempArray.items);
-            currentMesh = renderable.meshPart.mesh;
-            currentMesh.bind(program, getAttributeLocations(renderable.meshPart.mesh.getVertexAttributes()));
-        }
-        renderable.meshPart.render(program, false);
+        renderables.clear();
     }
 
     public void end() {
@@ -322,7 +308,6 @@ public abstract class BasicShader implements Shader, UniformRegistry, Disposable
             currentMesh = null;
         }
         program.end();
-        begunWithLibGDX = false;
     }
 
     @Override
@@ -399,5 +384,23 @@ public abstract class BasicShader implements Shader, UniformRegistry, Disposable
 
     public void setUniformArray(final int location, float[] values) {
         program.setUniform3fv(location, values, 0, values.length);
+    }
+
+    protected static class RenderablePool extends FlushablePool<Renderable> {
+        @Override
+        protected Renderable newObject() {
+            return new Renderable();
+        }
+
+        @Override
+        public Renderable obtain() {
+            Renderable renderable = super.obtain();
+            renderable.environment = null;
+            renderable.material = null;
+            renderable.meshPart.set("", null, 0, 0, 0);
+            renderable.shader = null;
+            renderable.userData = null;
+            return renderable;
+        }
     }
 }

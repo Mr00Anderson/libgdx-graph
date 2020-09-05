@@ -1,4 +1,4 @@
-package com.gempukku.libgdx.graph.test.episodes;
+package com.gempukku.libgdx.graph.test;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
@@ -11,11 +11,11 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.TextureArray;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.glutils.GLFrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -26,13 +26,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.gempukku.libgdx.graph.GraphLoader;
-import com.gempukku.libgdx.graph.libgdx.LibGDXModels;
 import com.gempukku.libgdx.graph.pipeline.PipelineLoaderCallback;
 import com.gempukku.libgdx.graph.pipeline.PipelineRenderer;
-import com.gempukku.libgdx.graph.pipeline.PipelineRendererModels;
 import com.gempukku.libgdx.graph.pipeline.RenderOutputs;
-import com.gempukku.libgdx.graph.shader.GraphShaderUtil;
-import com.gempukku.libgdx.graph.test.WhitePixel;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstance;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModels;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,13 +39,13 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     private long lastProcessedInput;
 
     private PipelineRenderer pipelineRenderer;
-    private PipelineRendererModels models;
+    private GraphShaderModels models;
     private Model model;
     private Camera camera;
     private Stage stage;
-    private ModelInstance dukeInstance;
     private Skin skin;
     private AnimationController animationController;
+    private GraphShaderModelInstance modelInstance;
 
     @Override
     public void create() {
@@ -69,29 +67,40 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         PerspectiveCamera camera = new PerspectiveCamera();
         camera.near = 0.5f;
         camera.far = 100f;
-        camera.position.set(0.8f, 0.8f, 0.5f);
-        camera.up.set(0f, 0f, 1f);
-        camera.lookAt(0, 0f, 0.3f);
+        camera.position.set(0.8f, 0.5f, 0.8f);
+        camera.up.set(0f, 1f, 0f);
+        camera.lookAt(0, 0.3f, 0f);
         camera.update();
         return camera;
     }
 
-    private PipelineRendererModels createModels() {
+    private GraphShaderModels createModels() {
         JsonReader jsonReader = new JsonReader();
         G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
         model = modelLoader.loadModel(Gdx.files.internal("model/duke/duke.g3dj"));
 
-        LibGDXModels models = new LibGDXModels();
-        dukeInstance = new ModelInstance(model);
+        GraphShaderModels models = new GraphShaderModels();
+        String modelId = models.registerModel(model);
+        modelInstance = models.createModelInstance(modelId);
+
         float scale = 0.08f;
-        dukeInstance.transform.scale(scale, scale, scale);
-        dukeInstance.transform.rotate(0, 0, 1f, 90);
+        Matrix4 transformMatrix = modelInstance.getTransformMatrix();
+        transformMatrix.scale(scale, scale, scale);
+        //transformMatrix.rotate(0, 0, 1f, 90);
 
-        animationController = new AnimationController(dukeInstance);
+        animationController = models.createAnimationController(modelInstance.getId());
         animationController.animate("Armature|walk", -1, 1f, null, 0.2f);
-
-        GraphShaderUtil.addShaderTag(dukeInstance, "Default");
-        models.addRenderableProvider(dukeInstance);
+        modelInstance.addTag("Default");
+//        dukeInstance = new ModelInstance(model);
+//        float scale = 0.08f;
+//        dukeInstance.transform.scale(scale, scale, scale);
+//        dukeInstance.transform.rotate(0, 0, 1f, 90);
+//
+//        animationController = new AnimationController(dukeInstance);
+//        animationController.animate("Armature|walk", -1, 1f, null, 0.2f);
+//
+//        GraphShaderUtil.addShaderTag(dukeInstance, "Default");
+//        models.addRenderableProvider(dukeInstance);
         return models;
     }
 
@@ -106,8 +115,8 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
                         boolean checked = switchButton.isChecked();
                         String removeTag = checked ? "Default" : "Hologram";
                         String tag = checked ? "Hologram" : "Default";
-                        GraphShaderUtil.removeShaderTag(dukeInstance, removeTag);
-                        GraphShaderUtil.addShaderTag(dukeInstance, tag);
+                        modelInstance.removeTag(removeTag);
+                        modelInstance.addTag(tag);
                     }
                 });
 
@@ -152,6 +161,7 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
     @Override
     public void dispose() {
         model.dispose();
+        models.dispose();
         stage.dispose();
         skin.dispose();
         pipelineRenderer.dispose();

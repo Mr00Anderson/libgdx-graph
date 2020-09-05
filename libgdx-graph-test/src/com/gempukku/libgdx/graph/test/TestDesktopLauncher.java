@@ -2,7 +2,6 @@ package com.gempukku.libgdx.graph.test;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.gempukku.libgdx.graph.test.episodes.LibgdxGraphTestApplication;
 
 public class TestDesktopLauncher {
     public static void main(String[] arg) {

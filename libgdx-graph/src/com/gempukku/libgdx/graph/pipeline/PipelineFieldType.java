@@ -2,10 +2,11 @@ package com.gempukku.libgdx.graph.pipeline;
 
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.gempukku.libgdx.graph.data.FieldType;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModels;
 
 public enum PipelineFieldType implements FieldType {
     Float, Vector2, Vector3, Color, Boolean,
-    Stage, Camera, Lights, Models,
+    Stage, Camera, Lights, Models, GraphModels,
     RenderPipeline;
 
     @Override
@@ -27,6 +28,8 @@ public enum PipelineFieldType implements FieldType {
                 return value instanceof com.badlogic.gdx.scenes.scene2d.Stage;
             case Models:
                 return value instanceof PipelineRendererModels;
+            case GraphModels:
+                return value instanceof GraphShaderModels;
             case Lights:
                 return value instanceof Environment;
             case Camera:
