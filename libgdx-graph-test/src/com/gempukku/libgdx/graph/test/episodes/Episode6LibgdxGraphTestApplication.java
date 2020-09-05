@@ -79,8 +79,8 @@ public class Episode6LibgdxGraphTestApplication extends ApplicationAdapter {
 
         GraphShaderModels models = new GraphShaderModels();
         String modelId = models.registerModel(model);
-        shipInstance = models.createModelInstance(modelId);
         float scale = 0.0008f;
+        shipInstance = models.createModelInstance(modelId);
         shipInstance.getTransformMatrix().scale(scale, scale, scale).rotate(-1, 0, 0f, 90);
         shipInstance.addTag("Default");
         return models;

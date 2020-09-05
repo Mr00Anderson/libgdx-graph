@@ -48,10 +48,12 @@ public class UniformSetters {
         @Override
         public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
             Matrix4[] modelBones = renderable.bones;
-            for (int i = 0; i < bones.length; i++) {
+            for (int i = 0; i < bones.length; i += 16) {
                 final int idx = i / 16;
-                bones[i] = (modelBones == null || idx >= modelBones.length || modelBones[idx] == null) ? idtMatrix.val[i % 16]
-                        : modelBones[idx].val[i % 16];
+                if (modelBones == null || idx >= modelBones.length || modelBones[idx] == null)
+                    System.arraycopy(idtMatrix.val, 0, bones, i, 16);
+                else
+                    System.arraycopy(modelBones[idx].val, 0, bones, i, 16);
             }
             shader.setUniformMatrixArray(location, bones);
         }

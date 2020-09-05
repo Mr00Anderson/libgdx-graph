@@ -86,21 +86,10 @@ public class LibgdxGraphTestApplication extends ApplicationAdapter {
         float scale = 0.08f;
         Matrix4 transformMatrix = modelInstance.getTransformMatrix();
         transformMatrix.scale(scale, scale, scale);
-        //transformMatrix.rotate(0, 0, 1f, 90);
 
         animationController = models.createAnimationController(modelInstance.getId());
         animationController.animate("Armature|walk", -1, 1f, null, 0.2f);
         modelInstance.addTag("Default");
-//        dukeInstance = new ModelInstance(model);
-//        float scale = 0.08f;
-//        dukeInstance.transform.scale(scale, scale, scale);
-//        dukeInstance.transform.rotate(0, 0, 1f, 90);
-//
-//        animationController = new AnimationController(dukeInstance);
-//        animationController.animate("Armature|walk", -1, 1f, null, 0.2f);
-//
-//        GraphShaderUtil.addShaderTag(dukeInstance, "Default");
-//        models.addRenderableProvider(dukeInstance);
         return models;
     }
 

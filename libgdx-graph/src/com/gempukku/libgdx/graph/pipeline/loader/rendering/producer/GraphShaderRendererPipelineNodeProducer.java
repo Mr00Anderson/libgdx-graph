@@ -66,6 +66,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
 
                 models.prepareForRendering(camera);
 
+
                 // Initialize shaders for drawing
                 for (GraphShader shader : shaders.values()) {
                     shader.setTimeProvider(pipelineRenderingContext.getTimeProvider());
@@ -73,16 +74,19 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                 }
 
                 // First render opaque models
+                models.orderFrontToBack();
                 for (Map.Entry<String, GraphShader> shaderEntry : shaders.entrySet()) {
                     String tag = shaderEntry.getKey();
                     GraphShader shader = shaderEntry.getValue();
                     if (shader.getTransparency() == BasicShader.Transparency.opaque) {
-                        renderWithShaderReverseOrder(tag, shader, models, camera, environment);
+                        renderWithShaderOpaquePass(tag, shader, models, camera, environment);
                     }
                 }
+
                 // Then render transparent models
+                models.orderBackToFront();
                 GraphShader lastShader = null;
-                for (GraphShaderModelInstanceImpl graphShaderModelInstance : models.getRenderablesForTransparentPass()) {
+                for (GraphShaderModelInstanceImpl graphShaderModelInstance : models.getModels()) {
                     for (Map.Entry<String, GraphShader> shaderEntry : shaders.entrySet()) {
                         String tag = shaderEntry.getKey();
                         GraphShader shader = shaderEntry.getValue();
@@ -109,9 +113,9 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                     output.setValue(renderPipeline);
             }
 
-            private void renderWithShaderReverseOrder(String tag, GraphShader shader, GraphShaderModels models, Camera camera, Environment environment) {
+            private void renderWithShaderOpaquePass(String tag, GraphShader shader, GraphShaderModels models, Camera camera, Environment environment) {
                 boolean begun = false;
-                for (GraphShaderModelInstanceImpl graphShaderModelInstance : models.getRenderablesForOpaquePass(tag)) {
+                for (GraphShaderModelInstanceImpl graphShaderModelInstance : models.getModelsWithTag(tag)) {
                     if (!begun) {
                         shader.begin(camera, environment, renderContext);
                         begun = true;
