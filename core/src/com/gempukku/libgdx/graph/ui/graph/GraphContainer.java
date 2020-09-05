@@ -52,6 +52,7 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
 
     private Map<String, GraphBox<T>> graphBoxes = new HashMap<>();
     private Map<String, VisWindow> boxWindows = new HashMap<>();
+    private Map<VisWindow, Vector2> windowPositions = new HashMap<>();
     private List<GraphConnection> graphConnections = new LinkedList<>();
 
     private Map<NodeConnector, Shape> connectionNodeMap = new HashMap<>();
@@ -63,6 +64,7 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
     private GraphValidator.ValidationResult<GraphBox<T>, GraphConnection, PropertyBox<T>, T> validationResult = new GraphValidator.ValidationResult<>();
 
     private Set<String> selectedNodes = new HashSet<>();
+    private boolean movingSelected = false;
 
     public GraphContainer(final PopupMenuProducer popupMenuProducer) {
         shapeRenderer = new ShapeRenderer();
@@ -340,14 +342,13 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
         VisWindow window = new VisWindow(windowTitle, false) {
             @Override
             protected void positionChanged() {
-                recreateClickableShapes();
-                updateCanvas(true);
-                fire(new GraphChangedEvent(false, false));
+                graphWindowMoved(this, graphBox.getId());
             }
 
             @Override
             protected void close() {
                 removeGraphBox(graphBox);
+                windowPositions.remove(this);
                 super.close();
             }
 
@@ -366,11 +367,33 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
             window.addCloseButton();
         }
         window.add(graphBox.getActor()).grow().row();
+        windowPositions.put(window, new Vector2(x, y));
         window.setPosition(x, y);
         addActor(window);
         window.setSize(Math.max(150, window.getPrefWidth()), window.getPrefHeight());
         boxWindows.put(graphBox.getId(), window);
         fire(new GraphChangedEvent(true, false));
+    }
+
+    private void graphWindowMoved(VisWindow visWindow, String nodeId) {
+        if (!movingSelected) {
+            movingSelected = true;
+            Vector2 oldPosition = windowPositions.get(visWindow);
+            float movedX = visWindow.getX() - oldPosition.x;
+            float movedY = visWindow.getY() - oldPosition.y;
+            for (String selectedNode : selectedNodes) {
+                if (!selectedNode.equals(nodeId)) {
+                    boxWindows.get(selectedNode).moveBy(movedX, movedY);
+                }
+            }
+
+            recreateClickableShapes();
+            updateCanvas(true);
+            fire(new GraphChangedEvent(false, false));
+
+            movingSelected = false;
+        }
+        windowPositions.get(visWindow).set(visWindow.getX(), visWindow.getY());
     }
 
     private void addToSelection(String nodeId) {
