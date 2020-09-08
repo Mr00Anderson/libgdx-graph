@@ -143,7 +143,7 @@ public abstract class CommonShaderBuilder {
     protected void appendStructures(StringBuilder stringBuilder) {
         for (Map.Entry<String, String> structureEntry : structures.entrySet()) {
             stringBuilder.append("struct " + structureEntry.getKey() + " {\n")
-                    .append(structureEntry.getValue()).append("};\n");
+                    .append(structureEntry.getValue()).append("};\n\n");
         }
         if (!structures.isEmpty())
             stringBuilder.append('\n');

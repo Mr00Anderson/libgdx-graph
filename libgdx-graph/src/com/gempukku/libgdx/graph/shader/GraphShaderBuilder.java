@@ -86,7 +86,7 @@ public class GraphShaderBuilder {
             AttributePositionShaderNodeBuilder position = new AttributePositionShaderNodeBuilder();
             JSONObject positionData = new JSONObject();
             positionData.put("coordinates", "world");
-            positionField = position.buildVertexNode(false, "fakePositionAttribute", positionData, Collections.<String, GraphShaderNodeBuilder.FieldOutput>emptyMap(),
+            positionField = position.buildVertexNode(false, "defaultPositionAttribute", positionData, Collections.<String, GraphShaderNodeBuilder.FieldOutput>emptyMap(),
                     Collections.singleton("position"), vertexShaderBuilder, graphShader, graphShader).get("position");
         }
         vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
@@ -100,9 +100,11 @@ public class GraphShaderBuilder {
         GraphShaderNodeBuilder.FieldOutput alphaClipField = getOutput(findInputVertex(graph, "end", "alphaClip"),
                 designTime, true, graph, graphShader, graphShader, fragmentNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);
         String alphaClip = (alphaClipField != null) ? alphaClipField.getRepresentation() : "0.0";
-        fragmentShaderBuilder.addMainLine("// End Graph Node");
-        fragmentShaderBuilder.addMainLine("if (" + alpha + " <= " + alphaClip + ")");
-        fragmentShaderBuilder.addMainLine("  discard;");
+        if (alphaField != null || alphaClipField != null) {
+            fragmentShaderBuilder.addMainLine("// End Graph Node");
+            fragmentShaderBuilder.addMainLine("if (" + alpha + " <= " + alphaClip + ")");
+            fragmentShaderBuilder.addMainLine("  discard;");
+        }
 
         GraphShaderNodeBuilder.FieldOutput colorField = getOutput(findInputVertex(graph, "end", "color"),
                 designTime, true, graph, graphShader, graphShader, fragmentNodeOutputs, vertexShaderBuilder, fragmentShaderBuilder);

@@ -44,13 +44,6 @@ public class CalculateLightingShaderNodeBuilder extends ConfigurationShaderNodeB
                 "  vec3 diffuse;\n" +
                         "  vec3 specular;\n");
 
-        final int numDirectionalLights = GraphShaderConfig.getMaxNumberOfDirectionalLights();
-        passDirectionalLights(fragmentShaderBuilder, numDirectionalLights);
-        final int numPointLights = GraphShaderConfig.getMaxNumberOfPointLights();
-        passPointLights(fragmentShaderBuilder, numPointLights);
-        final int numSpotLights = GraphShaderConfig.getMaxNumberOfSpotlights();
-        passSpotLights(fragmentShaderBuilder, numSpotLights);
-
         fragmentShaderBuilder.addUniformVariable("u_ambientLight", "vec3", true,
                 new UniformRegistry.UniformSetter() {
                     @Override
@@ -63,6 +56,13 @@ public class CalculateLightingShaderNodeBuilder extends ConfigurationShaderNodeB
                         }
                     }
                 });
+
+        final int numDirectionalLights = GraphShaderConfig.getMaxNumberOfDirectionalLights();
+        passDirectionalLights(fragmentShaderBuilder, numDirectionalLights);
+        final int numPointLights = GraphShaderConfig.getMaxNumberOfPointLights();
+        passPointLights(fragmentShaderBuilder, numPointLights);
+        final int numSpotLights = GraphShaderConfig.getMaxNumberOfSpotlights();
+        passSpotLights(fragmentShaderBuilder, numSpotLights);
 
         FieldOutput positionValue = inputs.get("position");
         FieldOutput normalValue = inputs.get("normal");
@@ -98,13 +98,20 @@ public class CalculateLightingShaderNodeBuilder extends ConfigurationShaderNodeB
 
     private void passSpotLights(FragmentShaderBuilder fragmentShaderBuilder, final int numSpotLights) {
         if (numSpotLights > 0) {
+            fragmentShaderBuilder.addUniformVariable("u_cameraPosition", "vec4", true, UniformSetters.cameraPosition);
+            fragmentShaderBuilder.addUniformVariable("u_spotLightCount", "int", true,
+                    new UniformRegistry.UniformSetter() {
+                        @Override
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                            shader.setUniform(location, environment.getSpotLights().size);
+                        }
+                    });
             fragmentShaderBuilder.addStructure("SpotLight",
                     "  vec3 color;\n" +
                             "  vec3 position;\n" +
                             "  vec3 direction;\n" +
                             "  float cutoffAngle;\n" +
                             "  float exponent;\n");
-            fragmentShaderBuilder.addUniformVariable("u_cameraPosition", "vec4", true, UniformSetters.cameraPosition);
             fragmentShaderBuilder.addStructArrayUniformVariable("u_spotLights", new String[]{"color", "position", "direction", "cutoffAngle", "exponent"}, numSpotLights, "SpotLight", true,
                     new UniformRegistry.StructArrayUniformSetter() {
                         @Override
@@ -154,10 +161,17 @@ public class CalculateLightingShaderNodeBuilder extends ConfigurationShaderNodeB
 
     private void passPointLights(FragmentShaderBuilder fragmentShaderBuilder, final int numPointLights) {
         if (numPointLights > 0) {
+            fragmentShaderBuilder.addUniformVariable("u_cameraPosition", "vec4", true, UniformSetters.cameraPosition);
+            fragmentShaderBuilder.addUniformVariable("u_pointLightCount", "int", true,
+                    new UniformRegistry.UniformSetter() {
+                        @Override
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                            shader.setUniform(location, environment.getPointLights().size);
+                        }
+                    });
             fragmentShaderBuilder.addStructure("PointLight",
                     "  vec3 color;\n" +
                             "  vec3 position;\n");
-            fragmentShaderBuilder.addUniformVariable("u_cameraPosition", "vec4", true, UniformSetters.cameraPosition);
             fragmentShaderBuilder.addStructArrayUniformVariable("u_pointLights", new String[]{"color", "position"}, numPointLights, "PointLight", true,
                     new UniformRegistry.StructArrayUniformSetter() {
                         @Override
@@ -200,10 +214,17 @@ public class CalculateLightingShaderNodeBuilder extends ConfigurationShaderNodeB
 
     private void passDirectionalLights(FragmentShaderBuilder fragmentShaderBuilder, final int numDirectionalLights) {
         if (numDirectionalLights > 0) {
+            fragmentShaderBuilder.addUniformVariable("u_cameraPosition", "vec4", true, UniformSetters.cameraPosition);
+            fragmentShaderBuilder.addUniformVariable("u_directionalLightCount", "int", true,
+                    new UniformRegistry.UniformSetter() {
+                        @Override
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                            shader.setUniform(location, environment.getDirectionalLights().size);
+                        }
+                    });
             fragmentShaderBuilder.addStructure("DirectionalLight",
                     "  vec3 color;\n" +
                             "  vec3 direction;\n");
-            fragmentShaderBuilder.addUniformVariable("u_cameraPosition", "vec4", true, UniformSetters.cameraPosition);
             fragmentShaderBuilder.addStructArrayUniformVariable("u_dirLights", new String[]{"color", "direction"}, numDirectionalLights, "DirectionalLight", true,
                     new UniformRegistry.StructArrayUniformSetter() {
                         @Override
