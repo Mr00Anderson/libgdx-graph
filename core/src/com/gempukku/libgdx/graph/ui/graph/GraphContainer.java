@@ -376,7 +376,7 @@ public class GraphContainer<T extends FieldType> extends Table implements Naviga
     }
 
     private void graphWindowMoved(VisWindow visWindow, String nodeId) {
-        if (!movingSelected) {
+        if (!movingSelected && !navigating) {
             movingSelected = true;
             Vector2 oldPosition = windowPositions.get(visWindow);
             float movedX = visWindow.getX() - oldPosition.x;

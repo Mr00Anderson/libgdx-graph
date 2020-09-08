@@ -2,6 +2,7 @@ package com.gempukku.libgdx.graph.ui.shader.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.environment.PointLight;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
@@ -27,6 +28,8 @@ import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.GraphShaderAttribute;
 import com.gempukku.libgdx.graph.shader.GraphShaderBuilder;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
+import com.gempukku.libgdx.graph.shader.environment.GraphShaderEnvironment;
+import com.gempukku.libgdx.graph.shader.models.GraphShaderModel;
 import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 
 public class ShaderPreviewWidget extends Widget implements Disposable {
@@ -41,6 +44,8 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
     private GraphShaderModelInstanceImpl modelInstance;
     private Camera camera;
     private DefaultTimeKeeper timeKeeper;
+    private GraphShaderModel graphShaderModel;
+    private GraphShaderEnvironment graphShaderEnvironment;
 
     public ShaderPreviewWidget(int width, int height) {
         this.width = width;
@@ -53,6 +58,12 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
         camera.up.set(0f, 1f, 0f);
         camera.lookAt(0, 0f, 0f);
         camera.update();
+
+        graphShaderEnvironment = new GraphShaderEnvironment();
+        graphShaderEnvironment.setAmbientColor(Color.DARK_GRAY);
+        PointLight pointLight = new PointLight();
+        pointLight.set(Color.WHITE, -2f, 1f, 1f, 2f);
+        graphShaderEnvironment.addPointLight(pointLight);
     }
 
     @Override
@@ -90,15 +101,16 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
     private void createModel() {
         ModelBuilder modelBuilder = new ModelBuilder();
         Material material = new Material(new GraphShaderAttribute());
-        model = modelBuilder.createSphere(1, 1, 1, 20, 20,
+        model = modelBuilder.createSphere(1, 1, 1, 50, 50,
                 material,
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
-        ModelInstance modelInstance = new ModelInstance(model);
-        this.modelInstance = new GraphShaderModelInstanceImpl(null, null, modelInstance);
+        graphShaderModel = new GraphShaderModel(model);
+        modelInstance = graphShaderModel.createInstance();
     }
 
     private void destroyShader() {
         model.dispose();
+        graphShaderModel.dispose();
         frameBuffer.dispose();
         frameBuffer = null;
         graphShader.dispose();
@@ -129,7 +141,7 @@ public class ShaderPreviewWidget extends Widget implements Disposable {
                 renderContext.begin();
                 Gdx.gl.glClearColor(0, 0, 0, 1);
                 Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-                graphShader.begin(camera, null, renderContext);
+                graphShader.begin(camera, graphShaderEnvironment, renderContext);
                 graphShader.render(modelInstance);
                 graphShader.end();
                 frameBuffer.end();

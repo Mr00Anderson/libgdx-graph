@@ -1,7 +1,6 @@
 package com.gempukku.libgdx.graph.pipeline.loader.rendering.producer;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -15,6 +14,7 @@ import com.gempukku.libgdx.graph.pipeline.loader.node.PipelineNodeProducerImpl;
 import com.gempukku.libgdx.graph.shader.BasicShader;
 import com.gempukku.libgdx.graph.shader.GraphShader;
 import com.gempukku.libgdx.graph.shader.ShaderLoaderCallback;
+import com.gempukku.libgdx.graph.shader.environment.GraphShaderEnvironment;
 import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 import com.gempukku.libgdx.graph.shader.models.GraphShaderModels;
 import org.json.simple.JSONObject;
@@ -38,7 +38,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
         }
 
         final PipelineNode.FieldOutput<GraphShaderModels> modelsInput = (PipelineNode.FieldOutput<GraphShaderModels>) inputFields.get("models");
-        final PipelineNode.FieldOutput<Environment> lightsInput = (PipelineNode.FieldOutput<Environment>) inputFields.get("lights");
+        final PipelineNode.FieldOutput<GraphShaderEnvironment> lightsInput = (PipelineNode.FieldOutput<GraphShaderEnvironment>) inputFields.get("lights");
         final PipelineNode.FieldOutput<Camera> cameraInput = (PipelineNode.FieldOutput<Camera>) inputFields.get("camera");
         final PipelineNode.FieldOutput<RenderPipeline> renderPipelineInput = (PipelineNode.FieldOutput<RenderPipeline>) inputFields.get("input");
 
@@ -61,7 +61,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                     camera.update();
                 }
                 renderContext.begin();
-                Environment environment = lightsInput != null ? lightsInput.getValue(pipelineRenderingContext) : null;
+                GraphShaderEnvironment environment = lightsInput != null ? lightsInput.getValue(pipelineRenderingContext) : null;
                 currentBuffer.begin();
 
                 models.prepareForRendering(camera);
@@ -113,7 +113,7 @@ public class GraphShaderRendererPipelineNodeProducer extends PipelineNodeProduce
                     output.setValue(renderPipeline);
             }
 
-            private void renderWithShaderOpaquePass(String tag, GraphShader shader, GraphShaderModels models, Camera camera, Environment environment) {
+            private void renderWithShaderOpaquePass(String tag, GraphShader shader, GraphShaderModels models, Camera camera, GraphShaderEnvironment environment) {
                 boolean begun = false;
                 for (GraphShaderModelInstanceImpl graphShaderModelInstance : models.getModelsWithTag(tag)) {
                     if (!begun) {

@@ -73,7 +73,7 @@ public class SelectBoxPart<T extends FieldType> extends Table implements GraphBo
 
     @Override
     public void serializePart(JSONObject object) {
-        object.put(property, selectBox.getSelected().toString());
+        object.put(property, selectBox.getSelected());
     }
 
     @Override

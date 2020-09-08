@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.GLTexture;
 import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.VertexAttributes;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.model.MeshPart;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
@@ -21,6 +20,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.FlushablePool;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.IntArray;
+import com.gempukku.libgdx.graph.shader.environment.GraphShaderEnvironment;
 import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 
 import java.util.HashMap;
@@ -131,7 +131,7 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
 
     private ShaderProgram program;
     private RenderContext context;
-    private Environment environment;
+    private GraphShaderEnvironment environment;
     private Camera camera;
     private Mesh currentMesh;
     private Culling culling = Culling.back;
@@ -252,7 +252,7 @@ public abstract class BasicShader implements UniformRegistry, Disposable {
         this.blending = blending;
     }
 
-    public void begin(Camera camera, Environment environment, RenderContext context) {
+    public void begin(Camera camera, GraphShaderEnvironment environment, RenderContext context) {
         this.camera = camera;
         this.context = context;
         this.environment = environment;

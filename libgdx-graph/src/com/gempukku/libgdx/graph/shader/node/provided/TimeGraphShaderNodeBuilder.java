@@ -1,7 +1,6 @@
 package com.gempukku.libgdx.graph.shader.node.provided;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.math.MathUtils;
 import com.gempukku.libgdx.graph.shader.BasicShader;
@@ -11,6 +10,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.UniformRegistry;
 import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
 import com.gempukku.libgdx.graph.shader.config.provided.TimeShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.environment.GraphShaderEnvironment;
 import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationCommonShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
@@ -33,7 +33,7 @@ public class TimeGraphShaderNodeBuilder extends ConfigurationCommonShaderNodeBui
             commonShaderBuilder.addUniformVariable("u_time", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
-                        public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                             shader.setUniform(location, graphShaderContext.getTimeProvider().getTime());
                         }
                     });
@@ -43,7 +43,7 @@ public class TimeGraphShaderNodeBuilder extends ConfigurationCommonShaderNodeBui
             commonShaderBuilder.addUniformVariable("u_sinTime", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
-                        public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                             shader.setUniform(location, MathUtils.sin(graphShaderContext.getTimeProvider().getTime()));
                         }
                     });
@@ -53,7 +53,7 @@ public class TimeGraphShaderNodeBuilder extends ConfigurationCommonShaderNodeBui
             commonShaderBuilder.addUniformVariable("u_cosTime", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
-                        public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                             shader.setUniform(location, MathUtils.cos(graphShaderContext.getTimeProvider().getTime()));
                         }
                     });
@@ -63,7 +63,7 @@ public class TimeGraphShaderNodeBuilder extends ConfigurationCommonShaderNodeBui
             commonShaderBuilder.addUniformVariable("u_deltaTime", "float", true,
                     new UniformRegistry.UniformSetter() {
                         @Override
-                        public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                             shader.setUniform(location, graphShaderContext.getTimeProvider().getDelta());
                         }
                     });

@@ -21,7 +21,7 @@ public class GLSLFragmentReader {
     public static String getFragment(String fragmentName, Map<String, String> replacements) {
         String fragment = readFragment(fragmentName);
         for (Map.Entry<String, String> replacement : replacements.entrySet())
-            fragment = fragment.replace("#" + replacement.getKey() + "#", replacement.getValue());
+            fragment = fragment.replace(replacement.getKey(), replacement.getValue());
 
         return fragment;
     }

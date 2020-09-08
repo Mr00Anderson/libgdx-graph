@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g3d.Attribute;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.gempukku.libgdx.WhitePixel;
 import com.gempukku.libgdx.graph.shader.BasicShader;
@@ -15,6 +14,7 @@ import com.gempukku.libgdx.graph.shader.UniformRegistry;
 import com.gempukku.libgdx.graph.shader.UniformSetters;
 import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
 import com.gempukku.libgdx.graph.shader.config.material.TextureAttributeShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.environment.GraphShaderEnvironment;
 import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 import com.gempukku.libgdx.graph.shader.node.ConfigurationCommonShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
@@ -58,14 +58,14 @@ public class TextureAttributeShaderNodeBuilder extends ConfigurationCommonShader
             commonShaderBuilder.addUniformVariable(textureName, "sampler2D", false,
                     new UniformRegistry.UniformSetter() {
                         @Override
-                        public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                             shader.setUniform(location, finalTexture);
                         }
                     });
             commonShaderBuilder.addUniformVariable(transformName, "vec4", false,
                     new UniformRegistry.UniformSetter() {
                         @Override
-                        public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                             shader.setUniform(location, 0f, 0f, 1f, 1f);
                         }
                     });

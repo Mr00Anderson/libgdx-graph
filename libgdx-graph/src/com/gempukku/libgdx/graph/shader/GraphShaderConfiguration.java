@@ -9,6 +9,7 @@ import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNo
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.effect.FresnelEffectShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.effect.IntensityShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.lighting.CalculateLightingShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.AddShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.DivideShaderNodeBuilder;
@@ -133,6 +134,9 @@ public class GraphShaderConfiguration {
         addGraphShaderNodeBuilder(new ArctanShaderNodeBuilder());
         addGraphShaderNodeBuilder(new RadiansShaderNodeBuilder());
         addGraphShaderNodeBuilder(new DegreesShaderNodeBuilder());
+
+        // Lighting
+        addGraphShaderNodeBuilder(new CalculateLightingShaderNodeBuilder());
 
         // Effect
         addGraphShaderNodeBuilder(new FresnelEffectShaderNodeBuilder());

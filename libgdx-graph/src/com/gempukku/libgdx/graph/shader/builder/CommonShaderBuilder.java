@@ -90,8 +90,8 @@ public abstract class CommonShaderBuilder {
     }
 
     public void addStructure(String name, String structureText) {
-        if (structures.containsKey(name))
-            throw new IllegalStateException("Already contains structure of that name");
+        if (structures.containsKey(name) && !structures.get(name).equals(structureText))
+            throw new IllegalStateException("Already contains structure of that name with different text");
         structures.put(name, structureText);
     }
 

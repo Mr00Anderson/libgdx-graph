@@ -3,7 +3,6 @@ package com.gempukku.libgdx.graph.shader.node;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -17,6 +16,7 @@ import com.gempukku.libgdx.graph.shader.UniformRegistry;
 import com.gempukku.libgdx.graph.shader.builder.CommonShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.FragmentShaderBuilder;
 import com.gempukku.libgdx.graph.shader.builder.VertexShaderBuilder;
+import com.gempukku.libgdx.graph.shader.environment.GraphShaderEnvironment;
 import com.gempukku.libgdx.graph.shader.models.GraphShaderModelInstanceImpl;
 import org.json.simple.JSONObject;
 
@@ -77,7 +77,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
         commonShaderBuilder.addUniformVariable(variableName, "vec4", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
-                    public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                    public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                         Object value = graphShaderModelInstance.getProperty(name);
                         if (!(value instanceof Color))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
@@ -94,7 +94,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
         commonShaderBuilder.addUniformVariable(variableName, "float", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
-                    public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                    public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                         Object value = graphShaderModelInstance.getProperty(name);
                         if (!(value instanceof Number))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
@@ -111,7 +111,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
         commonShaderBuilder.addUniformVariable(variableName, "vec2", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
-                    public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                    public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                         Object value = graphShaderModelInstance.getProperty(name);
                         if (!(value instanceof Vector2))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
@@ -128,7 +128,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
         commonShaderBuilder.addUniformVariable(variableName, "vec3", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
-                    public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                    public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                         Object value = graphShaderModelInstance.getProperty(name);
                         if (!(value instanceof Vector3))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
@@ -146,7 +146,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
         commonShaderBuilder.addUniformVariable(textureVariableName, "sampler2D", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
-                    public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                    public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                         Object value = graphShaderModelInstance.getProperty(name);
                         if (!(value instanceof TextureRegion))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();
@@ -156,7 +156,7 @@ public class PropertyShaderNodeBuilder implements GraphShaderNodeBuilder {
         commonShaderBuilder.addUniformVariable(uvTransformVariableName, "vec4", false,
                 new UniformRegistry.UniformSetter() {
                     @Override
-                    public void set(BasicShader shader, int location, Camera camera, Environment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+                    public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
                         Object value = graphShaderModelInstance.getProperty(name);
                         if (!(value instanceof TextureRegion))
                             value = graphShaderContext.getPropertySource(name).getDefaultValue();

@@ -6,8 +6,8 @@ import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeInputImpl;
 import com.gempukku.libgdx.graph.pipeline.loader.node.GraphNodeOutputImpl;
 
 import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Camera;
+import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.GraphLights;
 import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.GraphModels;
-import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.Lights;
 import static com.gempukku.libgdx.graph.pipeline.PipelineFieldType.RenderPipeline;
 
 public class GraphShaderRendererPipelineNodeConfiguration extends NodeConfigurationImpl<PipelineFieldType> {
@@ -18,7 +18,7 @@ public class GraphShaderRendererPipelineNodeConfiguration extends NodeConfigurat
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("camera", "Camera", true, Camera));
         addNodeInput(
-                new GraphNodeInputImpl<PipelineFieldType>("lights", "Lights", Lights));
+                new GraphNodeInputImpl<PipelineFieldType>("lights", "Graph Lights", GraphLights));
         addNodeInput(
                 new GraphNodeInputImpl<PipelineFieldType>("input", "Input", true, true, RenderPipeline));
         addNodeOutput(
