@@ -55,14 +55,17 @@ public class GraphShaderModel implements Disposable {
     private Mesh standardizeMesh(Mesh mesh) {
         if (attributes == null) {
             int maxNumberOfBoneWeights = GraphShaderConfig.getMaxNumberOfBoneWeights();
-            VertexAttribute[] vertexAttributeArr = new VertexAttribute[2 + 4 + maxNumberOfBoneWeights];
+            int maxNumberOfUVs = GraphShaderConfig.getMaxNumberOfUVs();
+
+            VertexAttribute[] vertexAttributeArr = new VertexAttribute[3 + maxNumberOfUVs + maxNumberOfBoneWeights];
             vertexAttributeArr[0] = VertexAttribute.Position();
             vertexAttributeArr[1] = VertexAttribute.Normal();
-            for (int i = 0; i < 4; i++) {
-                vertexAttributeArr[2 + i] = VertexAttribute.TexCoords(i);
+            vertexAttributeArr[2] = VertexAttribute.Tangent();
+            for (int i = 0; i < maxNumberOfUVs; i++) {
+                vertexAttributeArr[3 + i] = VertexAttribute.TexCoords(i);
             }
             for (int i = 0; i < maxNumberOfBoneWeights; i++) {
-                vertexAttributeArr[2 + 4 + i] = VertexAttribute.BoneWeight(i);
+                vertexAttributeArr[3 + maxNumberOfUVs + i] = VertexAttribute.BoneWeight(i);
             }
             attributes = new VertexAttributes(vertexAttributeArr);
         }
