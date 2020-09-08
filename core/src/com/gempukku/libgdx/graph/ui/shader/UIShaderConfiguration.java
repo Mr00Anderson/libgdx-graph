@@ -67,6 +67,7 @@ import com.gempukku.libgdx.graph.ui.producer.value.ValueVector2BoxProducer;
 import com.gempukku.libgdx.graph.ui.producer.value.ValueVector3BoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeNormalBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributePositionBoxProducer;
+import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeTangentBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.attribute.AttributeUVBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.material.TextureAttributeBoxProducer;
 import com.gempukku.libgdx.graph.ui.shader.property.PropertyColorBoxProducer;
@@ -90,6 +91,7 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
 
         graphBoxProducers.add(new AttributePositionBoxProducer());
         graphBoxProducers.add(new AttributeNormalBoxProducer());
+        graphBoxProducers.add(new AttributeTangentBoxProducer());
         graphBoxProducers.add(new AttributeUVBoxProducer());
 
         graphBoxProducers.add(new TextureAttributeBoxProducer("AmbientTexture", "Ambient texture"));

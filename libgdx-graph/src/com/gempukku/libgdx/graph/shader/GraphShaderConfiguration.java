@@ -6,6 +6,7 @@ import com.gempukku.libgdx.graph.shader.node.GraphShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.PropertyShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeNormalShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributePositionShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.attribute.AttributeTangentShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.effect.FresnelEffectShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.effect.IntensityShaderNodeBuilder;
@@ -145,6 +146,7 @@ public class GraphShaderConfiguration {
         // Attributes
         addGraphShaderNodeBuilder(new AttributePositionShaderNodeBuilder());
         addGraphShaderNodeBuilder(new AttributeNormalShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new AttributeTangentShaderNodeBuilder());
         addGraphShaderNodeBuilder(new AttributeUVShaderNodeBuilder());
 
         // Material
