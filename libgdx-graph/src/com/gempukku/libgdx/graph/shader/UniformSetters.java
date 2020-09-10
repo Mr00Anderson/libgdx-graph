@@ -1,6 +1,7 @@
 package com.gempukku.libgdx.graph.shader;
 
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.math.Matrix4;
@@ -34,6 +35,17 @@ public class UniformSetters {
         @Override
         public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
             shader.setUniform(location, renderable.worldTransform);
+        }
+    };
+    public final static UniformRegistry.UniformSetter ambientLight = new UniformRegistry.UniformSetter() {
+        @Override
+        public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
+            if (environment != null && environment.getAmbientColor() != null) {
+                Color ambientColor = environment.getAmbientColor();
+                shader.setUniform(location, ambientColor.r, ambientColor.g, ambientColor.b);
+            } else {
+                shader.setUniform(location, 0f, 0f, 0f);
+            }
         }
     };
 

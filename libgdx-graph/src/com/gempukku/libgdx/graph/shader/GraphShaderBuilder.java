@@ -89,7 +89,7 @@ public class GraphShaderBuilder {
             positionField = position.buildVertexNode(false, "defaultPositionAttribute", positionData, Collections.<String, GraphShaderNodeBuilder.FieldOutput>emptyMap(),
                     Collections.singleton("position"), vertexShaderBuilder, graphShader, graphShader).get("position");
         }
-        vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", false, UniformSetters.projViewTrans);
+        vertexShaderBuilder.addUniformVariable("u_projViewTrans", "mat4", true, UniformSetters.projViewTrans);
         String worldPosition = "vec4(" + positionField.getRepresentation() + ", 1.0)";
 
         // Fragment part

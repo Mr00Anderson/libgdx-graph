@@ -33,7 +33,7 @@ public class PropertyFloatBoxProducer implements PropertyBoxProducer<PipelineFie
     }
 
     private PropertyBox<PipelineFieldType> createPropertyBoxDefault(Skin skin, String name, float v1) {
-        final VisValidatableTextField v1Input = new VisValidatableTextField(new Validators.FloatValidator()) {
+        final VisValidatableTextField v1Input = new VisValidatableTextField(Validators.FLOATS) {
             @Override
             public float getPrefWidth() {
                 return 50;

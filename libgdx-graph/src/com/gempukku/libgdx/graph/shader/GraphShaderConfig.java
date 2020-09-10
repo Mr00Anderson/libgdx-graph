@@ -35,31 +35,36 @@ public class GraphShaderConfig {
     }
 
     public static int getMaxNumberOfUVs() {
+        freezeSettings();
         return MAX_NUMBER_OF_UVS;
     }
 
     public static int getMaxNumberOfBonesPerMesh() {
-        SET_IN_STONE = true;
+        freezeSettings();
         return MAX_NUMBER_OF_BONES_PER_MESH;
     }
 
     public static int getMaxNumberOfBoneWeights() {
-        SET_IN_STONE = true;
+        freezeSettings();
         return MAX_NUMBER_OF_BONE_WEIGHTS;
     }
 
     public static int getMaxNumberOfDirectionalLights() {
-        SET_IN_STONE = true;
+        freezeSettings();
         return MAX_NUMBER_OF_DIRECTIONAL_LIGHTS;
     }
 
     public static int getMaxNumberOfPointLights() {
-        SET_IN_STONE = true;
+        freezeSettings();
         return MAX_NUMBER_OF_POINT_LIGHTS;
     }
 
     public static int getMaxNumberOfSpotlights() {
-        SET_IN_STONE = true;
+        freezeSettings();
         return MAX_NUMBER_OF_SPOTLIGHTS;
+    }
+
+    private static void freezeSettings() {
+        SET_IN_STONE = true;
     }
 }

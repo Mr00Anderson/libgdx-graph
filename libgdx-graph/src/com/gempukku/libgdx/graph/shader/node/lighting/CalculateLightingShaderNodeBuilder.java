@@ -1,7 +1,6 @@
 package com.gempukku.libgdx.graph.shader.node.lighting;
 
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g3d.Renderable;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.environment.PointLight;
@@ -25,6 +24,7 @@ import com.gempukku.libgdx.graph.shader.node.DefaultFieldOutput;
 import org.json.simple.JSONObject;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,18 +44,7 @@ public class CalculateLightingShaderNodeBuilder extends ConfigurationShaderNodeB
                 "  vec3 diffuse;\n" +
                         "  vec3 specular;\n");
 
-        fragmentShaderBuilder.addUniformVariable("u_ambientLight", "vec3", true,
-                new UniformRegistry.UniformSetter() {
-                    @Override
-                    public void set(BasicShader shader, int location, Camera camera, GraphShaderEnvironment environment, GraphShaderModelInstanceImpl graphShaderModelInstance, Renderable renderable) {
-                        if (environment != null && environment.getAmbientColor() != null) {
-                            Color ambientColor = environment.getAmbientColor();
-                            shader.setUniform(location, ambientColor.r, ambientColor.g, ambientColor.b);
-                        } else {
-                            shader.setUniform(location, 0f, 0f, 0f);
-                        }
-                    }
-                });
+        fragmentShaderBuilder.addUniformVariable("u_ambientLight", "vec3", true, UniformSetters.ambientLight);
 
         final int numDirectionalLights = GraphShaderConfig.getMaxNumberOfDirectionalLights();
         passDirectionalLights(fragmentShaderBuilder, numDirectionalLights);
@@ -75,25 +64,33 @@ public class CalculateLightingShaderNodeBuilder extends ConfigurationShaderNodeB
         String normal = normalValue.getRepresentation();
         String albedo = albedoValue != null ? albedoValue.getRepresentation() : "vec3(0.0)";
         String emission = emissionValue != null ? emissionValue.getRepresentation() : "vec3(0.0)";
-        String specular = specularValue != null ? specularValue.getRepresentation() : albedo;
+        String specular = specularValue != null ? specularValue.getRepresentation() : "vec3(1.0)";
         String shininess = shininessValue != null ? shininessValue.getRepresentation() : "32.0";
 
         fragmentShaderBuilder.addMainLine("// Calculate Lighting node");
-        String name = "result_" + nodeId;
-        ShaderFieldType resultType = ShaderFieldType.Vector3;
-
-        fragmentShaderBuilder.addMainLine("Lighting lighting = Lighting(vec3(0.0), vec3(0.0));");
+        String lightingVariable = "lighting_" + nodeId;
+        fragmentShaderBuilder.addMainLine("Lighting " + lightingVariable + " = Lighting(vec3(0.0), vec3(0.0));");
         if (numDirectionalLights > 0)
-            fragmentShaderBuilder.addMainLine("lighting = getDirectionalLightContribution(" + position + ", " + normal + ", " + shininess + ", lighting);");
+            fragmentShaderBuilder.addMainLine(lightingVariable + " = getDirectionalLightContribution(" + position + ", " + normal + ", " + shininess + ", " + lightingVariable + ");");
         if (numPointLights > 0)
-            fragmentShaderBuilder.addMainLine("lighting = getPointLightContribution(" + position + ", " + normal + ", " + shininess + ", lighting);");
+            fragmentShaderBuilder.addMainLine(lightingVariable + " = getPointLightContribution(" + position + ", " + normal + ", " + shininess + ", " + lightingVariable + ");");
         if (numSpotLights > 0)
-            fragmentShaderBuilder.addMainLine("lighting = getSpotLightContribution(" + position + ", " + normal + ", " + shininess + ", lighting);");
+            fragmentShaderBuilder.addMainLine(lightingVariable + " = getSpotLightContribution(" + position + ", " + normal + ", " + shininess + ", " + lightingVariable + ");");
 
-        fragmentShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = " + emission + ".rgb + u_ambientLight * " + albedo + ".rgb + lighting.diffuse * " + albedo + ".rgb + lighting.specular * " + specular + ".rgb;");
+        ShaderFieldType resultType = ShaderFieldType.Vector3;
+        Map<String, DefaultFieldOutput> result = new HashMap<>();
+        if (producedOutputs.contains("output")) {
+            String name = "color_" + nodeId;
+            fragmentShaderBuilder.addMainLine(resultType.getShaderType() + " " + name + " = " + emission + ".rgb + u_ambientLight * " + albedo + ".rgb;");
+            fragmentShaderBuilder.addMainLine(name + " += " + lightingVariable + ".diffuse * " + albedo + ".rgb + " + lightingVariable + ".specular * " + specular + ".rgb;");
+            result.put("output", new DefaultFieldOutput(resultType, name));
+        } else if (producedOutputs.contains("diffuse")) {
+            result.put("diffuse", new DefaultFieldOutput(resultType, lightingVariable + ".diffuse"));
+        } else if (producedOutputs.contains("specular")) {
+            result.put("specular", new DefaultFieldOutput(resultType, lightingVariable + ".specular"));
+        }
 
-        return Collections.singletonMap("output", new DefaultFieldOutput(resultType, name));
-
+        return result;
     }
 
     private void passSpotLights(FragmentShaderBuilder fragmentShaderBuilder, final int numSpotLights) {

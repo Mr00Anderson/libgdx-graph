@@ -5,7 +5,6 @@ import com.gempukku.libgdx.graph.data.FieldType;
 import com.gempukku.libgdx.graph.data.GraphNodeInput;
 import com.gempukku.libgdx.graph.data.GraphNodeOutput;
 import com.gempukku.libgdx.graph.data.NodeConfiguration;
-import com.gempukku.libgdx.graph.ui.graph.GraphBox;
 import com.gempukku.libgdx.graph.ui.graph.GraphBoxImpl;
 import org.json.simple.JSONObject;
 
@@ -39,12 +38,7 @@ public class GraphBoxProducerImpl<T extends FieldType> implements GraphBoxProduc
     }
 
     @Override
-    public GraphBox<T> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
-        return createDefault(skin, id);
-    }
-
-    @Override
-    public GraphBox<T> createDefault(Skin skin, String id) {
+    public GraphBoxImpl<T> createPipelineGraphBox(Skin skin, String id, JSONObject data) {
         GraphBoxImpl<T> start = new GraphBoxImpl<T>(id, configuration, skin);
         Iterator<GraphNodeInput<T>> inputIterator = configuration.getNodeInputs().values().iterator();
         Iterator<GraphNodeOutput<T>> outputIterator = configuration.getNodeOutputs().values().iterator();
@@ -80,5 +74,10 @@ public class GraphBoxProducerImpl<T extends FieldType> implements GraphBoxProduc
         }
 
         return start;
+    }
+
+    @Override
+    public GraphBoxImpl<T> createDefault(Skin skin, String id) {
+        return createPipelineGraphBox(skin, id, null);
     }
 }

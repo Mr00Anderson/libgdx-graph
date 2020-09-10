@@ -10,7 +10,11 @@ import com.gempukku.libgdx.graph.shader.node.attribute.AttributeTangentShaderNod
 import com.gempukku.libgdx.graph.shader.node.attribute.AttributeUVShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.effect.FresnelEffectShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.effect.IntensityShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.lighting.AmbientLightShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.lighting.CalculateLightingShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.lighting.DirectionalLightShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.lighting.PointLightShaderNodeBuilder;
+import com.gempukku.libgdx.graph.shader.node.lighting.SpotLightShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.material.TextureAttributeShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.AddShaderNodeBuilder;
 import com.gempukku.libgdx.graph.shader.node.math.arithmetic.DivideShaderNodeBuilder;
@@ -138,6 +142,10 @@ public class GraphShaderConfiguration {
 
         // Lighting
         addGraphShaderNodeBuilder(new CalculateLightingShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new AmbientLightShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new DirectionalLightShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new PointLightShaderNodeBuilder());
+        addGraphShaderNodeBuilder(new SpotLightShaderNodeBuilder());
 
         // Effect
         addGraphShaderNodeBuilder(new FresnelEffectShaderNodeBuilder());

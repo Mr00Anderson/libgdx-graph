@@ -7,7 +7,7 @@ import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 
 public class CalculateLightingShaderNodeConfiguration extends NodeConfigurationImpl<ShaderFieldType> {
     public CalculateLightingShaderNodeConfiguration() {
-        super("Lighting", "Calculate Lighting", "Lighting");
+        super("Lighting", "Calculate lighting", "Lighting");
         addNodeInput(
                 new GraphNodeInputImpl<ShaderFieldType>("position", "Position", true, ShaderFieldType.Vector3));
         addNodeInput(
@@ -22,9 +22,9 @@ public class CalculateLightingShaderNodeConfiguration extends NodeConfigurationI
                 new GraphNodeInputImpl<ShaderFieldType>("shininess", "Shininess", false, ShaderFieldType.Float));
         addNodeOutput(
                 new GraphNodeOutputImpl<ShaderFieldType>("output", "Color", ShaderFieldType.Vector3));
-//        addNodeOutput(
-//                new GraphNodeOutputImpl<ShaderFieldType>("specularStrength", "Specular", ShaderFieldType.Float));
-//        addNodeOutput(
-//                new GraphNodeOutputImpl<ShaderFieldType>("diffuseStrength", "Diffuse", ShaderFieldType.Float));
+        addNodeOutput(
+                new GraphNodeOutputImpl<ShaderFieldType>("diffuse", "Diffuse", ShaderFieldType.Vector3));
+        addNodeOutput(
+                new GraphNodeOutputImpl<ShaderFieldType>("specular", "Specular", ShaderFieldType.Vector3));
     }
 }

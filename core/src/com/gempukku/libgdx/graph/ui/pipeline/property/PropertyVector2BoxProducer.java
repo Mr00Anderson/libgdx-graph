@@ -34,7 +34,7 @@ public class PropertyVector2BoxProducer implements PropertyBoxProducer<PipelineF
     }
 
     private PropertyBox<PipelineFieldType> createPropertyBoxDefault(Skin skin, String name, float v1, float v2) {
-        final VisValidatableTextField v1Input = new VisValidatableTextField(new Validators.FloatValidator()) {
+        final VisValidatableTextField v1Input = new VisValidatableTextField(Validators.FLOATS) {
             @Override
             public float getPrefWidth() {
                 return 50;
@@ -48,7 +48,7 @@ public class PropertyVector2BoxProducer implements PropertyBoxProducer<PipelineF
                         v1Input.fire(new GraphChangedEvent(false, true));
                     }
                 });
-        final VisValidatableTextField v2Input = new VisValidatableTextField(new Validators.FloatValidator()) {
+        final VisValidatableTextField v2Input = new VisValidatableTextField(Validators.FLOATS) {
             @Override
             public float getPrefWidth() {
                 return 50;

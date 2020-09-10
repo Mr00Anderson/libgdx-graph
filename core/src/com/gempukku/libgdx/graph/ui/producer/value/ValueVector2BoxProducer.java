@@ -42,7 +42,7 @@ public class ValueVector2BoxProducer<T extends FieldType> extends ValueGraphBoxP
     }
 
     private GraphBoxPartImpl<T> createValuePart(Skin skin, float v1, float v2) {
-        final VisValidatableTextField v1Input = new VisValidatableTextField(new Validators.FloatValidator()) {
+        final VisValidatableTextField v1Input = new VisValidatableTextField(Validators.FLOATS) {
             @Override
             public float getPrefWidth() {
                 return 50;
@@ -57,7 +57,7 @@ public class ValueVector2BoxProducer<T extends FieldType> extends ValueGraphBoxP
                     }
                 });
 
-        final VisValidatableTextField v2Input = new VisValidatableTextField(new Validators.FloatValidator()) {
+        final VisValidatableTextField v2Input = new VisValidatableTextField(Validators.FLOATS) {
             @Override
             public float getPrefWidth() {
                 return 50;

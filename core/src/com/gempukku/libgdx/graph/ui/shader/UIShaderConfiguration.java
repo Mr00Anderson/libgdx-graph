@@ -3,7 +3,11 @@ package com.gempukku.libgdx.graph.ui.shader;
 import com.gempukku.libgdx.graph.shader.ShaderFieldType;
 import com.gempukku.libgdx.graph.shader.config.effect.FresnelEffectShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.effect.IntensityShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.lighting.AmbientLightShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.lighting.CalculateLightingShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.lighting.DirectionalLightShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.lighting.PointLightShaderNodeConfiguration;
+import com.gempukku.libgdx.graph.shader.config.lighting.SpotLightShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.AddShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.DivideShaderNodeConfiguration;
 import com.gempukku.libgdx.graph.shader.config.math.arithmetic.MultiplyShaderNodeConfiguration;
@@ -103,6 +107,10 @@ public class UIShaderConfiguration implements UIGraphConfiguration<ShaderFieldTy
         graphBoxProducers.add(new TextureAttributeBoxProducer("SpecularTexture", "Specular texture"));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new CalculateLightingShaderNodeConfiguration()));
+        graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new AmbientLightShaderNodeConfiguration()));
+        graphBoxProducers.add(new IndexedBoxProducer<ShaderFieldType>(new DirectionalLightShaderNodeConfiguration()));
+        graphBoxProducers.add(new IndexedBoxProducer<ShaderFieldType>(new PointLightShaderNodeConfiguration()));
+        graphBoxProducers.add(new IndexedBoxProducer<ShaderFieldType>(new SpotLightShaderNodeConfiguration()));
 
         graphBoxProducers.add(new GraphBoxProducerImpl<ShaderFieldType>(new Sampler2DShaderNodeConfiguration()));
 
